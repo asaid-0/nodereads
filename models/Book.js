@@ -13,7 +13,8 @@ const schema = new mongoose.Schema({
     ],
     rates: [
         {
-            type: mongoose.Schema.Types.ObjectId, ref: 'User', rate: {
+            user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            rate: {
                 type: Number,
                 min: 1,
                 max: 5,
@@ -22,7 +23,8 @@ const schema = new mongoose.Schema({
     ],
     review: [
         {
-            type: mongoose.Schema.Types.ObjectId, ref: 'User', content: {
+            user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+            content: {
                 type: String,
                 minlength: 3,
                 maxlength: 512,
