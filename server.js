@@ -7,15 +7,7 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000
 const uri = process.env.DB_URI
-
-
-app.use(cors())
-app.use(express.json())
-
-
-app.get('/', (req, res) => {
-  res.json({"message": "working"});
-});
+const adminRoute= require('./routes/admins')
 
 mongoose.connect(uri, {
     useNewUrlParser: true,
@@ -26,5 +18,13 @@ mongoose.connect(uri, {
     if (!err) console.log("mogodb started");
     else console.log(err);
 })
+
+
+app.use(cors())
+app.use(express.json())
+
+
+app.use('/admin',adminRoute)
+
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
