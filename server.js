@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const booksRouter = require('./routes/books');
+const userRoutes = require('./routes/user');
 require('dotenv').config();
 
 const app = express();
@@ -26,5 +27,6 @@ app.use(express.json())
 
 app.use('/admin',adminRoute);
 app.use('/books', booksRouter);
+app.use('/', userRoutes);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
