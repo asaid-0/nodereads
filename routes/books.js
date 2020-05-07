@@ -2,6 +2,12 @@ const express = require('express');
 const BookModel = require('../models/Book')
 
 const router = express.Router();
+const Book  = require('../models/Book');
+// router.get('/', (req, res) => {
+//     res.send('route get /books');
+// })
+
+
 
 router.get('/', (req, res) => {
     // res.send('route get /books');
@@ -9,6 +15,8 @@ router.get('/', (req, res) => {
         .then(books => res.json(books))
         .catch(err => res.send(err))
 })
+
+
 
 router.get('/:id', (req, res) => {
     const { id } = req.params

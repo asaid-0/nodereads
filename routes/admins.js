@@ -4,6 +4,7 @@ const AuthorModel = require('../models/Author')
 
 //Get all books with populate
 router.get('/books', async (req, res) => {
+    console.log("current_user: ", req.currentUser);
     try {
         books = await BookModel.find({}).populate("authors").exec()
         res.json(books)
