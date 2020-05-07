@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const AuthorModel = require('../models/Author')
 const schema = new mongoose.Schema({
     name: { type: String, required: true, minlength: 3, maxlength: 255 },
     photo: { data: Buffer, contentType: String },
@@ -33,5 +33,16 @@ const schema = new mongoose.Schema({
     ],
 })
 
+schema.pre('findOneAndDelete', function (next) {
+    const book_id = this.getQuery()._id
+     console.log(book_id);
+    AuthorModel.find({books: book_id},(err,authors)=>{
+        if (err) next(err)
+        authors.map(author=>{
+            author.books.pull(book_id);
+        })
+        next()
+    })
+})
 const Book = mongoose.model('Book', schema);
 module.exports = Book;
