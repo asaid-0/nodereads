@@ -21,7 +21,7 @@ const schema = new mongoose.Schema({
             }
         }
     ],
-    review: [
+    reviews: [
         {
             user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
             content: {
