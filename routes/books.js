@@ -1,9 +1,22 @@
 const express = require('express');
 const router = express.Router();
+const Book  = require('../models/Book');
+// router.get('/', (req, res) => {
+//     res.send('route get /books');
+// })
 
-router.get('/', (req, res) => {
-    res.send('route get /books');
+
+router.get('/', async (req, res) => {
+    try {
+        const books = await Book.find({});
+        res.send(books);
+    } catch (e) {
+        res.send(e);
+    }
+
 })
+
+
 
 router.get('/:id', (req, res) => {
     const { id } = req.params
