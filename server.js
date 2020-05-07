@@ -30,6 +30,8 @@ app.use(express.json())
 
 app.use('/admin', admin, adminRoute);
 app.use('/books', auth, booksRouter);
+// app.use('/admin', adminRoute);
+app.use('/books', booksRouter);
 app.use('/home', auth, homeRouter);
 app.use('/', userRoutes);
 
