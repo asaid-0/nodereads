@@ -23,6 +23,7 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/books', async (req, res)=>{
+    console.log("current_user: ", req.currentUser);
     const users = await User.find({});
     res.send(users);
 })

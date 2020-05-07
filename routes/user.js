@@ -2,6 +2,17 @@ const express = require('express');
 const User = require('../models/User');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const generateToken = (id, email) => {
+    return jwt.sign({
+        _id: id,
+        email: email
+    }, process.env.JWT_SECRET_KEY || "NOJWTKEY", {
+        expiresIn: "4h"
+    });
+}
+
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
     User.findOne({ email: email }).exec()
@@ -9,10 +20,12 @@ router.post('/login', (req, res) => {
             if (user) {
                 bcrypt.compare(password, user.password, (err, success) => {
                     if (success) {
+                        const token = generateToken(user._id, user.email);
                         return res.status(200).json({
                             status: "success",
                             type: "login",
-                            message: `User ${user.email} logged in successfuly`
+                            message: `User ${user.email} logged in successfuly`,
+                            token: token
                         });
                     } else {
                         console.log("Eror in hashing compare: ", err);
@@ -58,14 +71,17 @@ router.post('/register', (req, res) => {
                 lastname: lastname,
                 email: email,
                 password: hash,
+                isAdmin: false
                 // photo: photo,      
             });
             user.save()
                 .then(user => {
+                    const token = generateToken(user._id, user.email);
                     return res.status(201).json({
                         status: "success",
                         type: "register",
-                        message: `User ${user.email} created successfuly`
+                        message: `User ${user.email} created successfuly`,
+                        token: token
                     })
                 })
                 .catch(err => {

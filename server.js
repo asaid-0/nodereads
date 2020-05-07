@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 const booksRouter = require('./routes/books');
 const adminRoute= require('./routes/admins')
 const homeRouter = require('./routes/home');
-
+const { auth, admin } = require('./middleware/auth');
 const userRoutes = require('./routes/user');
+
 require('dotenv').config();
 
 const app = express();
@@ -27,9 +28,9 @@ app.use(cors())
 app.use(express.json())
 
 
-app.use('/admin',adminRoute);
+app.use('/admin', admin, adminRoute);
 app.use('/books', booksRouter);
-app.use('/home', homeRouter);
+app.use('/home', auth, homeRouter);
 app.use('/', userRoutes);
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
