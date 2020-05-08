@@ -12,10 +12,9 @@ const Book = require('../models/Book');
 /////////////////////**** retrieve all books ****/////////////////////
 
 router.get('/', (req, res) => {
-    // res.send('route get /books');
-    // console.log(req.currentUser);
 
     BookModel.find({})
+        .populate('authors')
         .then(books => res.status(200).json(books))
         .catch(err => res.status(400).send(err))
 })
@@ -26,6 +25,7 @@ router.get('/:id', (req, res) => {
     const { id } = req.params
     // res.send(`route get /books/${id}`);
     BookModel.findById(id)
+        .populate('authors')
         .then(book => res.status(200).json(book))
         .catch(err => res.status(400).send(err))
 
@@ -50,13 +50,15 @@ router.post('/:id', (req, res) => {
         }
 
         BookModel.findById(id)
+            .populate('authors')
             .then(book => {
                 // check if user submitted review before
                 const oldReview = book.reviews.filter(review => review.user.toString() === currentUser._id)
                 if (!oldReview.length) {
                     book.reviews.push(review)
                     book.save()
-                    res.status(200).json(book)
+                        .then(book => res.status(200).json(book))
+                        .catch(err => res.status(400).send(err))
                 } else res.status(400).send('review already exist')
             })
             .catch(err => res.send(err))
@@ -74,6 +76,7 @@ router.post('/:id', (req, res) => {
         }
 
         BookModel.findById(id)
+            .populate('authors')
             .then(book => {
                 // check if user submitted rate before
                 const oldRate = book.rates.filter(rate => rate.user.toString() === currentUser._id)
@@ -81,9 +84,24 @@ router.post('/:id', (req, res) => {
                 if (!oldRate.length) {
                     book.rates.push(userRate)
                     book.save()
-                    res.status(200).json(book)
+                        .then(book => res.status(200).json(book))
+                        .catch(err => res.status(400).send(err))
                 }
-                else res.status(400).send('rate already exist')
+                // Edit rate
+                else {
+
+                    // book.rates.forEach(userRate => {
+                    //     if (userRate.user.toString() === currentUser._id) {
+                    //         userRate.rate = rate;
+                    //     }
+                    // })
+
+                    book.rates.id(oldRate[0]._id).rate = rate;
+                    book.save()
+                        .then(book => res.status(200).json(book))
+                        .catch(err => res.status(400).send(err))
+
+                }
             })
             .catch(err => res.status(400).send(err))
     }
@@ -101,33 +119,40 @@ router.patch('/:id', (req, res) => {
         const { reviewID, newContent } = req.body;
         if (!reviewID || !newContent) res.status(400).send('bad request')
         BookModel.findById(id)
+            .populate('authors')
             .then(book => {
-                book.reviews.forEach(review => {
-                    if (review._id.toString() === reviewID && review.user.toString() === currentUser._id) {
-                        review.content = newContent;
-                    }
-                })
-                res.status(200).json(book)
+                // book.reviews.forEach(review => {
+                //     if (review.user.toString() === currentUser._id) {
+                //         review.content = newContent;
+                //     }
+                // })
+                book.reviews.id(reviewID).content = newContent
+                console.log(book.reviews.id(reviewID).content);
+
+                book.save()
+                    .then(book => res.status(200).json(book))
+                    .catch(err => res.status(400).send(err))
+
             })
             .catch(err => res.status(400).send(err))
 
     }
 
     ///// Edit rate
-    if (type === 'rate') {
-        const { rateID, newRate } = req.body;
-        if (!rateID || !newRate || typeof (newRate) != 'number') res.status(400).send('bad request')
-        BookModel.findById(id)
-            .then(book => {
-                book.rates.forEach(userRate => {
-                    if (userRate._id.toString() === rateID && userRate.user.toString() === currentUser._id) {
-                        userRate.rate = newRate;
-                    }
-                })
-                res.status(200).json(book)
-            })
-            .catch(err => res.status(400).send(err))
-    }
+    // if (type === 'rate') {
+    //     const {  newRate } = req.body;
+    //     if (!rateID || !newRate || typeof (newRate) != 'number') res.status(400).send('bad request')
+    //     BookModel.findById(id)
+    //         .then(book => {
+    //             book.rates.forEach(userRate => {
+    //                 if (userRate.user.toString() === currentUser._id) {
+    //                     userRate.rate = newRate;
+    //                 }
+    //             })
+    //             res.status(200).json(book)
+    //         })
+    //         .catch(err => res.status(400).send(err))
+    // }
 
 })
 
@@ -139,6 +164,7 @@ router.delete('/:id', (req, res) => {
     if (type === 'review') {
         const { reviewID } = req.body
         BookModel.findById(id)
+            .populate('authors')
             .then(book => {
                 book.reviews.pull({ _id: reviewID, user: mongoose.Types.ObjectId(currentUser._id) })
                 book.save()
