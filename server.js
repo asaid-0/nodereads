@@ -6,6 +6,7 @@ const adminRoute= require('./routes/admins')
 const homeRouter = require('./routes/home');
 const { auth, admin } = require('./middleware/auth');
 const userRoutes = require('./routes/user');
+const authorsRouter = require('./routes/authors');
 
 require('dotenv').config();
 
@@ -32,6 +33,7 @@ app.use('/admin', admin, adminRoute);
 app.use('/books', auth, booksRouter);
 // app.use('/admin', adminRoute);
 app.use('/books', booksRouter);
+app.use('/authors', authorsRouter);
 app.use('/home', auth, homeRouter);
 app.use('/', userRoutes);
 
