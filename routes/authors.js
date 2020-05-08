@@ -1,9 +1,8 @@
 const express = require('express');
 const AuthorModel = require('../models/Author')
-
 const router = express.Router();
 
-router.get("/:id/books", (req, res) => {
+router.get('/:id/books', (req, res) => {
     try {
         author = AuthorModel.findById(req.params.id).populate("books").exec()
         res.json(author)
@@ -11,3 +10,5 @@ router.get("/:id/books", (req, res) => {
         res.send(error)
     }
 })
+
+module.exports = router
