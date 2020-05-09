@@ -197,11 +197,33 @@ router.patch("/categories/:id", (req, res) => {
   );
 });
 
-router.delete("/categories/:id", (req, res) => {
-  CategoryModel.findByIdAndDelete(req.params.id, (err, category) => {
-    if (err) res.send(err);
-    res.json(category);
-  });
-});
+
+
+router.post('/categories', (req, res) => {
+    const {body: { name }} = req
+    const category = new CategoryModel ({
+        name
+    })
+    category.save((err,categroy)=>{
+        if (err) res.send(err);
+        res.json(categroy)
+    })
+})
+
+router.patch('/categories/:id', (req, res) => {
+    const {body: { name }} = req
+    CategoryModel.findByIdAndUpdate(req.params.id,{'name':name},{new: true},(err,category)=>{
+        if (err) res.send(err);
+        res.json(category)
+    })
+})
+
+router.delete('/categories/:id', (req, res) => {
+    CategoryModel.findByIdAndDelete(req.params.id,(err,category)=>{
+        if (err) res.send(err)
+        res.json(category)
+    })
+})
+
 
 module.exports = router;
