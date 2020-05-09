@@ -148,6 +148,16 @@ router.get("/categories", async (req, res) => {
     }
 });
 
+router.get("/categories/:id", async (req, res) => {
+    try {
+        const { params: { id } } = req
+        books = await CategoryModel.findById(id).populate("books").exec();
+        res.json(books);
+    } catch (error) {
+        res.send(error);
+    }
+});
+
 router.post('/categories', (req, res) => {
     const { body: { name } } = req
     const category = new CategoryModel({
