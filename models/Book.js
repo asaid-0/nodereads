@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const AuthorModel = require('../models/Author')
+const CategoryModel = require('../models/Category')
+
 const schema = new mongoose.Schema({
     name: { type: String, required: true, minlength: 3, maxlength: 255 },
     photo: { data: Buffer, contentType: String },
@@ -40,6 +42,16 @@ schema.pre('findOneAndDelete', function (next) {
         authors.map(author=>{
             author.books.pull(book_id);
             author.save((err)=>{
+                if (err) next(err);
+            })
+        })
+        next()
+    })
+    CategoryModel.find({books: book_id},(err,categories)=>{
+        if (err) next(err)
+        categories.map(category=>{
+            category.books.pull(book_id);
+            category.save((err)=>{
                 if (err) next(err);
             })
         })
