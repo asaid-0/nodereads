@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const BookModel = require('../models/Book')
 const AuthorModel = require('../models/Author')
+const CategoryModel = require('../models/Category')
 
 //Get all books with populate
 router.get('/books', async (req, res) => {
@@ -113,6 +114,40 @@ router.delete('/authors/:id',(req,res)=>{
     AuthorModel.findByIdAndDelete(req.params.id,(err,author)=>{
         if (err) res.send(err)
         res.json(author)
+    })
+})
+
+router.get('/categories', async (req, res) => {
+    try {
+        categories = await CategoryModel.find({}).populate("books").exec()
+        res.json(categories)
+    } catch (error) {
+        res.send(error);
+    }
+})
+
+router.post('/categories', (req, res) => {
+    const {body: { name }} = req
+    const category = new CategoryModel ({
+        name
+    })
+    category.save((err,categroy)=>{
+        if (err) res.send(err);
+        res.json(categroy)
+    })
+})
+
+router.patch('/categories/:id', (req, res) => {
+    CategoryModel.findByIdAndUpdate(req.params.id,req.body,{new: true},(err,category)=>{
+        if (err) res.send(err);
+        res.json(category)
+    })
+})
+
+router.delete('/categories/:id', (req, res) => {
+    CategoryModel.findByIdAndDelete(req.params.id,(err,category)=>{
+        if (err) res.send(err)
+        res.json(category)
     })
 })
 
