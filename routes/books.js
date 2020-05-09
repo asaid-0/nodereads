@@ -4,7 +4,6 @@ const BookModel = require('../models/Book')
 const ShelveModel = require('../models/Shelve')
 
 const router = express.Router();
-const Book = require('../models/Book');
 
 
 /////////////////////**** retrieve all books ****/////////////////////

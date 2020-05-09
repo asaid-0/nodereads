@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const BookModel = require('../models/Book')
+
 const schema = new mongoose.Schema({
     firstname: { type: String, required: true, minlength: 3, maxlength: 15 },
     lastname: { type: String, required: true, minlength: 3, maxlength: 14 },
@@ -23,3 +23,5 @@ schema.pre('findOneAndDelete', function (next) {
 
 const Author = mongoose.model('Author', schema);
 module.exports = Author;
+
+const BookModel = require('./Book')

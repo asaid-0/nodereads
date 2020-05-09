@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const AuthorModel = require('../models/Author')
-const CategoryModel = require('../models/Category')
+const CategoryModel = require('./Category')
 
 const schema = new mongoose.Schema({
     name: { type: String, required: true, minlength: 3, maxlength: 255 },
@@ -59,3 +58,5 @@ schema.pre('findOneAndDelete', function (next) {
 })
 const Book = mongoose.model('Book', schema);
 module.exports = Book;
+
+const AuthorModel = require('./Author')
