@@ -5,9 +5,6 @@ const ShelveModel = require('../models/Shelve')
 
 const router = express.Router();
 const Book = require('../models/Book');
-// router.get('/', (req, res) => {
-//     res.send('route get /books');
-// })
 
 
 /////////////////////**** retrieve all books ****/////////////////////
@@ -91,12 +88,6 @@ router.post('/:id', (req, res) => {
                 // Edit rate
                 else {
 
-                    // book.rates.forEach(userRate => {
-                    //     if (userRate.user.toString() === currentUser._id) {
-                    //         userRate.rate = rate;
-                    //     }
-                    // })
-
                     book.rates.id(oldRate[0]._id).rate = rate;
                     book.save()
                         .then(book => res.status(200).json(book))
@@ -145,38 +136,13 @@ router.patch('/:id', (req, res) => {
         BookModel.findById(id)
             .populate('authors')
             .then(book => {
-                // book.reviews.forEach(review => {
-                //     if (review.user.toString() === currentUser._id) {
-                //         review.content = newContent;
-                //     }
-                // })
                 book.reviews.id(reviewID).content = newContent
-                console.log(book.reviews.id(reviewID).content);
-
                 book.save()
                     .then(book => res.status(200).json(book))
                     .catch(err => res.status(400).send(err))
-
             })
             .catch(err => res.status(400).send(err))
-
     }
-
-    ///// Edit rate
-    // if (type === 'rate') {
-    //     const {  newRate } = req.body;
-    //     if (!rateID || !newRate || typeof (newRate) != 'number') res.status(400).send('bad request')
-    //     BookModel.findById(id)
-    //         .then(book => {
-    //             book.rates.forEach(userRate => {
-    //                 if (userRate.user.toString() === currentUser._id) {
-    //                     userRate.rate = newRate;
-    //                 }
-    //             })
-    //             res.status(200).json(book)
-    //         })
-    //         .catch(err => res.status(400).send(err))
-    // }
 
     ///// Edit shelve
     else if (type === 'shelve'){
