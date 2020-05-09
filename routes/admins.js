@@ -117,7 +117,7 @@ router.delete('/authors/:id',(req,res)=>{
     })
 })
 
-router.get('/categories', (req, res) => {
+router.get('/categories', async (req, res) => {
     try {
         categories = await CategoryModel.find({}).populate("books").exec()
         res.json(categories)
