@@ -104,12 +104,12 @@ router.post('/:id', (req, res) => {
                     new:true,
                     upsert:true
                 }, (err, newShelve) => {
-                    if(err) res.status(400).send(err)
+                    if(err) res.status(400).json(err)
                     res.status(200).json(newShelve)
                 }
             )
         })
-        .catch(err => res.status(400).send("book doesn't exist"))
+        .catch(err => res.status(400).json({"err":"book doesn't exist"}))
     }
 })
 
@@ -153,6 +153,23 @@ router.patch('/:id', (req, res) => {
             .catch(err => res.status(400).send(err))
     }
 
+    ///// Edit shelve
+    else if (type === 'shelve'){
+        const { shelve } = req.body
+        const { currentUser } = req
+
+        // update shelve if exists or create new one
+        Shleve.findOneAndUpdate(
+            {user:currentUser._id, book: id},
+            {shelve:shelve},
+            {new:true}, (err, newShelve) => {
+                if(err) res.status(400).json(err)
+                res.status(200).json(newShelve)
+            }
+        )
+        
+    }
+
 })
 
 router.delete('/:id', (req, res) => {
@@ -171,6 +188,20 @@ router.delete('/:id', (req, res) => {
 
             })
             .catch(err => res.status(400).send(err))
+    }
+
+    // delete book from shelve
+    else if (type === 'shelve'){
+        const { currentUser } = req
+
+        // update shelve if exists or create new one
+        Shleve.findOneAndDelete(
+            {user:currentUser._id, book: id}, (err, deletedShelve) => {
+                if(err) res.status(400).json(err)
+                res.status(200).json(deletedShelve)
+            }
+        )
+        
     }
 })
 
