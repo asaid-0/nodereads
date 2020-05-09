@@ -126,6 +126,17 @@ router.get('/categories', (req, res) => {
     }
 })
 
+router.post('/categories', (req, res) => {
+    const {body: { name }} = req
+    const category = new CategoryModel ({
+        name
+    })
+    category.save((err,categroy)=>{
+        if (err) res.send(err);
+        res.json(categroy)
+    })
+})
+
 router.patch('/categories/:id', (req, res) => {
     CategoryModel.findByIdAndUpdate(req.params.id,req.body,{new: true},(err,category)=>{
         if (err) res.send(err);
