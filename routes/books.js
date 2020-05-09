@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const BookModel = require('../models/Book')
+const ShelveModel = require('../models/Shelve')
 
 const router = express.Router();
 const Book = require('../models/Book');
@@ -32,7 +33,7 @@ router.get('/:id', (req, res) => {
 })
 
 
-/////////////////////**** submit review, rate ****/////////////////////
+/////////////////////**** submit review, rate, add to shelve ****/////////////////////
 
 router.post('/:id', (req, res) => {
     const { type } = req.body;
@@ -86,6 +87,29 @@ router.post('/:id', (req, res) => {
                 else res.status(400).send('rate already exist')
             })
             .catch(err => res.status(400).send(err))
+    }
+
+    //////// add to shelve
+    else if (type === 'shelve'){
+        const { shelve } = req.body
+        const { currentUser } = req
+
+        bookModel.findById(id)
+        .then(book => {
+            // update shelve if exists or create new one
+            Shleve.findOneAndUpdate(
+                {user:currentUser._id, book: id},
+                {shelve:shelve},
+                {
+                    new:true,
+                    upsert:true
+                }, (err, newShelve) => {
+                    if(err) res.status(400).send(err)
+                    res.status(200).json(newShelve)
+                }
+            )
+        })
+        .catch(err => res.status(400).send("book doesn't exist"))
     }
 })
 
