@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const BookModel = require('../models/Book')
 const schema = new mongoose.Schema({
     name: { type: String, required: true, minlength: 3, maxlength: 15 },
     books: [
