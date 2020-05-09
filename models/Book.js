@@ -45,7 +45,6 @@ schema.pre('findOneAndDelete', function (next) {
                 if (err) next(err);
             })
         })
-        next()
     })
     CategoryModel.find({books: book_id},(err,categories)=>{
         if (err) next(err)
@@ -55,8 +54,8 @@ schema.pre('findOneAndDelete', function (next) {
                 if (err) next(err);
             })
         })
-        next()
     })
+    next()
 })
 const Book = mongoose.model('Book', schema);
 module.exports = Book;

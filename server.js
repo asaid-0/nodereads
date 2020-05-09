@@ -29,9 +29,9 @@ app.use(cors())
 app.use(express.json())
 
 
-app.use('/admin', admin, adminRoute);
-app.use('/books', auth, booksRouter);
-// app.use('/admin', adminRoute);
+// app.use('/admin', admin, adminRoute);
+// app.use('/books', auth, booksRouter);
+app.use('/admin', adminRoute);
 app.use('/books', booksRouter);
 app.use('/authors', authorsRouter);
 app.use('/home', auth, homeRouter);
