@@ -35,11 +35,13 @@ const schema = new mongoose.Schema({
 
 schema.pre('findOneAndDelete', function (next) {
     const book_id = this.getQuery()._id
-     console.log(book_id);
     AuthorModel.find({books: book_id},(err,authors)=>{
         if (err) next(err)
         authors.map(author=>{
             author.books.pull(book_id);
+            author.save((err)=>{
+                if (err) next(err);
+            })
         })
         next()
     })
