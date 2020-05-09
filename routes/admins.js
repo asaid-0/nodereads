@@ -8,9 +8,9 @@ router.get("/books", async (req, res) => {
     console.log("current_user: ", req.currentUser);
     try {
         books = await BookModel.find({}).populate("authors").exec();
-        res.json(books);
+        res.status(200).json(books);
     } catch (error) {
-        res.send(error);
+        res.status(200).json(error);
     }
 });
 
@@ -18,21 +18,15 @@ router.get("/books", async (req, res) => {
 router.get("/books/:id", async (req, res) => {
     try {
         book = await BookModel.findById(req.params.id).populate("authors").exec();
-        res.json(book);
+        res.status(200).json(book);
     } catch (error) {
-        res.send(error);
+        res.status(200).json(error);
     }
-    // BookModel.findById(req.params.id , (err, book) => {
-    //     if (err) res.send(err);
-    //     res.json(book)
-    // })
 });
 
 //add new book and add the book to authors books
 router.post("/books", (req, res) => {
-    const {
-        body: { name, authors, categories },
-    } = req;
+    const { name, authors, categories } = req.body;
     if (!name || !authors || !categories) res.status(400).send("bad request");
     const book = new BookModel({
         name,
@@ -65,6 +59,7 @@ router.post("/books", (req, res) => {
 router.patch("/books/:id", (req, res) => {
     const { name, authors, categories } = req.body;
     if (!name || !authors || !categories) res.status(400).send("bad request");
+
     BookModel.findById(req.params.id)
         .then((book) => {
             book.name = name;
@@ -76,17 +71,13 @@ router.patch("/books/:id", (req, res) => {
                 .catch((err) => res.status(400).send(err));
         })
         .catch((err) => res.status(400).send(err));
-    // BookModel.findByIdAndUpdate(req.params.id,req.body,{new: true},(err,book)=>{
-    //     if (err) res.send(err);
-    //     res.json(book)
-    // })
 });
 
 //delete book
 router.delete("/books/:id", (req, res) => {
     BookModel.findByIdAndDelete(req.params.id, (err, book) => {
         if (err) res.send(err);
-        res.json(book);
+        res.status(200).json(book);
     });
 });
 
@@ -94,9 +85,9 @@ router.delete("/books/:id", (req, res) => {
 router.get("/authors", async (req, res) => {
     try {
         authors = await AuthorModel.find({}).populate("books").exec();
-        res.json(authors);
+        res.status(200).json(authors);
     } catch (error) {
-        res.send(error);
+        res.status(200).json(error);
     }
 });
 
@@ -104,15 +95,15 @@ router.get("/authors", async (req, res) => {
 router.get("/authors/:id", async (req, res) => {
     try {
         author = await AuthorModel.findById(req.params.id).populate("books").exec();
-        res.json(author);
+        res.status(200).json(author);
     } catch (error) {
-        res.send(error);
+        res.status(200).json(error);
     }
 });
 
 //add new author
 router.post("/authors", (req, res) => {
-    const { firstname, lastname, dob } = req;
+    const { firstname, lastname, dob } = req.body;
     if (!firstname || !lastname || !dob) res.status(400).send("bad request");
 
     const author = new AuthorModel({
@@ -121,8 +112,8 @@ router.post("/authors", (req, res) => {
         dob,
     });
     author.save((err, author) => {
-        if (err) res.send(err);
-        res.json(author);
+        if (err) res.status(200).json(err);
+        res.status(200).json(author);
     });
 }),
     //edit author
@@ -137,27 +128,15 @@ router.post("/authors", (req, res) => {
                 author.dob = dob;
                 author.save()
                     .then((author) => res.status(200).json(author))
-                    .catch((err) => res.status(400).send(err));
+                    .catch((err) => res.status(200).json(err));
             }).catch((err) => res.status(400).send(err));
-
-        // AuthorModel.findByIdAndUpdate(
-        //   req.params.id,
-        //   req.body,
-        //   {
-        //     new: true,
-        //   },
-        //   (err, author) => {
-        //     if (err) res.send(err);
-        //     res.json(author);
-        //   }
-        // );
     });
 
 //delete author
 router.delete("/authors/:id", (req, res) => {
     AuthorModel.findByIdAndDelete(req.params.id, (err, author) => {
-        if (err) res.send(err);
-        res.json(author);
+        if (err) res.status(200).json(err);
+        res.status(200).json(author);
     });
 });
 
@@ -166,7 +145,7 @@ router.get("/categories", async (req, res) => {
         categories = await CategoryModel.find({}).populate("books").exec();
         res.json(categories);
     } catch (error) {
-        res.send(error);
+        res.status(200).json(error);
     }
 });
 
@@ -196,7 +175,6 @@ router.patch("/categories/:id", (req, res) => {
         }
     );
 });
-
 
 
 router.post('/categories', (req, res) => {
