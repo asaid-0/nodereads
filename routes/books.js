@@ -165,17 +165,13 @@ router.delete('/:id', (req, res) => {
     }
 
     // delete book from shelve
-    else if (type === 'shelve'){
-        const { currentUser } = req
-
-        // update shelve if exists or create new one
-        Shleve.findOneAndDelete(
-            {user:currentUser._id, book: id}, (err, deletedShelve) => {
-                if(err) res.status(400).json(err)
-                res.status(200).json(deletedShelve)
-            }
-        )
-        
+    else if (type === 'shelf'){
+        UserModel.findOneAndDelete({ _id: currentUser._id} ,
+            { $pull: { "books" : { "book": id } } },
+            (err) =>{
+                if(err) res.send(err)
+                res.status(200).json("Book Deleted successfully from shelf")
+        })
     }
 })
 
