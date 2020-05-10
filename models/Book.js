@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
     name: { type: String, required: true, minlength: 3, maxlength: 255 },
-    photo: { data: Buffer, contentType: String },
+    photo: {type: String, required:true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author'},
     categories: [
         { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }

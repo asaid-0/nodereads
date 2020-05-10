@@ -2,6 +2,7 @@ const router = require("express").Router();
 const BookModel = require("../models/Book");
 const AuthorModel = require("../models/Author");
 const CategoryModel = require("../models/Category");
+const upload = require('../middleware/multer')
 
 //Get all books with populate
 router.get("/books", async (req, res) => {
@@ -25,20 +26,22 @@ router.get("/books/:id", async (req, res) => {
 });
 
 //add new book and add the book to authors books
-router.post("/books", async (req, res) => {
+router.post("/books", upload.single('bookImage') ,async (req, res) => {
+    
     const { name, author, categories } = req.body;
     if (!name || !author || !categories) return res.status(400).send("bad request");
     const book = new BookModel({
         name,
         author,
         categories,
+        photo: req.file.path
     });
     try {
         await book.save()
         // await CategoryModel.updateMany({ _id: { $in: categories } }, { $push: { books: book._id } })
         res.status(200).send(book);
     } catch (error) {
-        return res.status(400).send(error);
+        return res.status(500).send(error);
     }
 });
 
@@ -55,7 +58,7 @@ router.patch("/books/:id", (req, res) => {
         .then(book => {
             res.status(200).json(book)
         }).catch(err => {
-            res.status(400).send(err)
+            res.status(500).send(err)
         })
     // BookModel.findById(req.params.id)
     //     .then((book) => {
@@ -72,7 +75,7 @@ router.patch("/books/:id", (req, res) => {
 //delete book
 router.delete("/books/:id", (req, res) => {
     BookModel.findByIdAndDelete(req.params.id, (err, book) => {
-        if (err) res.send(err);
+        if (err) res.status(500).send(err);
         res.status(200).json(book);
     });
 });
@@ -93,7 +96,7 @@ router.get("/authors/:id", async (req, res) => {
         author = await AuthorModel.findById(req.params.id);
         res.status(200).json(author);
     } catch (error) {
-        res.status(200).json(error);
+        res.status(500).json(error);
     }
 });
 
