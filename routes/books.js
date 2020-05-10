@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const BookModel = require('../models/Book')
-const ShelveModel = require('../models/Shelve')
+const UserModel = require('../models/User')
 
 const router = express.Router();
 
@@ -98,26 +98,15 @@ router.post('/:id', (req, res) => {
     }
 
     //////// add to shelve
-    else if (type === 'shelve'){
-        const { shelve } = req.body
-        const { currentUser } = req
-
-        bookModel.findById(id)
-        .then(book => {
-            // update shelve if exists or create new one
-            Shleve.findOneAndUpdate(
-                {user:currentUser._id, book: id},
-                {shelve:shelve},
-                {
-                    new:true,
-                    upsert:true
-                }, (err, newShelve) => {
-                    if(err) res.status(400).json(err)
-                    res.status(200).json(newShelve)
-                }
-            )
+    else if (type === 'shelf'){
+        const { shelf } = req.body
+        UserModel.findOneAndUpdate({ _id: currentUser._id, "books.book":id } ,
+            {"books.$.shelf": shelf},
+            {new:true},
+            (err) =>{
+                if(err) res.send(err)
+                res.status(200).json("Book added successfully to shelf")
         })
-        .catch(err => res.status(400).json({"err":"book doesn't exist"}))
     }
 })
 
@@ -144,20 +133,14 @@ router.patch('/:id', (req, res) => {
     }
 
     ///// Edit shelve
-    else if (type === 'shelve'){
-        const { shelve } = req.body
-        const { currentUser } = req
-
-        // update shelve if exists or create new one
-        Shleve.findOneAndUpdate(
-            {user:currentUser._id, book: id},
-            {shelve:shelve},
-            {new:true}, (err, newShelve) => {
-                if(err) res.status(400).json(err)
-                res.status(200).json(newShelve)
-            }
-        )
-        
+    else if (type === 'shelf'){
+        const { shelf } = req.body
+        UserModel.findOneAndUpdate({ _id: currentUser._id, "books.book":id } ,
+            {"books.$.shelf": shelf},
+            (err) =>{
+                if(err) res.send(err)
+                res.status(200).json("Book updated successfully to shelf")
+        })
     }
 
 })
@@ -182,17 +165,13 @@ router.delete('/:id', (req, res) => {
     }
 
     // delete book from shelve
-    else if (type === 'shelve'){
-        const { currentUser } = req
-
-        // update shelve if exists or create new one
-        Shleve.findOneAndDelete(
-            {user:currentUser._id, book: id}, (err, deletedShelve) => {
-                if(err) res.status(400).json(err)
-                res.status(200).json(deletedShelve)
-            }
-        )
-        
+    else if (type === 'shelf'){
+        UserModel.findOneAndDelete({ _id: currentUser._id} ,
+            { $pull: { "books" : { "book": id } } },
+            (err) =>{
+                if(err) res.send(err)
+                res.status(200).json("Book Deleted successfully from shelf")
+        })
     }
 })
 
