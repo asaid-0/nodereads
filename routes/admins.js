@@ -25,7 +25,7 @@ router.get("/books/:id", async (req, res) => {
 });
 
 //add new book and add the book to authors books
-router.post("/books", (req, res) => {
+router.post("/books", async (req, res) => {
     const { name, authors, categories } = req.body;
     if (!name || !authors || !categories) res.status(400).send("bad request");
     const book = new BookModel({
@@ -33,26 +33,32 @@ router.post("/books", (req, res) => {
         authors,
         categories,
     });
-    book.save((err, book) => {
-        if (err) res.status(400).send(err);
-        authors.map((author) => {
-            AuthorModel.findById(author, (err, author) => {
-                author.books.push(book._id);
-                author.save((err, author) => {
-                    if (err) res.status(400).send(err);
-                });
-            });
-        });
-        categories.map((cat) => {
-            CategoryModel.findById(cat, (err, cat) => {
-                cat.books.push(book._id);
-                cat.save((err, cat) => {
-                    if (err) res.status(400).send(err);
-                });
-            });
-        });
+    try {
+        await book.save()
+        await AuthorModel.updateMany({ _id: { $in: authors } }, { $push: { books: book._id }})
+        await CategoryModel.updateMany({ _id: { $in: categories } }, { $push: { books: book._id } })
         res.status(200).send(book);
-    });
+    } catch (error) {
+        return res.status(400).send(error);
+    }
+    // authors.forEach((author) => {
+    //     AuthorModel.findById(author, (err, author) => {
+    //         author.books.push(book._id);
+    //         author.save((err, author) => {
+    //             if (err) res.status(400).send(err);
+    //         });
+    //     });
+    // });
+    // categories.forEach((cat) => {
+    //     debugger
+    //     CategoryModel.findById(cat, (err, cat) => {
+    //         cat.books.push(book._id);
+    //         cat.save((err, cat) => {
+    //             if (err) res.status(400).send(err);
+    //         });
+    //     });
+    // });
+    // });
 });
 
 //edit book

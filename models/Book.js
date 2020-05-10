@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const CategoryModel = require('./Category')
+// const AuthorModel = require('./Author')
 
 const schema = new mongoose.Schema({
     name: { type: String, required: true, minlength: 3, maxlength: 255 },
@@ -36,6 +37,9 @@ const schema = new mongoose.Schema({
 
 schema.pre('findOneAndDelete', function (next) {
     const book_id = this.getQuery()._id
+    const AuthorModel = mongoose.model('Author')
+    // const CategoryModel = mongoose.model('Category')
+
     AuthorModel.find({books: book_id},(err,authors)=>{
         if (err) next(err)
         authors.map(author=>{
@@ -58,5 +62,3 @@ schema.pre('findOneAndDelete', function (next) {
 })
 const Book = mongoose.model('Book', schema);
 module.exports = Book;
-
-const AuthorModel = require('./Author')
