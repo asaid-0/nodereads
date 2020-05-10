@@ -143,7 +143,7 @@ router.delete("/authors/:id", (req, res) => {
 router.get("/categories", async (req, res) => {
     try {
         categories = await CategoryModel.find({}).populate("books").exec();
-        res.json(categories);
+        res.send(categories);
     } catch (error) {
         res.status(200).json(error);
     }
@@ -153,7 +153,7 @@ router.get("/categories/:id", async (req, res) => {
     try {
         const { params: { id } } = req
         books = await CategoryModel.findById(id).populate("books").exec();
-        res.json(books);
+        res.send(books);
     } catch (error) {
         res.send(error);
     }
@@ -161,27 +161,47 @@ router.get("/categories/:id", async (req, res) => {
 
 router.post('/categories', (req, res) => {
     const { body: { name } } = req
-    const category = new CategoryModel({
-        name
-    })
-    category.save((err, categroy) => {
-        if (err) res.send(err);
-        res.json(categroy)
-    })
+    if( name && name.length > 0){
+        const category = new CategoryModel({
+            name
+        })
+        category.save((err, category) => {
+            if (err) res.send(err);
+            res.send(category)
+        })
+    } else {
+        res.send({"err":"Name is empty or undefined"})
+    }
 })
 
 router.patch('/categories/:id', (req, res) => {
     const { body: { name } } = req
-    CategoryModel.findByIdAndUpdate(req.params.id, { 'name': name }, { new: true }, (err, category) => {
-        if (err) res.send(err);
-        res.json(category)
-    })
+    if( name && name.length > 0){
+        CategoryModel.findByIdAndUpdate(req.params.id, { 'name': name }, (err, category) => {
+            if (err) res.send(err);
+            res.send(category)
+        })
+    } else {
+        res.send({"err":"Name is empty or undefined"})
+    }
 })
 
 router.delete('/categories/:id', (req, res) => {
-    CategoryModel.findByIdAndDelete(req.params.id, (err, category) => {
+    CategoryModel.findByIdAndDelete(req.params.id, function(err, category){
         if (err) res.send(err)
-        res.json(category)
+        try{
+            BookModel.updateMany(
+                { _id : { $in : [category.books] } },
+                { $pull:{ categories : { $in: [category._id]} } },
+                { multi: true }, (err) => {
+                    if (err) res.send(err)
+                    res.send(category)
+                }
+            )
+        } catch {
+            res.send({"err":"Category doesn't exist"})
+        }
+        
     })
 })
 
