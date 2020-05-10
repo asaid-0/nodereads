@@ -29,7 +29,8 @@ router.get("/books/:id", async (req, res) => {
 router.post("/books", upload.single('bookImage') ,async (req, res) => {
     
     const { name, author, categories } = req.body;
-    if (!name || !author || !categories) return res.status(400).send("bad request");
+    const photo = req.file
+    if (!name || !author || !categories || !photo) return res.status(400).send("bad request");
     const book = new BookModel({
         name,
         author,
@@ -46,13 +47,17 @@ router.post("/books", upload.single('bookImage') ,async (req, res) => {
 });
 
 //edit book
-router.patch("/books/:id", (req, res) => {
+router.patch("/books/:id", upload.single('bookImage'), (req, res) => {
     const { name, author, categories } = req.body;
+    const photo = req.file
     if (!name || !author || !categories) return res.status(400).send("bad request");
     const modifiedBook = {
         name,
         author,
         categories
+    }
+    if (photo){
+        modifiedBook.photo = photo.path
     }
     BookModel.findByIdAndUpdate(req.params.id, modifiedBook, { new: true })
         .then(book => {
@@ -101,14 +106,16 @@ router.get("/authors/:id", async (req, res) => {
 });
 
 //add new author
-router.post("/authors", (req, res) => {
+router.post("/authors", upload.single('authorImage') ,(req, res) => {
     const { firstname, lastname, dob } = req.body;
-    if (!firstname || !lastname || !dob) return res.status(400).send("bad request");
+    const photo = req.file
+    if (!firstname || !lastname || !dob || !photo ) return res.status(400).send("bad request");
 
     const author = new AuthorModel({
         firstname,
         lastname,
         dob,
+        photo: req.file.path
     });
     author.save((err, author) => {
         if (err) res.status(200).json(err);
@@ -116,19 +123,25 @@ router.post("/authors", (req, res) => {
     });
 }),
     //edit author
-    router.patch("/authors/:id", (req, res) => {
+    router.patch("/authors/:id", upload.single('authorImage'), (req, res) => {
         const { firstname, lastname, dob } = req.body;
+        const photo = req.file
         if (!firstname || !lastname || !dob) return res.status(400).send("bad request");
 
-        AuthorModel.findById(req.params.id)
+        const modifiedAuthor = {
+            firstname,
+            lastname,
+            dob
+        }
+        if (photo){
+            modifiedAuthor.photo = photo.path
+        }
+        AuthorModel.findByIdAndUpdate(req.params.id, modifiedAuthor, { new: true })
             .then(author => {
-                author.firstname = firstname;
-                author.lastname = lastname;
-                author.dob = dob;
-                author.save()
-                    .then((author) => res.status(200).json(author))
-                    .catch((err) => res.status(200).json(err));
-            }).catch((err) => res.status(400).send(err));
+                res.status(200).json(author)
+            }).catch(err => {
+                res.status(500).send(err)
+            })
     });
 
 //delete author
