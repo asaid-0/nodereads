@@ -132,6 +132,17 @@ router.patch('/:id', (req, res) => {
             .catch(err => res.status(400).send(err))
     }
 
+    ///// Edit shelve
+    else if (type === 'shelf'){
+        const { shelf } = req.body
+        UserModel.findOneAndUpdate({ _id: currentUser._id, "books.book":id } ,
+            {"books.$.shelf": shelf},
+            (err) =>{
+                if(err) res.send(err)
+                res.status(200).json("Book updated successfully to shelf")
+        })
+    }
+
 })
 
 router.delete('/:id', (req, res) => {
