@@ -132,23 +132,6 @@ router.patch('/:id', (req, res) => {
             .catch(err => res.status(400).send(err))
     }
 
-    ///// Edit shelve
-    else if (type === 'shelve'){
-        const { shelve } = req.body
-        const { currentUser } = req
-
-        // update shelve if exists or create new one
-        Shleve.findOneAndUpdate(
-            {user:currentUser._id, book: id},
-            {shelve:shelve},
-            {new:true}, (err, newShelve) => {
-                if(err) res.status(400).json(err)
-                res.status(200).json(newShelve)
-            }
-        )
-        
-    }
-
 })
 
 router.delete('/:id', (req, res) => {
