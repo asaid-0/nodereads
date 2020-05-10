@@ -7,75 +7,66 @@ const CategoryModel = require("../models/Category");
 router.get("/books", async (req, res) => {
     console.log("current_user: ", req.currentUser);
     try {
-        books = await BookModel.find({}).populate("authors").populate("categories").exec();
+        books = await BookModel.find({}).populate("author").populate("categories").exec();
         res.status(200).json(books);
     } catch (error) {
-        res.status(200).json(error);
+        res.status(400).json(error);
     }
 });
 
 //get certain book with populate
 router.get("/books/:id", async (req, res) => {
     try {
-        book = await BookModel.findById(req.params.id).populate("authors").populate("categories").exec();
+        book = await BookModel.findById(req.params.id).populate("author").populate("categories").exec();
         res.status(200).json(book);
     } catch (error) {
-        res.status(200).json(error);
+        res.status(400).json(error);
     }
 });
 
 //add new book and add the book to authors books
 router.post("/books", async (req, res) => {
-    const { name, authors, categories } = req.body;
-    if (!name || !authors || !categories) res.status(400).send("bad request");
+    const { name, author, categories } = req.body;
+    if (!name || !author || !categories) return res.status(400).send("bad request");
     const book = new BookModel({
         name,
-        authors,
+        author,
         categories,
     });
     try {
         await book.save()
-        await AuthorModel.updateMany({ _id: { $in: authors } }, { $push: { books: book._id }})
-        await CategoryModel.updateMany({ _id: { $in: categories } }, { $push: { books: book._id } })
+        // await CategoryModel.updateMany({ _id: { $in: categories } }, { $push: { books: book._id } })
         res.status(200).send(book);
     } catch (error) {
         return res.status(400).send(error);
     }
-    // authors.forEach((author) => {
-    //     AuthorModel.findById(author, (err, author) => {
-    //         author.books.push(book._id);
-    //         author.save((err, author) => {
-    //             if (err) res.status(400).send(err);
-    //         });
-    //     });
-    // });
-    // categories.forEach((cat) => {
-    //     debugger
-    //     CategoryModel.findById(cat, (err, cat) => {
-    //         cat.books.push(book._id);
-    //         cat.save((err, cat) => {
-    //             if (err) res.status(400).send(err);
-    //         });
-    //     });
-    // });
-    // });
 });
 
 //edit book
 router.patch("/books/:id", (req, res) => {
-    const { name, authors, categories } = req.body;
-    if (!name || !authors || !categories) res.status(400).send("bad request");
-
-    BookModel.findById(req.params.id)
-        .then((book) => {
-            book.name = name;
-            book.authors = authors;
-            book.categories = categories;
-            book.save()
-                .then((book) => res.status(200).json(book))
-                .catch((err) => res.status(400).send(err));
+    const { name, author, categories } = req.body;
+    if (!name || !author || !categories) return res.status(400).send("bad request");
+    const modifiedBook = {
+        name,
+        author,
+        categories
+    }
+    BookModel.findByIdAndUpdate(req.params.id, modifiedBook, { new: true })
+        .then(book => {
+            res.status(200).json(book)
+        }).catch(err => {
+            res.status(400).send(err)
         })
-        .catch((err) => res.status(400).send(err));
+    // BookModel.findById(req.params.id)
+    //     .then((book) => {
+    //         book.name = name;
+    //         book.authors = authors;
+    //         book.categories = categories;
+    //         book.save()
+    //             .then((book) => res.status(200).json(book))
+    //             .catch((err) => res.status(400).send(err));
+    //     })
+    //     .catch((err) => res.status(400).send(err));
 });
 
 //delete book
@@ -89,17 +80,17 @@ router.delete("/books/:id", (req, res) => {
 //Get all authors with populate
 router.get("/authors", async (req, res) => {
     try {
-        authors = await AuthorModel.find({}).populate("books").exec();
+        authors = await AuthorModel.find({});
         res.status(200).json(authors);
     } catch (error) {
-        res.status(200).json(error);
+        res.status(500).json(error);
     }
 });
 
 //get certain author with populate
 router.get("/authors/:id", async (req, res) => {
     try {
-        author = await AuthorModel.findById(req.params.id).populate("books").exec();
+        author = await AuthorModel.findById(req.params.id);
         res.status(200).json(author);
     } catch (error) {
         res.status(200).json(error);
@@ -109,7 +100,7 @@ router.get("/authors/:id", async (req, res) => {
 //add new author
 router.post("/authors", (req, res) => {
     const { firstname, lastname, dob } = req.body;
-    if (!firstname || !lastname || !dob) res.status(400).send("bad request");
+    if (!firstname || !lastname || !dob) return res.status(400).send("bad request");
 
     const author = new AuthorModel({
         firstname,
@@ -124,7 +115,7 @@ router.post("/authors", (req, res) => {
     //edit author
     router.patch("/authors/:id", (req, res) => {
         const { firstname, lastname, dob } = req.body;
-        if (!firstname || !lastname || !dob) res.status(400).send("bad request");
+        if (!firstname || !lastname || !dob) return res.status(400).send("bad request");
 
         AuthorModel.findById(req.params.id)
             .then(author => {
