@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const BookModel = require('../models/Book')
+
 const schema = new mongoose.Schema({
     firstname: { type: String, required: true, minlength: 3, maxlength: 15 },
     lastname: { type: String, required: true, minlength: 3, maxlength: 14 },
@@ -14,7 +14,7 @@ const schema = new mongoose.Schema({
 
 schema.pre('findOneAndDelete', function (next) {
     const author_id = this.getQuery()._id
-        
+    const BookModel = mongoose.model('Book')
     BookModel.deleteMany({"authors": author_id},(err, books)=>{
         if (err) next(err)
         next()
@@ -23,3 +23,5 @@ schema.pre('findOneAndDelete', function (next) {
 
 const Author = mongoose.model('Author', schema);
 module.exports = Author;
+
+// const BookModel = require('./Book')
