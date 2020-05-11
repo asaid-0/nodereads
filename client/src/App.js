@@ -21,7 +21,7 @@ function App() {
 
 
         <Route exact path="/books" component={Books}/>
-
+        <Route exact path="/books/:bookId" component={Book} />
 
         <Route exact path="/authors" component={Authors}/>
 

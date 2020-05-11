@@ -164,8 +164,21 @@ router.get("/categories", async (req, res) => {
 router.get("/categories/:id", async (req, res) => {
     try {
         const { params: { id } } = req
-        books = await CategoryModel.findById(id).populate("books").exec();
-        res.send(books);
+        //books = await BookModel.find({categories: id}).populate("author").populate("categories").exec();
+        CategoryModel.findById(id, (err, category)=>{
+            if(err) res.send(err)
+            if(category){
+                BookModel.find({categories: category._id},(err, books)=>{
+                    if(err) res.send(err)
+                    if(books.length > 0)
+                        res.send(books)
+                    else
+                        res.send({"err":"No books in this category"})
+                })
+            } else {
+                res.send({"err":"Category doesn't exist"})
+            }
+        })
     } catch (error) {
         res.send(error);
     }
@@ -203,7 +216,7 @@ router.delete('/categories/:id', (req, res) => {
         if (err) res.send(err)
         try{
             BookModel.updateMany(
-                { _id : { $in : [category.books] } },
+                { cateogries : category._id },
                 { $pull:{ categories : { $in: [category._id]} } },
                 { multi: true }, (err) => {
                     if (err) res.send(err)
