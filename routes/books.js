@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
 
     BookModel.find({})
-        .populate('authors')
+        .populate('author')
         .then(books => res.status(200).json(books))
         .catch(err => res.status(400).send(err))
 })
@@ -22,7 +22,7 @@ router.get('/:id', (req, res) => {
     const { id } = req.params
     // res.send(`route get /books/${id}`);
     BookModel.findById(id)
-        .populate('authors')
+        .populate('author')
         .then(book => res.status(200).json(book))
         .catch(err => res.status(400).send(err))
 
@@ -32,31 +32,44 @@ router.get('/:id', (req, res) => {
 /////////////////////**** submit review, rate, add to shelve ****/////////////////////
 
 router.post('/:id', (req, res) => {
+
     const { type } = req.body;
     const { id } = req.params
     const { currentUser } = req
 
     /////// submit review
     if (type === 'review') {
+
         const { content } = req.body
-        if (!content) res.status(400).send('review content missing')
+        if (!content) return res.status(400).send('review content missing')
 
         const review = {
-            user: currentUser,
+            // user: currentUser,
+            user: "5eb4628d746f7c3026426730",
             content,
         }
 
         BookModel.findById(id)
-            .populate('authors')
+            .populate('author')
             .then(book => {
                 // check if user submitted review before
                 const oldReview = book.reviews.filter(review => review.user.toString() === currentUser._id)
                 if (!oldReview.length) {
+
                     book.reviews.push(review)
                     book.save()
-                        .then(book => res.status(200).json(book))
-                        .catch(err => res.status(400).send(err))
-                } else res.status(400).send('review already exist')
+                        .then(book => {
+                            console.log(book);
+
+                            res.status(200).json(book)
+                        })
+                        .catch(err => {
+                            console.log(err);
+
+                            res.status(400).send(err)
+                        })
+
+                } else return res.status(400).send('review already exist')
             })
             .catch(err => res.send(err))
     }
@@ -73,7 +86,7 @@ router.post('/:id', (req, res) => {
         }
 
         BookModel.findById(id)
-            .populate('authors')
+            .populate('author')
             .then(book => {
                 // check if user submitted rate before
                 const oldRate = book.rates.filter(rate => rate.user.toString() === currentUser._id)
@@ -98,15 +111,15 @@ router.post('/:id', (req, res) => {
     }
 
     //////// add to shelve
-    else if (type === 'shelf'){
+    else if (type === 'shelf') {
         const { shelf } = req.body
-        UserModel.findOneAndUpdate({ _id: currentUser._id, "books.book":id } ,
-            {"books.$.shelf": shelf},
-            {new:true},
-            (err) =>{
-                if(err) res.send(err)
+        UserModel.findOneAndUpdate({ _id: currentUser._id, "books.book": id },
+            { "books.$.shelf": shelf },
+            { new: true },
+            (err) => {
+                if (err) res.send(err)
                 res.status(200).json("Book added successfully to shelf")
-        })
+            })
     }
 })
 
@@ -122,7 +135,7 @@ router.patch('/:id', (req, res) => {
         const { reviewID, newContent } = req.body;
         if (!reviewID || !newContent) res.status(400).send('bad request')
         BookModel.findById(id)
-            .populate('authors')
+            .populate('author')
             .then(book => {
                 book.reviews.id(reviewID).content = newContent
                 book.save()
@@ -133,14 +146,14 @@ router.patch('/:id', (req, res) => {
     }
 
     ///// Edit shelve
-    else if (type === 'shelf'){
+    else if (type === 'shelf') {
         const { shelf } = req.body
-        UserModel.findOneAndUpdate({ _id: currentUser._id, "books.book":id } ,
-            {"books.$.shelf": shelf},
-            (err) =>{
-                if(err) res.send(err)
+        UserModel.findOneAndUpdate({ _id: currentUser._id, "books.book": id },
+            { "books.$.shelf": shelf },
+            (err) => {
+                if (err) res.send(err)
                 res.status(200).json("Book updated successfully to shelf")
-        })
+            })
     }
 
 })
@@ -153,7 +166,6 @@ router.delete('/:id', (req, res) => {
     if (type === 'review') {
         const { reviewID } = req.body
         BookModel.findById(id)
-            .populate('authors')
             .then(book => {
                 book.reviews.pull({ _id: reviewID, user: mongoose.Types.ObjectId(currentUser._id) })
                 book.save()
@@ -165,13 +177,13 @@ router.delete('/:id', (req, res) => {
     }
 
     // delete book from shelve
-    else if (type === 'shelf'){
-        UserModel.findOneAndDelete({ _id: currentUser._id} ,
-            { $pull: { "books" : { "book": id } } },
-            (err) =>{
-                if(err) res.send(err)
+    else if (type === 'shelf') {
+        UserModel.findOneAndDelete({ _id: currentUser._id },
+            { $pull: { "books": { "book": id } } },
+            (err) => {
+                if (err) res.send(err)
                 res.status(200).json("Book Deleted successfully from shelf")
-        })
+            })
     }
 })
 

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Dashboard from './components/Dashboard';
 import NavBar from './components/NavBar';
-
+import Book from "./components/Book";
 
 
 
@@ -23,6 +23,8 @@ function App() {
         <Route exact path="/books" >
           <h1> All books </h1>
         </Route>
+
+        <Route exact path="/books/:bookId" component={Book} />
 
         <Route exact path="/authors" >
           <h1> Authors </h1>
