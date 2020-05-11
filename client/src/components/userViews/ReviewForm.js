@@ -17,11 +17,13 @@ function ReviewForm(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post(`/books/${props.bookId}`, request)
+        axios.post(`http://localhost:5000/books/${props.bookId}`, request)
             .then(res => {
-                console.log(res.data);
-                setReview("");
-                props.updateReviewList(res.data);
+                // console.log(res.data.error);
+                if (!res.data.error) {
+                    setReview("");
+                    props.updateReviewList(res.data);
+                }else alert(res.data.error)
             })
             .catch(err => console.log(err))
 

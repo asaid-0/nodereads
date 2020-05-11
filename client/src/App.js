@@ -5,6 +5,7 @@ import Dashboard from './components/adminViews/Dashboard';
 
 import Home from './components/userViews/Home';
 import Books from './components/userViews/Books';
+import Book from './components/userViews/Book';
 import Authors from './components/userViews/Authors';
 import Categories from './components/userViews/Categories';
 

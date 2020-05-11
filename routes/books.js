@@ -53,7 +53,9 @@ router.post('/:id', (req, res) => {
             .populate('author')
             .then(book => {
                 // check if user submitted review before
-                const oldReview = book.reviews.filter(review => review.user.toString() === currentUser._id)
+                const oldReview = book.reviews.filter(review => review.user.toString() === "5eb4628d746f7c3026426730")//currentUser._id
+                // console.log(oldReview);
+
                 if (!oldReview.length) {
 
                     book.reviews.push(review)
@@ -69,7 +71,7 @@ router.post('/:id', (req, res) => {
                             res.status(400).send(err)
                         })
 
-                } else return res.status(400).send('review already exist')
+                } else return res.json({ error: 'review already exist' })
             })
             .catch(err => res.send(err))
     }
