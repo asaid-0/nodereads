@@ -1,8 +1,12 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
-import Dashboard from './components/Dashboard';
-import NavBar from './components/NavBar';
+import Dashboard from './components/adminViews/Dashboard';
+
+import Home from './components/userViews/Home';
+import Books from './components/userViews/Books';
+import Authors from './components/userViews/Authors';
+import Categories from './components/userViews/Categories';
 
 
 
@@ -11,29 +15,20 @@ function App() {
   return (
     <>
       <Router>
-        <NavBar />
-        <Route exact path="/home" >
-          <h1> Home </h1>
-        </Route>
+        <Route exact path="/home" component={Home}/>
 
-        <Route exact path="/" >
-          <h1> Landing Page </h1>
-        </Route>
+        <Route exact path="/" component={Home} />
 
-        <Route exact path="/books" >
-          <h1> All books </h1>
-        </Route>
 
-        <Route exact path="/authors" >
-          <h1> Authors </h1>
-        </Route>
+        <Route exact path="/books" component={Books}/>
 
-        <Route exact path="/categories" >
-          <h1> Categories </h1>
-        </Route>
-        <Route exact path="/admin" >
-          <Dashboard />
-        </Route>
+
+        <Route exact path="/authors" component={Authors}/>
+
+
+        <Route exact path="/categories" component={Categories}/>
+
+        <Route exact path="/admin" component={Dashboard}/>
       </Router>
     </>
   );
