@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ReviewForm from './ReviewForm';
 import Review from './Review';
+import WithUserHeaders from '../HOC/WithUserHeaders';
 
 function Book(props) {
 
@@ -44,4 +45,4 @@ function Book(props) {
     )
 }
 
-export default Book;
+export default WithUserHeaders(Book);
