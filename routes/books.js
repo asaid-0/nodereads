@@ -59,9 +59,9 @@ router.post('/:id', (req, res) => {
                     book.reviews.push(review)
                     book.save()
                         .then(book => {
-                            console.log(book);
+                            // console.log(book);
 
-                            res.status(200).json(book)
+                            res.status(200).json(book.reviews.slice(-1)[0])
                         })
                         .catch(err => {
                             console.log(err);

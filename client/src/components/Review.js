@@ -1,45 +1,19 @@
-import React, { useState } from 'react'
-import axios from 'axios';
+import React from 'react'
+import Card from 'react-bootstrap/Card'
 
 function Review(props) {
-
-    const [review, setReview] = useState("");
-
-    const handleChange = (e) => {
-        setReview(e.target.value);
-    }
-
-    const request = {
-        "type": "review",
-        "content": review,
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        axios.post(`/books/${props.bookId}`, request)
-            .then(res => {
-                console.log(res.data);
-                setReview("");
-            })
-            .catch(err => console.log(err))
-
-    }
-
     return (
         <div>
-            reviews
-            <form onSubmit={handleSubmit} >
-                <div >
-                    <textarea placeholder="Review" rows="4" cols="50" required
-                        onChange={handleChange}
-                        value={review}
-                    />
-                </div>
-                <div className="comment-form-actions">
-                    <button type="submit">Submit review</button>
-                </div>
-            </form>
+            <Card style={{ width: '18rem' }}>
+                <Card.Body>
+                    <Card.Title>
+                            Review
+                    </Card.Title>
+                    <Card.Text>
+                        { props.reviewData.content }
+                    </Card.Text>
+                </Card.Body>
+            </Card>
         </div>
     )
 }

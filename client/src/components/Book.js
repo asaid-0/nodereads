@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import ReviewForm from './ReviewForm';
 import Review from './Review';
+
 function Book(props) {
 
     const [book, setBook] = useState({});
+    const [reviewList, setReviewList] = useState([])
 
     const { match: { params: { bookId } } } = props;
+
+    const updateReviewList = (review) => {
+        setReviewList(reviewList.concat(review));
+    }
 
     useEffect(() => {
         axios.get(`/books/${bookId}`)
             .then(res => {
-                // console.log(res.data);
                 setBook(res.data);
+                // console.log(res.data.reviews);
+                setReviewList(res.data.reviews);
             })
             .catch(err => console.log(err))
     }, [bookId])
@@ -23,7 +31,14 @@ function Book(props) {
                 <img src={book.photo ? `/${book.photo}` : ''} alt="Cover" />
             </div>
             <div>
-                <Review bookId={bookId}/>
+                <ReviewForm bookId={bookId} updateReviewList={updateReviewList}/>
+            </div>
+            <div>
+                {
+                    reviewList.map(review => {
+                        return <Review reviewData={review} key={review._id}/>
+                    })
+                }
             </div>
         </>
     )
