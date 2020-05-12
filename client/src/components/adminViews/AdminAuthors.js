@@ -21,6 +21,7 @@ function AdminAuthors() {
     const deleteAuthor = (id)=>{
         axios.delete(`/admin/authors/${id}`)
         .then(res=>{
+            setAuthors(authors.filter(auther=>auther._id!==id))
             console.log(
                 res.data.firstname + "deleted"
             );
