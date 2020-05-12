@@ -9,7 +9,7 @@ import Authors from './components/userViews/Authors';
 import Categories from './components/userViews/Categories';
 import AdminBooks from './components/adminViews/AdminBooks';
 import AdminAuthors from './components/adminViews/AdminAuthors';
-import AddAuthor from './components/adminViews/AddAuthor';
+import AuthorForm from './components/adminViews/AuthorForm';
 
 
 
@@ -33,7 +33,9 @@ function App() {
         <Route exact path="/admin" component={Dashboard}/>
         <Route exact path="/admin/books" component={AdminBooks}/>
         <Route exact path="/admin/authors" component={AdminAuthors}/>
-        <Route exact path="/admin/authors/add" component={AddAuthor}/>
+        <Route exact path="/admin/authors/add" component={AuthorForm}/>
+        <Route exact path="/admin/authors/edit/:authorId" component={AuthorForm}/>
+
       </Router>
     </>
   );

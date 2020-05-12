@@ -1,16 +1,26 @@
 import React, { useState } from 'react'
 import { Container, Row, Form, Button } from 'react-bootstrap';
-import DatePicker from 'react-date-picker';
-
+import DatePicker,{registerLocale} from 'react-date-picker';
 import axios from 'axios'
 
-function AddAuthor() {
+
+function AuthorForm(props) {
     const [author, setAuthor] = useState({
         firstname: "",
         lastname: "",
         dob: new Date(),
         authorImage: ""
     })
+    const [editingId,setEditingId]= useState("")
+
+
+    useEffect(()=>{
+        const { match: { params: { authorId } } } = props
+        if (authorId){
+            setEditingId(authorId);
+            axios.get(`/admin/authors/${authorId}`).then(res=> setAuthor(res.data)).catch(err=>console.log(err))
+        }
+    },[])
 
     const handleChange = event => {
         const { name, value } = event.target
@@ -34,8 +44,13 @@ function AddAuthor() {
         formData.append("lastname", author.lastname)
         formData.append("dob", author.dob)
         formData.append("authorImage", author.authorImage)
-
-        axios.post('/admin/authors', formData).then(res => {console.log(res)}).catch(err => { console.log(err) })
+        if(editingId){
+            axios.patch(`/admin/authors/${editingId}`, formData)
+            .then(res => {props.history.push('/admin/authors')})
+            .catch(err => { console.log(err) })
+        }else{
+            axios.post('/admin/authors', formData).then(res => {props.history.push('/admin/authors')}).catch(err => { console.log(err) })
+        }
     }
     return (
         <Container fluid>
@@ -50,6 +65,8 @@ function AddAuthor() {
                         <Form.Control type="text" placeholder="Enter Last Name" name="lastname" value={author.lastname} onChange={handleChange} />
                     </Form.Group>
                     <Form.Group controlId="formImage">
+                        <Form.Label>Author Image</Form.Label>
+                        {author.photo ? <img style={{ width: 100, height: 100 }} src={`/${author.photo}`} alt="author" />:""}
                         <Form.File
                             id="authorImage"
                             label="Upload Author Image"
@@ -59,8 +76,9 @@ function AddAuthor() {
                         />
                     </Form.Group>
                     <Form.Group controlId="formDOB">
+                        <Form.Label>Date of Birth</Form.Label>
                         <DatePicker
-                            selected={author.dob}
+                            value={new Date(author.dob)}
                             onChange={handleDateChange}
                             name="dob"
                             dateFormat="MM/dd/yyyy"
@@ -76,4 +94,4 @@ function AddAuthor() {
     )
 }
 
-export default AddAuthor
+export default AuthorForm
