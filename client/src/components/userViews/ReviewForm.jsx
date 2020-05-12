@@ -9,7 +9,7 @@ function ReviewForm(props) {
         setReview(e.target.value);
     }
 
-    const request = {
+    const payload = {
         "type": "review",
         "content": review,
     }
@@ -17,7 +17,7 @@ function ReviewForm(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post(`http://localhost:5000/books/${props.bookId}`, request)
+        axios.post(`/books/${props.bookId}`, payload)
             .then(res => {
                 // console.log(res.data.error);
                 if (!res.data.error) {
@@ -33,7 +33,7 @@ function ReviewForm(props) {
         <div>
             <form onSubmit={handleSubmit} >
                 <div >
-                    <textarea placeholder="Review" rows="4" cols="50" required
+                    <textarea placeholder="Review" rows="4" cols="50"
                         onChange={handleChange}
                         value={review}
                     />

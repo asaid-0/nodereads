@@ -23,6 +23,7 @@ router.get('/:id', (req, res) => {
     // res.send(`route get /books/${id}`);
     BookModel.findById(id)
         .populate('author')
+        .populate('reviews.user')
         .then(book => res.status(200).json(book))
         .catch(err => res.status(400).send(err))
 
@@ -41,7 +42,7 @@ router.post('/:id', (req, res) => {
     if (type === 'review') {
 
         const { content } = req.body
-        if (!content) return res.status(400).send('review content missing')
+        if (!content.trim()) return res.json({error:'review content required'})
 
         const review = {
             // user: currentUser,
@@ -50,10 +51,10 @@ router.post('/:id', (req, res) => {
         }
 
         BookModel.findById(id)
-            .populate('author')
+            .populate('reviews.user')
             .then(book => {
                 // check if user submitted review before
-                const oldReview = book.reviews.filter(review => review.user.toString() === "5eb4628d746f7c3026426730")//currentUser._id
+                const oldReview = book.reviews.filter(review => review.user._id.toString() === "5eb4628d746f7c3026426730")//currentUser._id
                 // console.log(oldReview);
 
                 if (!oldReview.length) {
@@ -135,13 +136,13 @@ router.patch('/:id', (req, res) => {
     ///// Edit review
     if (type === 'review') {
         const { reviewID, newContent } = req.body;
-        if (!reviewID || !newContent) res.status(400).send('bad request')
+        if (!reviewID || !newContent.trim()) return res.json({error:'review content required'})
         BookModel.findById(id)
-            .populate('author')
+            .populate('reviews.user')
             .then(book => {
                 book.reviews.id(reviewID).content = newContent
                 book.save()
-                    .then(book => res.status(200).json(book))
+                    .then(book => res.status(200).json(book.reviews.id(reviewID)))
                     .catch(err => res.status(400).send(err))
             })
             .catch(err => res.status(400).send(err))
