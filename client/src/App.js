@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import Dashboard from './components/adminViews/Dashboard';
-import Book from './components/Book';
 import Home from './components/userViews/Home';
 import Books from './components/userViews/Books';
 import Book from './components/userViews/Book';
