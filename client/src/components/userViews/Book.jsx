@@ -11,8 +11,8 @@ function Book(props) {
 
     const { match: { params: { bookId } } } = props;
 
-    const updateReviewList = (review) => {
-        setReviewList(reviewList.concat(review));
+    const updateReviewList = (newReviewList) => {
+        setReviewList(newReviewList);
     }
 
     useEffect(() => {
@@ -32,13 +32,15 @@ function Book(props) {
                 <img src={book.photo ? `/${book.photo}` : ''} alt="Cover" />
             </div>
             <div>
-                <ReviewForm bookId={bookId} updateReviewList={updateReviewList}/>
+                <ReviewForm bookId={bookId} updateReviewList={updateReviewList} />
             </div>
             <div>
                 {
-                    reviewList.map(review => {
-                        return <Review bookId={bookId} review={review} key={review._id}/>
+
+                    reviewList.length ? reviewList.map(review => {
+                        return <Review bookId={bookId} updateReviewList={updateReviewList} review={review} key={review._id} />
                     })
+                        : <h3>No reviews</h3>
                 }
             </div>
         </>

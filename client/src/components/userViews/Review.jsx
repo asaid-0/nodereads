@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
-import ReviewEditForm from './ReviewEditForm'
+import ReviewForm from './ReviewForm'
+import axios from 'axios'
 
 
 function Review(props) {
@@ -16,11 +17,23 @@ function Review(props) {
         setReview({ ...newReview, isInEditMode: !review.isInEditMode });
     }
 
+    const deletReview = (reviewID) => {
+        const payload = {
+            "type": "review",
+            "reviewID": reviewID
+        }
+        axios.delete(`http://localhost:5000/books/${props.bookId}`, { data: payload })
+            .then(res => {
+                props.updateReviewList(res.data);
+            })
+            .catch(err => console.log(err))
+    }
+
     return (
         <div>
             {review.isInEditMode ?
                 <>
-                    <ReviewEditForm updateReview={updateReview} bookId={props.bookId} review={review} />
+                    <ReviewForm updateReview={updateReview} bookId={props.bookId} review={review} />
                     <Button onClick={changeMode} variant="danger">X</Button>
                 </>
                 :
@@ -32,6 +45,7 @@ function Review(props) {
                         <Card.Text>
                             {review.content}
                             <Button onClick={changeMode} variant="info">Edit</Button>
+                            <Button onClick={() => deletReview(review._id)} variant="danger">Delete</Button>
                         </Card.Text>
                     </Card.Body>
                 </Card>

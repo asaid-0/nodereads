@@ -42,7 +42,7 @@ router.post('/:id', (req, res) => {
     if (type === 'review') {
 
         const { content } = req.body
-        if (!content.trim()) return res.json({error:'review content required'})
+        if (!content.trim()) return res.json({ error: 'review content required' })
 
         const review = {
             // user: currentUser,
@@ -64,7 +64,7 @@ router.post('/:id', (req, res) => {
                         .then(book => {
                             // console.log(book);
 
-                            res.status(200).json(book.reviews.slice(-1)[0])
+                            res.status(200).json(book.reviews)
                         })
                         .catch(err => {
                             console.log(err);
@@ -136,7 +136,7 @@ router.patch('/:id', (req, res) => {
     ///// Edit review
     if (type === 'review') {
         const { reviewID, newContent } = req.body;
-        if (!reviewID || !newContent.trim()) return res.json({error:'review content required'})
+        if (!reviewID || !newContent.trim()) return res.json({ error: 'review content required' })
         BookModel.findById(id)
             .populate('reviews.user')
             .then(book => {
@@ -169,10 +169,11 @@ router.delete('/:id', (req, res) => {
     if (type === 'review') {
         const { reviewID } = req.body
         BookModel.findById(id)
+            .populate('reviews.user')
             .then(book => {
-                book.reviews.pull({ _id: reviewID, user: mongoose.Types.ObjectId(currentUser._id) })
+                book.reviews.pull({ _id: reviewID, user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730") })//currentUser._id
                 book.save()
-                    .then(book => res.json(book))
+                    .then(book => res.json(book.reviews))
                     .catch(err => res.status(400).send(err))
 
             })
