@@ -49,7 +49,7 @@ function AuthorForm(props) {
             .then(res => {props.history.push('/admin/authors')})
             .catch(err => { console.log(err) })
         }else{
-            axios.post('/admin/authors', formData).then(res => {console.log(res)}).catch(err => { console.log(err) })
+            axios.post('/admin/authors', formData).then(res => {props.history.push('/admin/authors')}).catch(err => { console.log(err) })
         }
     }
     return (
