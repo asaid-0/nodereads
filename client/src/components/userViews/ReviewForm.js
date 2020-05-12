@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 
-function Review(props) {
+function ReviewForm(props) {
 
     const [review, setReview] = useState("");
 
@@ -17,10 +17,13 @@ function Review(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post(`/books/${props.bookId}`, request)
+        axios.post(`http://localhost:5000/books/${props.bookId}`, request)
             .then(res => {
-                console.log(res.data);
-                setReview("");
+                // console.log(res.data.error);
+                if (!res.data.error) {
+                    setReview("");
+                    props.updateReviewList(res.data);
+                }else alert(res.data.error)
             })
             .catch(err => console.log(err))
 
@@ -28,7 +31,6 @@ function Review(props) {
 
     return (
         <div>
-            reviews
             <form onSubmit={handleSubmit} >
                 <div >
                     <textarea placeholder="Review" rows="4" cols="50" required
@@ -44,4 +46,4 @@ function Review(props) {
     )
 }
 
-export default Review
+export default ReviewForm
