@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Row, Form, Button } from 'react-bootstrap';
-import DatePicker,{registerLocale} from 'react-date-picker';
+import DatePicker, { registerLocale } from 'react-date-picker';
 import axios from 'axios'
 
 
@@ -11,16 +11,16 @@ function AuthorForm(props) {
         dob: new Date(),
         authorImage: ""
     })
-    const [editingId,setEditingId]= useState("")
+    const [editingId, setEditingId] = useState("")
 
 
-    useEffect(()=>{
+    useEffect(() => {
         const { match: { params: { authorId } } } = props
-        if (authorId){
+        if (authorId) {
             setEditingId(authorId);
-            axios.get(`/admin/authors/${authorId}`).then(res=> setAuthor(res.data)).catch(err=>console.log(err))
+            axios.get(`/admin/authors/${authorId}`).then(res => setAuthor(res.data)).catch(err => console.log(err))
         }
-    },[])
+    }, [])
 
     const handleChange = event => {
         const { name, value } = event.target
@@ -44,12 +44,12 @@ function AuthorForm(props) {
         formData.append("lastname", author.lastname)
         formData.append("dob", author.dob)
         formData.append("authorImage", author.authorImage)
-        if(editingId){
+        if (editingId) {
             axios.patch(`/admin/authors/${editingId}`, formData)
-            .then(res => {props.history.push('/admin/authors')})
-            .catch(err => { console.log(err) })
-        }else{
-            axios.post('/admin/authors', formData).then(res => {props.history.push('/admin/authors')}).catch(err => { console.log(err) })
+                .then(res => { props.history.push('/admin/authors') })
+                .catch(err => { console.log(err) })
+        } else {
+            axios.post('/admin/authors', formData).then(res => { props.history.push('/admin/authors') }).catch(err => { console.log(err) })
         }
     }
     return (
@@ -66,7 +66,7 @@ function AuthorForm(props) {
                     </Form.Group>
                     <Form.Group controlId="formImage">
                         <Form.Label>Author Image</Form.Label>
-                        {author.photo ? <img style={{ width: 100, height: 100 }} src={`/${author.photo}`} alt="author" />:""}
+                        {author.photo ? <img style={{ width: 100, height: 100 }} src={`/${author.photo}`} alt="author" /> : ""}
                         <Form.File
                             id="authorImage"
                             label="Upload Author Image"
