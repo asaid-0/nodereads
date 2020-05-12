@@ -37,7 +37,7 @@ function Book(props) {
             <div>
                 {
                     reviewList.map(review => {
-                        return <Review reviewData={review} key={review._id}/>
+                        return <Review bookId={bookId} review={review} key={review._id}/>
                     })
                 }
             </div>
