@@ -54,10 +54,10 @@ router.post('/:id', (req, res) => {
             .populate('reviews.user')
             .then(book => {
                 // check if user submitted review before
-                const oldReview = book.reviews.filter(review => review.user._id.toString() === "5eb4628d746f7c3026426730")//currentUser._id
+                const oldReview = book.reviews.find(review => review.user._id.toString() === "5eb4628d746f7c3026426730")//currentUser._id
                 // console.log(oldReview);
 
-                if (!oldReview.length) {
+                if (!oldReview) {
 
                     book.reviews.push(review)
                     book.save()
@@ -84,7 +84,8 @@ router.post('/:id', (req, res) => {
         if (!rate || typeof (rate) != 'number') res.status(400).send('Invalid rate')
 
         const userRate = {
-            user: currentUser,
+            // user: currentUser,
+            user: "5eb4628d746f7c3026426730",
             rate,
         }
 
@@ -92,20 +93,21 @@ router.post('/:id', (req, res) => {
             .populate('author')
             .then(book => {
                 // check if user submitted rate before
-                const oldRate = book.rates.filter(rate => rate.user.toString() === currentUser._id)
+                const oldRate = book.rates.find(rate => rate.user.toString() === "5eb4628d746f7c3026426730")//currentUser._id
 
-                if (!oldRate.length) {
+                if (!oldRate) {
                     book.rates.push(userRate)
                     book.save()
-                        .then(book => res.status(200).json(book))
+                        .then(book => res.status(200).json(book.rates.slice(-1)[0]))
                         .catch(err => res.status(400).send(err))
                 }
                 // Edit rate
                 else {
 
-                    book.rates.id(oldRate[0]._id).rate = rate;
+                    const newRate = book.rates.id(oldRate._id);
+                    newRate.rate = rate
                     book.save()
-                        .then(book => res.status(200).json(book))
+                        .then(book => res.status(200).json(newRate))
                         .catch(err => res.status(400).send(err))
 
                 }

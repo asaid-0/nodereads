@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Form, Button } from 'react-bootstrap';
-import DatePicker, { registerLocale } from 'react-date-picker';
+import DatePicker from 'react-date-picker';
 import axios from 'axios'
 
 

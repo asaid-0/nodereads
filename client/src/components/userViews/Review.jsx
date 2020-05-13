@@ -40,7 +40,7 @@ function Review(props) {
                 <Card style={{ width: '18rem' }}>
                     <Card.Body>
                         <Card.Title>
-                            Review
+                            {`${review.user.firstname} ${review.user.lastname}`}
                     </Card.Title>
                         <Card.Text>
                             {review.content}
