@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Form, Button } from 'react-bootstrap';
 import axios from 'axios'
-import 'react-widgets/dist/css/react-widgets.css';
 
 function BookForm(props) {
     const [book, setBook] = useState({
@@ -92,7 +91,7 @@ function BookForm(props) {
 
                     <Form.Group controlId="exampleForm.ControlSelect2">
                         <Form.Label>Category</Form.Label>
-                        <Form.Control as="select"  as="select" name="categories" value={book.categories} onChange={handleCategoryChange}>
+                        <Form.Control as="select" name="categories" value={book.categories} onChange={handleCategoryChange}>
                             {categories.map((Category,index)=>{
                                 return(
                                 <option value={Category._id} key={index}>{Category.name}</option>
