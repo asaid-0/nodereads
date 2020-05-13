@@ -23,6 +23,7 @@ router.get('/:id', (req, res) => {
     // res.send(`route get /books/${id}`);
     BookModel.findById(id)
         .populate('author')
+        .populate('reviews.user')
         .then(book => res.status(200).json(book))
         .catch(err => res.status(400).send(err))
 
@@ -41,7 +42,7 @@ router.post('/:id', (req, res) => {
     if (type === 'review') {
 
         const { content } = req.body
-        if (!content) return res.status(400).send('review content missing')
+        if (!content.trim()) return res.json({ error: 'review content required' })
 
         const review = {
             // user: currentUser,
@@ -50,20 +51,20 @@ router.post('/:id', (req, res) => {
         }
 
         BookModel.findById(id)
-            .populate('author')
+            .populate('reviews.user')
             .then(book => {
                 // check if user submitted review before
-                const oldReview = book.reviews.filter(review => review.user.toString() === "5eb4628d746f7c3026426730")//currentUser._id
+                const oldReview = book.reviews.find(review => review.user._id.toString() === "5eb4628d746f7c3026426730")//currentUser._id
                 // console.log(oldReview);
 
-                if (!oldReview.length) {
+                if (!oldReview) {
 
                     book.reviews.push(review)
                     book.save()
                         .then(book => {
                             // console.log(book);
 
-                            res.status(200).json(book.reviews.slice(-1)[0])
+                            res.status(200).json(book.reviews)
                         })
                         .catch(err => {
                             console.log(err);
@@ -83,7 +84,8 @@ router.post('/:id', (req, res) => {
         if (!rate || typeof (rate) != 'number') res.status(400).send('Invalid rate')
 
         const userRate = {
-            user: currentUser,
+            // user: currentUser,
+            user: "5eb4628d746f7c3026426730",
             rate,
         }
 
@@ -91,20 +93,21 @@ router.post('/:id', (req, res) => {
             .populate('author')
             .then(book => {
                 // check if user submitted rate before
-                const oldRate = book.rates.filter(rate => rate.user.toString() === currentUser._id)
+                const oldRate = book.rates.find(rate => rate.user.toString() === "5eb4628d746f7c3026426730")//currentUser._id
 
-                if (!oldRate.length) {
+                if (!oldRate) {
                     book.rates.push(userRate)
                     book.save()
-                        .then(book => res.status(200).json(book))
+                        .then(book => res.status(200).json(book.rates.slice(-1)[0]))
                         .catch(err => res.status(400).send(err))
                 }
                 // Edit rate
                 else {
 
-                    book.rates.id(oldRate[0]._id).rate = rate;
+                    const newRate = book.rates.id(oldRate._id);
+                    newRate.rate = rate
                     book.save()
-                        .then(book => res.status(200).json(book))
+                        .then(book => res.status(200).json(newRate))
                         .catch(err => res.status(400).send(err))
 
                 }
@@ -135,13 +138,13 @@ router.patch('/:id', (req, res) => {
     ///// Edit review
     if (type === 'review') {
         const { reviewID, newContent } = req.body;
-        if (!reviewID || !newContent) res.status(400).send('bad request')
+        if (!reviewID || !newContent.trim()) return res.json({ error: 'review content required' })
         BookModel.findById(id)
-            .populate('author')
+            .populate('reviews.user')
             .then(book => {
                 book.reviews.id(reviewID).content = newContent
                 book.save()
-                    .then(book => res.status(200).json(book))
+                    .then(book => res.status(200).json(book.reviews.id(reviewID)))
                     .catch(err => res.status(400).send(err))
             })
             .catch(err => res.status(400).send(err))
@@ -168,10 +171,11 @@ router.delete('/:id', (req, res) => {
     if (type === 'review') {
         const { reviewID } = req.body
         BookModel.findById(id)
+            .populate('reviews.user')
             .then(book => {
-                book.reviews.pull({ _id: reviewID, user: mongoose.Types.ObjectId(currentUser._id) })
+                book.reviews.pull({ _id: reviewID, user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730") })//currentUser._id
                 book.save()
-                    .then(book => res.json(book))
+                    .then(book => res.json(book.reviews))
                     .catch(err => res.status(400).send(err))
 
             })
