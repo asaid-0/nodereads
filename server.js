@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const booksRouter = require('./routes/books');
-const adminRoute= require('./routes/admins')
+const adminRoute = require('./routes/admins')
 const homeRouter = require('./routes/home');
 const { auth, admin } = require('./middleware/auth');
 const userRoutes = require('./routes/user');
@@ -35,7 +35,7 @@ app.use(express.json())
 app.use('/admin', adminRoute);
 app.use('/books', booksRouter);
 app.use('/authors', authorsRouter);
-app.use('/home', auth, homeRouter);
+app.use('/home', homeRouter);
 app.use('/', userRoutes);
 
 

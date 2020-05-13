@@ -3,6 +3,7 @@ const router = express.Router();
 const Book = require('../models/Book');
 const Author = require('../models/Author');
 const User = require('../models/User');
+const mongoose = require('mongoose');
 
 
 // @route   GET /
@@ -33,9 +34,10 @@ router.get('/books', async (req, res) => {
         const { filter, offset, limit } = req.query;
         const beginIndex = limit * (offset - 1);
         const endIndex = parseInt(limit * (offset - 1)) + parseInt(limit);
-        // console.log({ beginIndex, endIndex });
-        const { books } = await User.findById(req.currentUser._id).populate('books.book');
-        const userBooks = books;
+        // const { books } = await User.findById(req.currentUser._id).populate('books.book');
+        const { books } = await User.findById(mongoose.Types.ObjectId("5eb3ae2e2c6ca55e7142efde"))
+            .populate('books.book');
+        let userBooks = books; // Question
         if (filter) {
             userBooks = books.filter((book) => {
                 return book.shelf === filter;
