@@ -1,13 +1,62 @@
 import React, {useState, useEffect} from 'react'
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col ,Table} from 'react-bootstrap';
+import BookRow from './BookRow'
+import axios from 'axios'
 
 function AdminBooks() {
-    return (
-        <Container fluid>
-            <Row>
-                <Col sm="12" md={{ size: 6, offset: 3 }}><h1>Admin books</h1></Col>
-            </Row>
-        </Container>)
+        const [books, setBooks] = useState([]);
+
+        ////// add sppinner
+        useEffect(() => {
+            axios.get('/admin/books')
+                .then(res => {
+                    setBooks(res.data)
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }, [])
+    
+    
+        const deleteBook = (id)=>{
+            axios.delete(`/admin/books/${id}`)
+            .then(res=>{
+                setBooks(books.filter(book=>book._id!==id))
+                console.log(
+                    res.data.name + "deleted"
+                );
+            })
+            .catch(err=>console.log(err))
+        }
+    
+        return (
+            <Container fluid>
+                <Row>
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Category</th>
+                                <th>Photo</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {books.length > 0 ?
+                                books.map((book, index) => {
+                                    return <BookRow book={book} index={index} key={index} deleteBook={deleteBook} />
+                                }) :
+                                <tr>
+                                    <td colSpan={6}>No Books</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </Table>
+                </Row>
+            </Container>
+        )
 }
 
 export default AdminBooks
