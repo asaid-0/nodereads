@@ -31,21 +31,13 @@ function App() {
 
         <Route exact path="/categories" component={Categories} />
 
-<<<<<<< HEAD
         <Route exact path="/admin" component={Dashboard} />
         <Route exact path="/admin/books" component={AdminBooks} />
+        <Route exact path="/admin/books/add" component={BookForm} />
+        <Route exact path="/admin/books/edit/:bookId" component={BookForm} />
         <Route exact path="/admin/authors" component={AdminAuthors} />
         <Route exact path="/admin/authors/add" component={AuthorForm} />
         <Route exact path="/admin/authors/edit/:authorId" component={AuthorForm} />
-=======
-        <Route exact path="/admin" component={Dashboard}/>
-        <Route exact path="/admin/books" component={AdminBooks}/>
-        <Route exact path="/admin/books/add" component={BookForm}/>
-        <Route exact path="/admin/books/edit/:bookId" component={BookForm}/>
-        <Route exact path="/admin/authors" component={AdminAuthors}/>
-        <Route exact path="/admin/authors/add" component={AuthorForm}/>
-        <Route exact path="/admin/authors/edit/:authorId" component={AuthorForm}/>
->>>>>>> f786f270b89b72185a191b79548fd3244264bcb9
 
       </Router>
     </>
