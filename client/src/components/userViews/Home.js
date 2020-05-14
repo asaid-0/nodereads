@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from './Home.module.css';
-import { Row, Col } from 'react-bootstrap';
+import { Layout, Spin, Row, Col, Pagination } from 'antd';
 import 'antd/dist/antd.css';
-import { Layout, Spin } from 'antd';
 import WithUserHeaders from '../../HOC/WithUserHeaders';
+import styles from './Home.module.css';
 import BookCard from './BookCard';
 import SideNav from './SideNav';
-const { Sider, Header, Content } = Layout;
+
+const { Sider, Header, Content, Footer } = Layout;
+
 
 
 
@@ -15,41 +16,56 @@ function Home() {
     const [books, setBooks] = useState([]);
     const [foundBooks, setFoundBooks] = useState(true);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
 
-    const filterShelf = (shelf) => {
+    const getBooks = (shelf, page) => {
+        return shelf ?
+            axios.get(`http://localhost:5000/home/books?filter=${shelf}&limit=2&offset=${page}`) :
+            axios.get(`http://localhost:5000/home/books?limit=4&offset=${page}`);
+    }
+
+
+    useEffect(() => {
+        getBooks(0, page).then(res => {
+            if (res.data.length) {
+                setBooks(res.data);
+                setLoading(false);
+            }
+            else {
+                setFoundBooks(false);
+                setLoading(false);
+            }
+        })
+            .catch(err => console.log(err));
+    }, [page]);
+
+
+    const filterShelf = async (shelf) => {
+        setLoading(true);
+        setPage(1);
+        let res = [];
+        console.log(shelf);
         if (shelf != "all") {
-            setLoading(true);
-            axios.get(`http://localhost:5000/home/books?filter=${shelf}&limit=2&offset=1`)
-                .then(res => {
-                    console.log(res.data);
-                    setBooks(res.data);
-                    setLoading(false);
-                })
-                .catch(err => console.log(err));
+            res = await getBooks(shelf, page);
+            console.log(res);
         } else {
-            axios.get(`http://localhost:5000/home/books?limit=4&offset=1`)
-                .then(res => {
-                    console.log(res.data);
-                    setBooks(res.data);
-                })
-                .catch(err => console.log(err));
+            res = await getBooks(0, page)
+        }
+        if (res.data.length) {
+            setBooks(res.data);
+            setLoading(false);
+        }
+        else {
+            setFoundBooks(false);
+            setLoading(false);
         }
     }
-    useEffect(() => {
-        axios.get(`http://localhost:5000/home/books?limit=4&offset=1`)
-            .then(res => {
-                console.log(res.data);
-                if (res.data.length) {
-                    setBooks(res.data);
-                    setLoading(false);
-                }
-                else {
-                    setFoundBooks(false);
-                    setLoading(false);
-                }
-            })
-            .catch(err => console.log(err));
-    }, []);
+
+    const handlePagination = (page, pageSize) => {
+        console.log({ page, pageSize });
+        setPage(page);
+    }
+
 
 
 
@@ -59,27 +75,38 @@ function Home() {
             <Layout>
                 <SideNav filterShelf={filterShelf} />
                 <Content className={styles.content}>
-
-                    <Row>
-
+                    <Row align="middle" justify="center" style={{ marginTop: "2rem" }} >
                         {
-                            loading ? <Spin className={styles.loader} size="large" /> :
+                            foundBooks ?
+                                <Col>
+                                    <Pagination
+                                        onChange={handlePagination}
+                                        defaultCurrent={1} total={30} pageSize={3}
+                                    />
+                                </Col>
+                                : null
+                        }
+
+                    </Row>
+                    <Row justify="space-around" style={{ height: "100vh" }}>
+                        {
+                            loading ?
+                                <Col className={styles.loader} >
+                                    <Spin className={styles.loader} size="large" />
+                                </Col>
+                                :
                                 books.map((elem) =>
-                                    <Col>
+                                    <Col style={{ marginTop: "2rem" }} >
                                         <BookCard key={elem.book._id} item={elem} />
                                     </Col>
-                                )}
+                                )
+                        }
+                        {
+                            foundBooks ? null : "No Books Found"
+                        }
                     </Row>
-                    {
-                        foundBooks ? null : "No Books Found"
-                    }
-
                 </Content>
             </Layout>
-
-
-
-
         </>
     )
 }
