@@ -15,7 +15,7 @@ export default function NavBar() {
     }
     return (
         <>
-            <Navbar bg="dark" variant="dark">
+            <Navbar variant="dark" style={{ backgroundColor: "#001529" }}>
                 <Navbar.Brand as={Link} to="/">NodeReads</Navbar.Brand>
                 <Nav className="mr-auto">
                     <Nav.Link as={Link} to="/home" >  Home </Nav.Link>
