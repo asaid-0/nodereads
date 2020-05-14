@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Table } from 'react-bootstrap';
+import { Container, Row, Table ,Button } from 'react-bootstrap';
 import axios from 'axios'
 import AuthorRow from './AuthorRow';
+import { Link } from 'react-router-dom';
 
 function AdminAuthors() {
     const [authors, setAuthors] = useState([]);
@@ -31,6 +32,7 @@ function AdminAuthors() {
 
     return (
         <Container fluid>
+            <Row><Button variant="success" as={Link} to="/admin/books/add" >Add Author</Button> </Row>
             <Row>
                 <Table responsive>
                     <thead>

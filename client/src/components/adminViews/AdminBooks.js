@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react'
-import { Container, Row ,Table} from 'react-bootstrap';
+import { Container, Row ,Table , Button} from 'react-bootstrap';
 import BookRow from './BookRow'
 import axios from 'axios'
+import { Link } from 'react-router-dom';
 
 function AdminBooks() {
         const [books, setBooks] = useState([]);
@@ -31,6 +32,7 @@ function AdminBooks() {
     
         return (
             <Container fluid>
+                <Row><Button variant="success" as={Link} to="/admin/books/add" >Add Author</Button> </Row>
                 <Row>
                     <Table responsive>
                         <thead>
