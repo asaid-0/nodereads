@@ -13,7 +13,7 @@ function BookForm(props) {
     const [authors, setAuthors] = useState([])
     const [categories, setCategories] = useState([])
     const [editingId, setEditingId] = useState("")
-    const [selectedOptions, setSelectedOptions]= useState([])
+    const [selectedOptions, setSelectedOptions] = useState([])
 
 
     useEffect(() => {
@@ -35,9 +35,9 @@ function BookForm(props) {
         if (bookId) {
             setEditingId(bookId);
             axios.get(`/admin/books/${bookId}`).then(res => {
-                const { name , author , categories , photo } = res.data
+                const { name, author, categories, photo } = res.data
                 //---- set options in category multi select -----//
-                setSelectedOptions(categories.map(category=> {return {value: category._id, label: category.name}}))
+                setSelectedOptions(categories.map(category => { return { value: category._id, label: category.name } }))
                 //---- map recived categories to match book.categories  -----//
                 const categoriesIds = categories.map(category => category._id)
 
@@ -59,7 +59,7 @@ function BookForm(props) {
         //---- to control multi select input -----//
         setSelectedOptions(selected)
         //---- set book.categories by mapping selected values -----//
-        setBook({ ...book, categories: selected.map(element=> element.value ) })
+        setBook({ ...book, categories: selected.map(element => element.value) })
     }
 
     const handleSubmit = (event) => {
@@ -109,17 +109,17 @@ function BookForm(props) {
                         }}
                         value={selectedOptions}
                         onChange={handleCategoryChange}
-                        options={categories.map(category=>{
+                        options={categories.map(category => {
                             return (
-                                {value: category._id, label: category.name}
+                                { value: category._id, label: category.name }
                             )
-                        })}     
+                        })}
                     />
 
                     <Form.Group controlId="formImage">
                         <Form.Label>Book Image</Form.Label>
                         {/* //---- show image when admin edit book -----// */}
-                        {book.photo ? <img style={{ width: 100, height: 100 }} src={`/${book.photo}`} alt="book" /> : ""} 
+                        {book.photo ? <img style={{ width: 100, height: 100 }} src={`/${book.photo}`} alt="book" /> : ""}
                         <Form.File
                             id="bookImage"
                             label="Upload Book Image"
