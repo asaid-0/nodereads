@@ -48,6 +48,8 @@ function ReviewEditForm(props) {
                     if (!res.data.error) {
                         setReview("");
                         props.updateReviewList(res.data);
+                        console.log(res.data);
+
                     } else alert(res.data.error)
                 })
                 .catch(err => console.log(err))
@@ -63,7 +65,7 @@ function ReviewEditForm(props) {
                 />
             </div>
             <div className="comment-form-actions">
-                <button type="submit">{reviewId ? "Save": "Submit Review"}</button>
+                <button type="submit">{reviewId ? "Save" : "Submit Review"}</button>
             </div>
         </form>
     )

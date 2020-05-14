@@ -24,7 +24,11 @@ router.get('/:id', (req, res) => {
     BookModel.findById(id)
         .populate('author')
         .populate('reviews.user')
-        .then(book => res.status(200).json(book))
+        .then(book => {
+            console.log(book);
+
+            res.status(200).json(book)
+        })
         .catch(err => res.status(400).send(err))
 
 })
@@ -46,12 +50,11 @@ router.post('/:id', (req, res) => {
 
         const review = {
             // user: currentUser,
-            user: "5eb4628d746f7c3026426730",
+            user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730"),
             content,
         }
 
         BookModel.findById(id)
-            .populate('reviews.user')
             .then(book => {
                 // check if user submitted review before
                 const oldReview = book.reviews.find(review => review.user._id.toString() === "5eb4628d746f7c3026426730")//currentUser._id
@@ -62,9 +65,11 @@ router.post('/:id', (req, res) => {
                     book.reviews.push(review)
                     book.save()
                         .then(book => {
-                            // console.log(book);
-
-                            res.status(200).json(book.reviews)
+                            // console.log(book.populated);
+                            book.populate('reviews.user', function(err,book) {
+                                console.log(book);
+                                res.status(200).json(book.reviews)
+                               });
                         })
                         .catch(err => {
                             console.log(err);
@@ -85,7 +90,7 @@ router.post('/:id', (req, res) => {
 
         const userRate = {
             // user: currentUser,
-            user: "5eb4628d746f7c3026426730",
+            user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730"),
             rate,
         }
 
