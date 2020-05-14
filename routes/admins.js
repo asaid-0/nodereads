@@ -30,11 +30,12 @@ router.post("/books", upload.single('bookImage') ,async (req, res) => {
     
     const { name, author, categories } = req.body;
     const photo = req.file
+    const parsedCat = JSON.parse(categories)
     if (!name || !author || !categories || !photo) return res.status(400).send("bad request");
     const book = new BookModel({
         name,
         author,
-        categories,
+        categories:parsedCat,
         photo: req.file.path
     });
     try {
@@ -50,11 +51,12 @@ router.post("/books", upload.single('bookImage') ,async (req, res) => {
 router.patch("/books/:id", upload.single('bookImage'), (req, res) => {
     const { name, author, categories } = req.body;
     const photo = req.file
+    const parsedCat = JSON.parse(categories)
     if (!name || !author || !categories) return res.status(400).send("bad request");
     const modifiedBook = {
         name,
         author,
-        categories
+        categories:parsedCat
     }
     if (photo){
         modifiedBook.photo = photo.path
