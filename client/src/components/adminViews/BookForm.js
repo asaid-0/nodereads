@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Form, Button } from 'react-bootstrap';
 import axios from 'axios'
+import Select from 'react-select';
 
 function BookForm(props) {
     const [book, setBook] = useState({
@@ -12,6 +13,7 @@ function BookForm(props) {
     const [authors, setAuthors] = useState([])
     const [categories, setCategories] = useState([])
     const [editingId, setEditingId] = useState("")
+    const [selectedOptions, setSelectedOptions] = useState([])
 
 
     useEffect(() => {
@@ -33,8 +35,13 @@ function BookForm(props) {
         if (bookId) {
             setEditingId(bookId);
             axios.get(`/admin/books/${bookId}`).then(res => {
-                const categoriesIds= res.data.categories.map(category=> category._id)
-                setBook({ ...book, name: res.data.name, author: res.data.author._id, categories: categoriesIds, photo: res.data.photo })
+                const { name, author, categories, photo } = res.data
+                //---- set options in category multi select -----//
+                setSelectedOptions(categories.map(category => { return { value: category._id, label: category.name } }))
+                //---- map recived categories to match book.categories  -----//
+                const categoriesIds = categories.map(category => category._id)
+
+                setBook({ ...book, name: name, author: author._id, categories: categoriesIds, photo: photo })
             }).catch(err => console.log(err))
         }
     }, [])
@@ -46,21 +53,25 @@ function BookForm(props) {
 
     const handleFileChange = event => {
         setBook({ ...book, "bookImage": event.target.files[0] })
-
     }
-    const handleCategoryChange = event => {
-        // const newCategories =categories.concat(event.target.value)
-        setBook({ ...book, categories: event.target.value })
+
+    const handleCategoryChange = selected => {
+        //---- to control multi select input -----//
+        setSelectedOptions(selected)
+        //---- set book.categories by mapping selected values -----//
+        setBook({ ...book, categories: selected.map(element => element.value) })
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
         if (!book.name || !book.author || book.categories.length === 0) return
+
         const formData = new FormData()
         formData.append("name", book.name)
         formData.append("author", book.author)
-        formData.append("categories", book.categories)
+        formData.append("categories", JSON.stringify(book.categories)) //---- using json.stringify to send array through formData and parse it at the backend -----//
         formData.append("bookImage", book.bookImage)
+
         if (editingId) {
             axios.patch(`/admin/books/${editingId}`, formData)
                 .then(res => { props.history.push('/admin/books') })
@@ -89,19 +100,25 @@ function BookForm(props) {
                         </Form.Control>
                     </Form.Group>
 
-                    <Form.Group controlId="exampleForm.ControlSelect2">
-                        <Form.Label>Category</Form.Label>
-                        <Form.Control as="select" name="categories" value={book.categories} onChange={handleCategoryChange}>
-                            {categories.map((Category,index)=>{
-                                return(
-                                <option value={Category._id} key={index}>{Category.name}</option>
-                                )
-                            })}
-                        </Form.Control>
-                    </Form.Group>
+
+                    <Select
+                        isMulti
+                        isClearable
+                        styles={{
+                            menu: styles => ({ ...styles, zIndex: 999 })
+                        }}
+                        value={selectedOptions}
+                        onChange={handleCategoryChange}
+                        options={categories.map(category => {
+                            return (
+                                { value: category._id, label: category.name }
+                            )
+                        })}
+                    />
 
                     <Form.Group controlId="formImage">
                         <Form.Label>Book Image</Form.Label>
+                        {/* //---- show image when admin edit book -----// */}
                         {book.photo ? <img style={{ width: 100, height: 100 }} src={`/${book.photo}`} alt="book" /> : ""}
                         <Form.File
                             id="bookImage"
