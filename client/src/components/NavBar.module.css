@@ -1,0 +1,11 @@
+.navbar{
+    background-color:#001529;
+    height: 4rem;
+}
+.link{
+    --fill-color: #198CE6;
+      font-family: Raleway, sans-serif;
+      font-weight: 200;
+      text-decoration: none;
+      text-transform: uppercase;
+}

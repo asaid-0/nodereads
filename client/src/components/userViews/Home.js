@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Layout, Spin, Row, Col, Pagination, Empty } from 'antd';
+import { Layout, Spin, Row, Col, Pagination } from 'antd';
 import 'antd/dist/antd.css';
 import WithUserHeaders from '../../HOC/WithUserHeaders';
 import styles from './Home.module.css';
 import BookCard from './BookCard';
 import SideNav from './SideNav';
+import EmptyPlaceholder from '../ui_components/EmptyPlaceholder';
 
 const { Sider, Header, Content, Footer } = Layout;
 
@@ -105,15 +106,7 @@ function Home() {
                         }
                         {
                             foundBooks ? null :
-                                <Empty
-                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                    description={
-                                        <span> No Books Found </span>
-                                    }
-                                    imageStyle={{
-                                        marginTop: "10rem"
-                                    }}
-                                />
+                                <EmptyPlaceholder />
                         }
                     </Row>
                 </Content>
