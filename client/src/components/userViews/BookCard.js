@@ -6,7 +6,7 @@ import { Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 const BookCard = (props) => {
 
     const { item } = props;
-    console.log(item);
+    // console.log(item);
 
 
     return (
