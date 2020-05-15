@@ -18,16 +18,22 @@ function Home() {
     const [foundBooks, setFoundBooks] = useState(true);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
+    const [shelf, setShelf] = useState("all");
 
     const getBooks = (shelf, page) => {
-        return shelf ?
-            axios.get(`http://localhost:5000/home/books?filter=${shelf}&limit=2&offset=${page}`) :
-            axios.get(`http://localhost:5000/home/books?limit=2&offset=${page}`);
+        if (shelf === "all") {
+            return axios.get(`http://localhost:5000/home/books?limit=2&offset=${page}`);
+        }
+        else {
+            return axios.get(`http://localhost:5000/home/books?filter=${shelf}&limit=2&offset=${page}`);
+        }
     }
 
 
     useEffect(() => {
-        getBooks(0, page).then(res => {
+        setLoading(true);
+        setFoundBooks(true);
+        getBooks(shelf, page).then(res => {
             if (res.data.length) {
                 setBooks(res.data);
                 setLoading(false);
@@ -40,28 +46,34 @@ function Home() {
             }
         })
             .catch(err => console.log(err));
-    }, [page]);
+    }, [page, shelf]);
 
 
-    const filterShelf = async (shelf) => {
-        setLoading(true);
+    const filterShelf = (shelf) => {
+        // setLoading(true);
+        // setFoundBooks(true);
+        // let res = [];
+        // console.log(shelf);
+        // if (shelf === "all") {
+        //     res = await getBooks(0, page)
+        //     console.log(foundBooks);
+        // } else {
+        //     res = await getBooks(shelf, page);
+        // }
+        // if (res.data.length) {
+        //     setBooks(res.data);
+        //     setLoading(false);
+        //     setPage(1);
+        //     setShelf(shelf);
+        // }
+        // else {
+        //     setFoundBooks(false);
+        //     setLoading(false);
+        //     setPage(1);
+        //     setShelf(shelf);
+        // }
+        setShelf(shelf);
         setPage(1);
-        let res = [];
-        console.log(shelf);
-        if (shelf != "all") {
-            res = await getBooks(shelf, page);
-            console.log(res);
-        } else {
-            res = await getBooks(0, page)
-        }
-        if (res.data.length) {
-            setBooks(res.data);
-            setLoading(false);
-        }
-        else {
-            setFoundBooks(false);
-            setLoading(false);
-        }
     }
 
     const handlePagination = (page, pageSize) => {
