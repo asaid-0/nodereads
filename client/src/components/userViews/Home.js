@@ -13,7 +13,7 @@ const { Sider, Header, Content, Footer } = Layout;
 
 
 
-function Home() {
+function Home(props) {
     const [books, setBooks] = useState([]);
     const [foundBooks, setFoundBooks] = useState(true);
     const [loading, setLoading] = useState(true);
@@ -31,6 +31,7 @@ function Home() {
 
 
     useEffect(() => {
+        // console.log(props.name);
         setLoading(true);
         setFoundBooks(true);
         getBooks(shelf, page).then(res => {
@@ -111,8 +112,9 @@ function Home() {
                                 </Col>
                                 :
                                 books.map((elem) =>
+
                                     <Col style={{ marginTop: "2rem" }} >
-                                        <BookCard key={elem.book._id} item={elem} />
+                                        <BookCard key={elem.book._id} book={elem.book} shelf={elem.shelf} />
                                     </Col>
                                 )
                         }

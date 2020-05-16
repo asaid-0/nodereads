@@ -5,8 +5,9 @@ import { Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 const BookCard = (props) => {
 
-    const { item } = props;
-    // console.log(item);
+    const { book, shelf } = props;
+
+    console.log(book);
 
 
     return (
@@ -14,14 +15,17 @@ const BookCard = (props) => {
         <Card className={styles.card}>
             <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
             <Card.Body className={styles.text}>
-                <Card.Title>{item.book.title}</Card.Title>
+                <Card.Title>{book.title}</Card.Title>
                 <Card.Text >
-                    {item.book.shortDescription}
+                    {book.shortDescription}
                 </Card.Text>
             </Card.Body>
-            <ListGroup className="list-group-flush">
-                <ListGroupItem>{item.shelf}</ListGroupItem>
-            </ListGroup>
+            {
+                shelf ?
+                    <ListGroup className="list-group-flush">
+                        <ListGroupItem>{shelf}</ListGroupItem>
+                    </ListGroup> : null
+            }
         </Card>
 
 

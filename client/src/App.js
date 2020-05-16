@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import Dashboard from './components/adminViews/Dashboard';
 import Home from './components/userViews/Home';
+import SearchResult from './components/userViews/SearchResult';
 import Books from './components/userViews/Books';
 import Book from './components/userViews/Book.jsx';
 import Authors from './components/userViews/Authors';
@@ -20,7 +21,7 @@ function App() {
     <>
       <Router>
         <Route exact path="/home" component={Home} />
-
+        <Route exact path="/home/search/:searchInput" component={SearchResult} />
         <Route exact path="/" component={Home} />
 
         <Route exact path="/books" component={Books} />

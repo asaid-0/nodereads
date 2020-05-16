@@ -1,9 +1,23 @@
 .navbar{
     background-color:#001529;
     height: 4rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.logo{
+    width: 2rem;
+    margin-left: 1rem;
+}
+.title{
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #61DBFB;
+    margin-right: 2rem;
 }
 .link{
-      font-family: Raleway, sans-serif;
       font-weight: 800;
       text-decoration: none;
       text-transform: uppercase;
@@ -14,3 +28,6 @@
     -webkit-text-stroke: 0.01rem white;
     -webkit-text-fill-color:  rgb(126, 193, 255);
 }
+
+   
+   
