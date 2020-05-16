@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import Card from 'react-bootstrap/Card'
-import Button from 'react-bootstrap/Button'
+// import Button from 'react-bootstrap/Button'
 import ReviewForm from './ReviewForm'
 import axios from 'axios'
-
+import { Comment, Avatar, Button, Col } from "antd";
 
 function Review(props) {
 
@@ -34,21 +34,30 @@ function Review(props) {
             {review.isInEditMode ?
                 <>
                     <ReviewForm updateReview={updateReview} bookId={props.bookId} review={review} />
-                    <Button onClick={changeMode} variant="danger">X</Button>
+                    <Col>
+                        <Button onClick={changeMode} type="primary" danger >X</Button>
+                    </Col>
                 </>
                 :
-                <Card style={{ width: '18rem' }}>
-                    <Card.Body>
-                        <Card.Title>
-                            {`${review.user.firstname} ${review.user.lastname}`}
-                    </Card.Title>
-                        <Card.Text>
+                <Comment
+                    author={<a>{`${review.user.firstname} ${review.user.lastname}`}</a>}
+                    avatar={
+                        <Avatar
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT2LfV4GzzKg_8tkHFIGSMw4YzYzAlLDnLYlJ2d6A7mMxygJo_j&usqp=CAU"
+                            alt="Han Solo"
+                        />
+                    }
+                    content={
+                        <p>
                             {review.content}
-                            <Button onClick={changeMode} variant="info">Edit</Button>
-                            <Button onClick={() => deletReview(review._id)} variant="danger">Delete</Button>
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
+                            <br />
+                            <Button type="primary" onClick={changeMode} variant="info">Edit</Button>
+                            <Button type="primary" danger onClick={() => deletReview(review._id)}>Delete</Button>
+                        </p>
+
+                    }
+
+                />
             }
 
         </div>

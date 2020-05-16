@@ -1,0 +1,15 @@
+.side_nav{
+    background-color: #71A662;
+}
+.menu{
+    margin-top: 2rem;
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: #71A662;    
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+}

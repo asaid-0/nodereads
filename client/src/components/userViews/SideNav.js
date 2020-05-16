@@ -1,8 +1,10 @@
 import React from 'react';
+import styles from './SideNav.module.css';
 import 'antd/dist/antd.css';
 import { Layout, Menu } from 'antd';
 import { BookOutlined } from '@ant-design/icons';
 const { Sider, Header, Content } = Layout;
+
 
 
 function SideNav(props) {
@@ -13,12 +15,13 @@ function SideNav(props) {
     }
     return (
         <>
-            <Sider trigger={null} theme="light">
+            <Sider trigger={null} theme="light" className={styles.side_nav} >
                 <div className="logo" />
                 <Menu theme="light"
                     mode="inline"
                     defaultSelectedKeys={['All']}
                     onClick={handleClick}
+                    className={styles.menu}
                 >
                     <Menu.Item key="all" icon={<BookOutlined />}>
                         All
