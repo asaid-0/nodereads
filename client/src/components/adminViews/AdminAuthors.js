@@ -3,6 +3,7 @@ import { Container, Row, Table ,Button } from 'react-bootstrap';
 import axios from 'axios'
 import AuthorRow from './AuthorRow';
 import { Link } from 'react-router-dom';
+import WithAdminHeaders from '../../HOC/WithAdminHeaders'
 
 function AdminAuthors() {
     const [authors, setAuthors] = useState([]);
@@ -61,4 +62,4 @@ function AdminAuthors() {
     )
 }
 
-export default AdminAuthors
+export default WithAdminHeaders(AdminAuthors)

@@ -3,6 +3,7 @@ import { Container, Row ,Table , Button} from 'react-bootstrap';
 import BookRow from './BookRow'
 import axios from 'axios'
 import { Link } from 'react-router-dom';
+import WithAdminHeaders from '../../HOC/WithAdminHeaders'
 
 function AdminBooks() {
         const [books, setBooks] = useState([]);
@@ -61,4 +62,4 @@ function AdminBooks() {
         )
 }
 
-export default AdminBooks
+export default WithAdminHeaders(AdminBooks)

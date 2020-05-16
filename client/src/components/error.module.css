@@ -1,0 +1,6 @@
+.error{
+    color: hsl(345, 100%, 40%);
+    font-size: 15px;
+    font-weight: bold;
+    text-shadow: 1px 1px rgba(250,250,250,.3);
+  }

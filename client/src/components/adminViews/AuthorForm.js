@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Form, Button } from 'react-bootstrap';
+import {  Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-date-picker';
 import axios from 'axios'
 import authorSchema from '../../schemas/authorSchema'
 import _ from 'lodash'
+import WithAdminHeaders from '../../HOC/WithAdminHeaders'
+import { Row, Col ,Divider } from 'antd';
+import Error from '../Error'
+import  styles  from "./formContainer.module.css"
 
 function AuthorForm(props) {
     const [author, setAuthor] = useState({
@@ -61,18 +65,20 @@ function AuthorForm(props) {
         }
     }
     return (
-        <Container fluid>
-            <Row>
+        <>
+            <Divider><h2>{editingId? "Edit Author":"Add Author"}</h2></Divider>
+            <Row justify="center" >
+            <Col className={styles.form_container}>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group controlId="formFirstName">
                         <Form.Label>First Name</Form.Label>
                         <Form.Control type="text" placeholder="Enter First Name" name="firstname" value={author.firstname} onChange={handleChange} />
-                        {errors.firstname &&  <p>{errors.firstname}</p>}
+                        {errors.firstname &&  <Error error={errors.firstname}/>}
                     </Form.Group>
                     <Form.Group controlId="formLastName">
                         <Form.Label>Last Name</Form.Label>
                         <Form.Control  type="text" placeholder="Enter Last Name" name="lastname" value={author.lastname} onChange={handleChange} />
-                        {errors.lastname && <p>{errors.lastname}</p>}
+                        {errors.lastname && <Error error={errors.lastname}/>}
                     </Form.Group>
                     <Form.Group controlId="formImage">
                         <Form.Label>Author Image</Form.Label>
@@ -84,26 +90,29 @@ function AuthorForm(props) {
                             onChange={handleFileChange}
                             custom
                         />
-                        {errors.authorImage && <p>{errors.authorImage}</p> }
+                        {errors.authorImage && <Error error={errors.authorImage}/> }
                     </Form.Group>
                     <Form.Group controlId="formDOB">
-                        <Form.Label>Date of Birth</Form.Label>
+                        <Form.Label>Date of Birth</Form.Label><br/>
                         <DatePicker
                             value={new Date(author.dob)}
                             onChange={handleDateChange}
                             name="dob"
                             dateFormat="MM/dd/yyyy"
                         />
-                        {errors.dob && <p>{errors.dob}</p> }
+                        {errors.dob && <Error error={errors.dob}/> }
                     </Form.Group>
-                    <Button variant="primary" type="submit">
-                        Submit
+                    <Row justify="center">
+                    <Button style={{width:"10vw"}}variant="success" type="submit">
+                        {editingId? "Edit Author":"Add Author"}
                     </Button>
+                    </Row>
                 </Form>
-
+            </Col>
             </Row>
-        </Container>
+
+        </>
     )
 }
 
-export default AuthorForm
+export default WithAdminHeaders(AuthorForm)

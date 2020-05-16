@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import axios from 'axios'
 import Select from 'react-select';
 import bookSchema from '../../schemas/bookSchema'
 import _ from 'lodash'
+import WithAdminHeaders from '../../HOC/WithAdminHeaders'
+import 'antd/dist/antd.css';
+import { Row, Col ,Divider } from 'antd';
+import Error from '../Error'
+import  styles  from "./formContainer.module.css"
 
 function BookForm(props) {
     // const [{book,authors,categories,edit}, setState] = useReducer((oldState, newState) => ({ ...oldState, ...newState }), { book:{} , authors:[]});
@@ -95,13 +100,15 @@ function BookForm(props) {
         }
     }
     return (
-        <Container fluid>
-            <Row>
+        <>
+            <Divider><h2>{editingId? "Edit Book":"Add Book"}</h2></Divider>
+            <Row justify="center">
+            <Col className={styles.form_container}>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group controlId="formName">
                         <Form.Label>Title</Form.Label>
                         <Form.Control  type="text" placeholder="Enter Book Title" name="name" value={book.name} onChange={handleChange} />
-                        {errors.name && <p>{errors.name}</p>}
+                        {errors.name && <Error error={errors.name}/>}
                     </Form.Group>
 
                     <Form.Group controlId="exampleForm.ControlSelect1">
@@ -114,11 +121,13 @@ function BookForm(props) {
                                 )
                             })}
                         </Form.Control>
-                        {errors.author && <p>{errors.author}</p>}
+                        {errors.author && <Error error={errors.author}/>}
                     </Form.Group>
 
                     <Form.Group>
+                    <Form.Label>Categories</Form.Label>
                     <Select
+                        placeholder= "Select Categories"
                         name = "categories"
                         isMulti
                         isClearable
@@ -133,7 +142,7 @@ function BookForm(props) {
                             )
                         })}
                     />
-                    {errors.categories && <p>{errors.categories}</p>}
+                    {errors.categories && <Error error={errors.categories}/>}
                     </Form.Group>
 
                     <Form.Group controlId="formImage">
@@ -148,15 +157,18 @@ function BookForm(props) {
                             custom
                             
                         />
-                        {errors.bookImage && <p>{errors.bookImage}</p>}
+                        {errors.bookImage && <Error error={errors.bookImage}/>}
                     </Form.Group>
-                    <Button variant="primary" type="submit">
-                        Submit
+                    <Row justify="center">
+                    <Button style={{width:"10vw"}}variant="success" type="submit">
+                        {editingId? "Edit Book":"Add Book"}
                     </Button>
+                    </Row>
                 </Form>
+                </Col>
             </Row>
-        </Container>
+            </>
     )
 }
 
-export default BookForm
+export default WithAdminHeaders(BookForm)
