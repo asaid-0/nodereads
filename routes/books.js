@@ -25,7 +25,6 @@ router.get('/:id', (req, res) => {
         .populate('author')
         .populate('reviews.user')
         .then(book => {
-            console.log(book);
 
             res.status(200).json(book)
         })
@@ -67,7 +66,6 @@ router.post('/:id', (req, res) => {
                         .then(book => {
                             // console.log(book.populated);
                             book.populate('reviews.user', function(err,book) {
-                                console.log(book);
                                 res.status(200).json(book.reviews)
                                });
                         })
@@ -77,7 +75,7 @@ router.post('/:id', (req, res) => {
                             res.status(400).send(err)
                         })
 
-                } else return res.json({ error: 'review already exist' })
+                } else return res.json({ error: 'You have already submitted a review, you can edit it in review section below' })
             })
             .catch(err => res.send(err))
     }
@@ -181,6 +179,19 @@ router.delete('/:id', (req, res) => {
                 book.reviews.pull({ _id: reviewID, user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730") })//currentUser._id
                 book.save()
                     .then(book => res.json(book.reviews))
+                    .catch(err => res.status(400).send(err))
+
+            })
+            .catch(err => res.status(400).send(err))
+    }
+
+    if (type === 'rate') {
+        const { rateID } = req.body
+        BookModel.findById(id)
+            .then(book => {
+                book.rates.pull({ _id: rateID, user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730") })//currentUser._id
+                book.save()
+                    .then(book => res.json(book.rates))
                     .catch(err => res.status(400).send(err))
 
             })

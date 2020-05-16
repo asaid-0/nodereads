@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Button, Input, Alert } from "antd";
+
+const { TextArea } = Input
 
 function ReviewEditForm(props) {
 
     const [review, setReview] = useState("");
     const [reviewId, setReviewId] = useState("")
+    const [error, setError] = useState("")
+
     useEffect(() => {
         if (props.review) {
             setReviewId(props.review._id);
@@ -18,6 +23,9 @@ function ReviewEditForm(props) {
         setReview(e.target.value)
     }
 
+    const handleCloseAlert = () => {
+        setError("")
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -33,7 +41,10 @@ function ReviewEditForm(props) {
                     // console.log(res.data);
                     if (!res.data.error) {
                         props.updateReview(res.data)
-                    } else alert(res.data.error)
+                    } else {
+
+                        setError(res.data.error)
+                    }
                 })
                 .catch(err => console.log(err))
         } else {
@@ -48,26 +59,38 @@ function ReviewEditForm(props) {
                     if (!res.data.error) {
                         setReview("");
                         props.updateReviewList(res.data);
-                        console.log(res.data);
+                        // console.log(res.data);
 
-                    } else alert(res.data.error)
+                    } else setError(res.data.error)
                 })
                 .catch(err => console.log(err))
         }
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div >
-                <textarea placeholder="Review" rows="4" cols="50" required
+        <>
+            {
+                error ? <Alert
+                    description={error}
+                    type="warning"
+                    showIcon
+                    closable
+                    onClose={handleCloseAlert}
+                /> : ""
+
+            }
+            <form onSubmit={handleSubmit}>
+                <TextArea allowClear placeholder="Write your Review..." rows="5" required
                     onChange={handleChange}
                     value={review}
                 />
-            </div>
-            <div className="comment-form-actions">
-                <button type="submit">{reviewId ? "Save" : "Submit Review"}</button>
-            </div>
-        </form>
+
+                <Button type="primary" htmlType="submit">
+                    {reviewId ? "Save" : "Submit Review"}
+                </Button>
+
+            </form>
+        </>
     )
 }
 
