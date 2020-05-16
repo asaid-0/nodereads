@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Container, Row, Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-date-picker';
 import axios from 'axios'
-
+import authorSchema from '../../schemas/authorSchema'
+import _ from 'lodash'
 
 function AuthorForm(props) {
     const [author, setAuthor] = useState({
@@ -12,7 +13,7 @@ function AuthorForm(props) {
         authorImage: ""
     })
     const [editingId, setEditingId] = useState("")
-
+    const [errors, setErrors] = useState({})
 
     useEffect(() => {
         const { match: { params: { authorId } } } = props
@@ -27,9 +28,7 @@ function AuthorForm(props) {
         setAuthor({ ...author, [name]: value })
     }
     const handleDateChange = date => {
-
         setAuthor({ ...author, dob: date })
-        console.log(author.dob);
     }
 
     const handleFileChange = event => {
@@ -38,18 +37,27 @@ function AuthorForm(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        if (!author.firstname || !author.lastname || !author.dob) return
-        const formData = new FormData()
-        formData.append("firstname", author.firstname)
-        formData.append("lastname", author.lastname)
-        formData.append("dob", author.dob)
-        formData.append("authorImage", author.authorImage)
-        if (editingId) {
-            axios.patch(`/admin/authors/${editingId}`, formData)
-                .then(res => { props.history.push('/admin/authors') })
-                .catch(err => { console.log(err) })
-        } else {
-            axios.post('/admin/authors', formData).then(res => { props.history.push('/admin/authors') }).catch(err => { console.log(err) })
+        try {
+            //--------------//validating form//---------//
+            const customAuthorSchema = authorSchema(editingId)
+            const cleanedData = customAuthorSchema.clean({...author, authorImage: _.get( author ,'authorImage.name' )})
+            customAuthorSchema.validate(cleanedData);
+            //--------------//creating validated form//---------//            
+            const formData = new FormData()
+            formData.append("firstname", author.firstname)
+            formData.append("lastname", author.lastname)
+            formData.append("dob", author.dob)
+            formData.append("authorImage", author.authorImage)
+            //--------------//sending validated form//---------//
+            if (editingId) {
+                axios.patch(`/admin/authors/${editingId}`, formData)
+                    .then(res => { props.history.push('/admin/authors') })
+                    .catch(err => { console.log(err) })
+            } else {
+                axios.post('/admin/authors', formData).then(res => { props.history.push('/admin/authors') }).catch(err => { console.log(err) })
+            }
+        } catch (error) {
+            setErrors(error.details.reduce((agg,e)=>({...agg, [e.name]:e.message}),{}));
         }
     }
     return (
@@ -59,10 +67,12 @@ function AuthorForm(props) {
                     <Form.Group controlId="formFirstName">
                         <Form.Label>First Name</Form.Label>
                         <Form.Control type="text" placeholder="Enter First Name" name="firstname" value={author.firstname} onChange={handleChange} />
+                        {errors.firstname &&  <p>{errors.firstname}</p>}
                     </Form.Group>
                     <Form.Group controlId="formLastName">
                         <Form.Label>Last Name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter Last Name" name="lastname" value={author.lastname} onChange={handleChange} />
+                        <Form.Control  type="text" placeholder="Enter Last Name" name="lastname" value={author.lastname} onChange={handleChange} />
+                        {errors.lastname && <p>{errors.lastname}</p>}
                     </Form.Group>
                     <Form.Group controlId="formImage">
                         <Form.Label>Author Image</Form.Label>
@@ -74,6 +84,7 @@ function AuthorForm(props) {
                             onChange={handleFileChange}
                             custom
                         />
+                        {errors.authorImage && <p>{errors.authorImage}</p> }
                     </Form.Group>
                     <Form.Group controlId="formDOB">
                         <Form.Label>Date of Birth</Form.Label>
@@ -83,6 +94,7 @@ function AuthorForm(props) {
                             name="dob"
                             dateFormat="MM/dd/yyyy"
                         />
+                        {errors.dob && <p>{errors.dob}</p> }
                     </Form.Group>
                     <Button variant="primary" type="submit">
                         Submit

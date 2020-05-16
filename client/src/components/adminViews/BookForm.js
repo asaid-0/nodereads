@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { Container, Row, Form, Button } from 'react-bootstrap';
 import axios from 'axios'
 import Select from 'react-select';
+import bookSchema from '../../schemas/bookSchema'
+import _ from 'lodash'
 
 function BookForm(props) {
+    // const [{book,authors,categories,edit}, setState] = useReducer((oldState, newState) => ({ ...oldState, ...newState }), { book:{} , authors:[]});
     const [book, setBook] = useState({
         name: "",
         author: "",
@@ -14,10 +17,12 @@ function BookForm(props) {
     const [categories, setCategories] = useState([])
     const [editingId, setEditingId] = useState("")
     const [selectedOptions, setSelectedOptions] = useState([])
-
+    const [errors, setErrors] = useState({})
 
     useEffect(() => {
         const { match: { params: { bookId } } } = props
+
+
         axios.get('/admin/authors')
             .then(res => {
                 setAuthors(res.data)
@@ -37,8 +42,9 @@ function BookForm(props) {
             axios.get(`/admin/books/${bookId}`).then(res => {
                 const { name, author, categories, photo } = res.data
                 //---- set options in category multi select -----//
-                setSelectedOptions(categories.map(category => { return { value: category._id, label: category.name } }))
-                //---- map recived categories to match book.categories  -----//
+                const selectedCategories = categories.map(category =>({ value: category._id, label: category.name  }))
+                setSelectedOptions(selectedCategories)
+                //---- map received categories to match book.categories  -----//
                 const categoriesIds = categories.map(category => category._id)
 
                 setBook({ ...book, name: name, author: author._id, categories: categoriesIds, photo: photo })
@@ -58,26 +64,34 @@ function BookForm(props) {
     const handleCategoryChange = selected => {
         //---- to control multi select input -----//
         setSelectedOptions(selected)
+
         //---- set book.categories by mapping selected values -----//
-        setBook({ ...book, categories: selected.map(element => element.value) })
+        if (selected) setBook({ ...book, categories: selected.map(element => element.value) })
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event)=>{
         event.preventDefault()
-        if (!book.name || !book.author || book.categories.length === 0) return
-
-        const formData = new FormData()
-        formData.append("name", book.name)
-        formData.append("author", book.author)
-        formData.append("categories", JSON.stringify(book.categories)) //---- using json.stringify to send array through formData and parse it at the backend -----//
-        formData.append("bookImage", book.bookImage)
-
-        if (editingId) {
-            axios.patch(`/admin/books/${editingId}`, formData)
-                .then(res => { props.history.push('/admin/books') })
-                .catch(err => { console.log(err) })
-        } else {
-            axios.post('/admin/books', formData).then(res => { props.history.push('/admin/books') }).catch(err => { console.log(err) })
+        try {
+            //--------------//validating form//---------//
+            const customBookSchema = bookSchema(editingId)
+            const cleanedData = customBookSchema.clean({...book, bookImage: _.get( book ,'bookImage.name' )})
+            customBookSchema.validate(cleanedData);
+            //--------------//sending validated form//---------//
+            const formData = new FormData()
+            formData.append("name", book.name)
+            formData.append("author", book.author)
+            formData.append("categories", JSON.stringify(book.categories)) //---- using json.stringify to send array through formData and parse it at the backend -----//
+            formData.append("bookImage", book.bookImage)
+    
+            if (editingId) {
+                axios.patch(`/admin/books/${editingId}`, formData)
+                    .then(res => { props.history.push('/admin/books') })
+                    .catch(err => { console.log(err) })
+            } else {
+                axios.post('/admin/books', formData).then(res => { props.history.push('/admin/books') }).catch(err => { console.log(err) })
+            }
+          } catch (error) {
+            setErrors(error.details.reduce((agg,e)=>({...agg, [e.name]:e.message}),{}));
         }
     }
     return (
@@ -86,22 +100,26 @@ function BookForm(props) {
                 <Form onSubmit={handleSubmit}>
                     <Form.Group controlId="formName">
                         <Form.Label>Title</Form.Label>
-                        <Form.Control type="text" placeholder="Enter Book Title" name="name" value={book.name} onChange={handleChange} />
+                        <Form.Control  type="text" placeholder="Enter Book Title" name="name" value={book.name} onChange={handleChange} />
+                        {errors.name && <p>{errors.name}</p>}
                     </Form.Group>
 
                     <Form.Group controlId="exampleForm.ControlSelect1">
                         <Form.Label>Author</Form.Label>
                         <Form.Control as="select" name="author" value={book.author} onChange={handleChange}>
+                            <option value="">Select author</option>
                             {authors.map((author, index) => {
                                 return (
                                     <option value={author._id} key={index}>{`${author.firstname} ${author.lastname}`}</option>
                                 )
                             })}
                         </Form.Control>
+                        {errors.author && <p>{errors.author}</p>}
                     </Form.Group>
 
-
+                    <Form.Group>
                     <Select
+                        name = "categories"
                         isMulti
                         isClearable
                         styles={{
@@ -115,6 +133,8 @@ function BookForm(props) {
                             )
                         })}
                     />
+                    {errors.categories && <p>{errors.categories}</p>}
+                    </Form.Group>
 
                     <Form.Group controlId="formImage">
                         <Form.Label>Book Image</Form.Label>
@@ -126,7 +146,9 @@ function BookForm(props) {
                             name="bookImage"
                             onChange={handleFileChange}
                             custom
+                            
                         />
+                        {errors.bookImage && <p>{errors.bookImage}</p>}
                     </Form.Group>
                     <Button variant="primary" type="submit">
                         Submit

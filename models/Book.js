@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const schema = new mongoose.Schema({
     name: { type: String, required: true, minlength: 3, maxlength: 255 },
-    photo: {type: String, required:true },
+    photo: {type: String, required:[true,"Photo is required"] },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author'},
     categories: [
-        { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }
+        { type: mongoose.Schema.Types.ObjectId, ref: 'Category'}
     ],
     rates: [
         {

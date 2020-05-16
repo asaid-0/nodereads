@@ -32,7 +32,7 @@ function AdminAuthors() {
 
     return (
         <Container fluid>
-            <Row><Button variant="success" as={Link} to="/admin/books/add" >Add Author</Button> </Row>
+            <Row><Button variant="success" as={Link} to="/admin/authors/add" >Add Author</Button> </Row>
             <Row>
                 <Table responsive>
                     <thead>

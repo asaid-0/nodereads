@@ -3,6 +3,7 @@ const BookModel = require("../models/Book");
 const AuthorModel = require("../models/Author");
 const CategoryModel = require("../models/Category");
 const upload = require('../middleware/multer')
+const _ = require('lodash')
 
 //Get all books with populate
 router.get("/books", async (req, res) => {
@@ -30,20 +31,21 @@ router.post("/books", upload.single('bookImage') ,async (req, res) => {
     
     const { name, author, categories } = req.body;
     const photo = req.file
+    const photoPath = _.get(req,'file.path')
     const parsedCat = JSON.parse(categories)
-    if (!name || !author || !categories || !photo) return res.status(400).send("bad request");
+    // if (!name || !author || !categories || !photo) return res.status(400).send("bad request");
     const book = new BookModel({
         name,
         author,
         categories:parsedCat,
-        photo: req.file.path
+        photo: photoPath
     });
     try {
         await book.save()
         // await CategoryModel.updateMany({ _id: { $in: categories } }, { $push: { books: book._id } })
         res.status(200).send(book);
     } catch (error) {
-        return res.status(500).send(error);
+        return res.status(500).json(error);
     }
 });
 
@@ -52,7 +54,7 @@ router.patch("/books/:id", upload.single('bookImage'), (req, res) => {
     const { name, author, categories } = req.body;
     const photo = req.file
     const parsedCat = JSON.parse(categories)
-    if (!name || !author || !categories) return res.status(400).send("bad request");
+    // if (!name || !author || !categories) return res.status(400).send("bad request");
     const modifiedBook = {
         name,
         author,
@@ -65,7 +67,7 @@ router.patch("/books/:id", upload.single('bookImage'), (req, res) => {
         .then(book => {
             res.status(200).json(book)
         }).catch(err => {
-            res.status(500).send(err)
+            res.status(500).json(err)
         })
     // BookModel.findById(req.params.id)
     //     .then((book) => {
@@ -111,16 +113,16 @@ router.get("/authors/:id", async (req, res) => {
 router.post("/authors", upload.single('authorImage') ,(req, res) => {
     const { firstname, lastname, dob } = req.body;
     const photo = req.file
-    if (!firstname || !lastname || !dob || !photo ) return res.status(400).send("bad request");
-
+    const photoPath = _.get(req,'file.path')
+    // if (!firstname || !lastname || !dob || !photo ) return res.status(400).send("bad request");    
     const author = new AuthorModel({
         firstname,
         lastname,
         dob,
-        photo: req.file.path
+        photo: photoPath
     });
     author.save((err, author) => {
-        if (err) res.status(200).json(err);
+        if (err) res.status(500).json(err);
         res.status(200).json(author);
     });
 }),
@@ -128,7 +130,7 @@ router.post("/authors", upload.single('authorImage') ,(req, res) => {
     router.patch("/authors/:id", upload.single('authorImage'), (req, res) => {
         const { firstname, lastname, dob } = req.body;
         const photo = req.file
-        if (!firstname || !lastname || !dob) return res.status(400).send("bad request");
+        // if (!firstname || !lastname || !dob) return res.status(400).send("bad request");
 
         const modifiedAuthor = {
             firstname,
