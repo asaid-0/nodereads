@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Input, Alert } from "antd";
+import {
+    CloseSquareFilled,
+    SaveFilled,
+} from '@ant-design/icons';
 
 const { TextArea } = Input
 
@@ -79,16 +83,18 @@ function ReviewEditForm(props) {
                 /> : ""
 
             }
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} style={{ margin: '20px' }}>
                 <TextArea allowClear placeholder="Write your Review..." rows="5" required
                     onChange={handleChange}
                     value={review}
                 />
 
                 <Button type="primary" htmlType="submit">
-                    {reviewId ? "Save" : "Submit Review"}
+                    {reviewId ? <SaveFilled style={{ fontSize: '20px' }}/> : "Submit Review"}
                 </Button>
-
+                {reviewId ?
+                    <Button onClick={props.changeMode} type="primary" danger ><CloseSquareFilled style={{ fontSize: '20px' }}/></Button>
+                    : ""}
             </form>
         </>
     )
