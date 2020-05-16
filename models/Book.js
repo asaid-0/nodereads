@@ -12,7 +12,7 @@ const schema = new mongoose.Schema({
             user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
             rate: {
                 type: Number,
-                min: 1,
+                min: 0.5,
                 max: 5,
             }
         }

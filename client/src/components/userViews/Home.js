@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Layout, Spin, Row, Col, Pagination } from 'antd';
+import { Layout, Spin, Row, Col, Pagination, Empty } from 'antd';
 import 'antd/dist/antd.css';
 import WithUserHeaders from '../../HOC/WithUserHeaders';
 import styles from './Home.module.css';
@@ -21,7 +21,7 @@ function Home() {
     const getBooks = (shelf, page) => {
         return shelf ?
             axios.get(`http://localhost:5000/home/books?filter=${shelf}&limit=2&offset=${page}`) :
-            axios.get(`http://localhost:5000/home/books?limit=4&offset=${page}`);
+            axios.get(`http://localhost:5000/home/books?limit=2&offset=${page}`);
     }
 
 
@@ -30,8 +30,10 @@ function Home() {
             if (res.data.length) {
                 setBooks(res.data);
                 setLoading(false);
+                setFoundBooks(true);
             }
             else {
+                setBooks([]);
                 setFoundBooks(false);
                 setLoading(false);
             }
@@ -77,21 +79,21 @@ function Home() {
                 <Content className={styles.content}>
                     <Row align="middle" justify="center" style={{ marginTop: "2rem" }} >
                         {
-                            foundBooks ?
-                                <Col>
-                                    <Pagination
-                                        onChange={handlePagination}
-                                        defaultCurrent={1} total={30} pageSize={3}
-                                    />
-                                </Col>
-                                : null
+                            // foundBooks ?
+                            <Col>
+                                <Pagination
+                                    onChange={handlePagination}
+                                    defaultCurrent={1} total={30} pageSize={2}
+                                />
+                            </Col>
+                            // : null
                         }
 
                     </Row>
                     <Row justify="space-around" style={{ height: "100vh" }}>
                         {
                             loading ?
-                                <Col className={styles.loader} >
+                                <Col>
                                     <Spin className={styles.loader} size="large" />
                                 </Col>
                                 :
@@ -102,7 +104,16 @@ function Home() {
                                 )
                         }
                         {
-                            foundBooks ? null : "No Books Found"
+                            foundBooks ? null :
+                                <Empty
+                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                    description={
+                                        <span> No Books Found </span>
+                                    }
+                                    imageStyle={{
+                                        marginTop: "10rem"
+                                    }}
+                                />
                         }
                     </Row>
                 </Content>
