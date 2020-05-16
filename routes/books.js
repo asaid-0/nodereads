@@ -24,6 +24,7 @@ router.get('/:id', (req, res) => {
     BookModel.findById(id)
         .populate('author')
         .populate('reviews.user')
+        .populate('categories')
         .then(book => {
 
             res.status(200).json(book)
@@ -187,6 +188,7 @@ router.delete('/:id', (req, res) => {
 
     if (type === 'rate') {
         const { rateID } = req.body
+        
         BookModel.findById(id)
             .then(book => {
                 book.rates.pull({ _id: rateID, user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730") })//currentUser._id
