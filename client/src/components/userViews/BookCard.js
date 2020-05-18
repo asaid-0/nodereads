@@ -23,7 +23,7 @@ const BookCard = (props) => {
             <h6> <Link className={styles.author}>New York</Link> </h6>
             <div>
                 <button className={styles.primary}>
-                    Message
+                    Read
 		        </button>
             </div>
         </div>
