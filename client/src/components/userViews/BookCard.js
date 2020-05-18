@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './BookCard.module.css';
-import { Card, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Rate } from 'antd';
 
 
 const BookCard = (props) => {
@@ -13,11 +14,13 @@ const BookCard = (props) => {
     return (
 
         <div className={styles.card_container} >
-            <span className={styles.pro}>PRO</span>
+            <span className={styles.pro}>
+                <Rate disabled defaultValue={2} />
+            </span>
             <img className={styles.round} src="https://randomuser.me/api/portraits/women/79.jpg" alt="user" />
-            <h3 className={styles.title} >Ricky Park</h3>
+            <h3> <Link className={styles.title} > Ricky Park </Link> </h3>
             <span>by</span>
-            <h6 className={styles.author}>New York</h6>
+            <h6> <Link className={styles.author}>New York</Link> </h6>
             <div>
                 <button className={styles.primary}>
                     Message

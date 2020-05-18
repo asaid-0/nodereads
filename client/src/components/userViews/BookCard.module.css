@@ -12,7 +12,8 @@
 
 
 .title {
-	margin: 10px 0;
+    margin: 10px 0;
+    color: white;
 }
 
 .author {
@@ -21,11 +22,13 @@
     display: inline-block;
     margin-left: 0.5rem;
     margin-bottom: 1rem;
+    color: #71A662;
 }
 
 
 .card_container {
-	background-color: #231E39;
+    /* background-color: #231E39; */
+    background-color: #001529;
     border-radius: 0.5rem;
 	box-shadow: 0px 10px 20px -10px rgba(0,0,0,0.75);
 	color: #B3B8CD;
@@ -41,20 +44,18 @@
 
 .card_container .pro {
 	color: #231E39;
-	background-color: #FEBB0B;
-	border-radius: 3px;
-	font-size: 14px;
-	font-weight: bold;
-	padding: 3px 7px;
+	border-radius: 1rem;
+	padding: 3px 2px;
 	position: absolute;
-	top: 20px;
-	left: 20px;
+    top: 1rem;
+    left: 1rem;
 }
 
 .card_container .round {
-	border: 0.5rem solid #03BFCB;
+	border: 0.2rem solid #03BFCB;
 	border-radius: 50%;
-	padding: 0.5rem;
+    padding: 0.5rem;
+    margin-top: 2rem;
 }
 
 button.primary {
