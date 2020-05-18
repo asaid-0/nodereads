@@ -22,7 +22,7 @@ function Home(props) {
 
     const getBooks = (shelf, page) => {
         if (shelf === "all") {
-            return axios.get(`http://localhost:5000/home/books?limit=2&offset=${page}`);
+            return axios.get(`http://localhost:5000/home/books?limit=4&offset=${page}`);
         }
         else {
             return axios.get(`http://localhost:5000/home/books?filter=${shelf}&limit=2&offset=${page}`);

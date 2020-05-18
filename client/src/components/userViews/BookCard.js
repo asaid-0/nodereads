@@ -12,22 +12,18 @@ const BookCard = (props) => {
 
     return (
 
-        <Card className={styles.card}>
-            <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
-            <Card.Body className={styles.text}>
-                <Card.Title>{book.title}</Card.Title>
-                <Card.Text >
-                    {book.shortDescription}
-                </Card.Text>
-            </Card.Body>
-            {
-                shelf ?
-                    <ListGroup className="list-group-flush">
-                        <ListGroupItem>{shelf}</ListGroupItem>
-                    </ListGroup> : null
-            }
-        </Card>
-
+        <div className={styles.card_container} >
+            <span className={styles.pro}>PRO</span>
+            <img className={styles.round} src="https://randomuser.me/api/portraits/women/79.jpg" alt="user" />
+            <h3 className={styles.title} >Ricky Park</h3>
+            <span>by</span>
+            <h6 className={styles.author}>New York</h6>
+            <div>
+                <button className={styles.primary}>
+                    Message
+		        </button>
+            </div>
+        </div>
 
     )
 }
