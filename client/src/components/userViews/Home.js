@@ -51,28 +51,6 @@ function Home(props) {
 
 
     const filterShelf = (shelf) => {
-        // setLoading(true);
-        // setFoundBooks(true);
-        // let res = [];
-        // console.log(shelf);
-        // if (shelf === "all") {
-        //     res = await getBooks(0, page)
-        //     console.log(foundBooks);
-        // } else {
-        //     res = await getBooks(shelf, page);
-        // }
-        // if (res.data.length) {
-        //     setBooks(res.data);
-        //     setLoading(false);
-        //     setPage(1);
-        //     setShelf(shelf);
-        // }
-        // else {
-        //     setFoundBooks(false);
-        //     setLoading(false);
-        //     setPage(1);
-        //     setShelf(shelf);
-        // }
         setShelf(shelf);
         setPage(1);
     }
