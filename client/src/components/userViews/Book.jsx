@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import ReviewForm from './ReviewForm';
 import Review from './Review';
 import WithUserHeaders from '../../HOC/WithUserHeaders';
 import Rate from './Rate'
 import { Layout, Row, Col, Card, Descriptions } from "antd";
 import AverageRate from './AverageRate';
+import styles from './Book.module.css';
 
 const { Content } = Layout
 const { Meta } = Card;
@@ -33,13 +35,13 @@ function Book(props) {
     return (
 
         <>
-            <Layout style={{backgroundColor: '#d2e0fa'}}>
-                <Content>
+            <Layout className={styles.layout}>
+                <Content >
                     <Row>
                         <Col span={10}>
                             <Card
                                 hoverable
-                                style={{ margin: 20 }}
+                                className={styles.card}
                                 cover={<img src={book.photo ? `/${book.photo}` : ''} alt="Cover" />}
                             >
                                 <hr />
@@ -48,14 +50,22 @@ function Book(props) {
                             </Card>,
 
                         </Col>
-                        <Col span={7} offset={4}>
-                            <Descriptions style={{ marginTop: 100 }} title={book.name}>
-                                <Descriptions.Item span={7} label="Author">{book.author ? `${book.author.firstname} ${book.author.lastname}` : ""}</Descriptions.Item>
+                        <Col className={styles.desc} span={7} offset={4}>
+                            <h2>{book.name}</h2>
+                            <Descriptions  >
+                                <Descriptions.Item span={7} label="Author">{book.author ?
+                                    <Link to={`/authors/${book.author._id}`} className={styles.link}>{`${book.author.firstname} ${book.author.lastname}`}</Link> : ""}</Descriptions.Item>
                                 <Descriptions.Item span={7} label="Category">{book.categories ?
-                                    book.categories.map(category => category.name)
+                                    book.categories.map(category => {
+                                       return <Link to={`/categories/${category._id}`} className={styles.link}> {category.name} </Link>
+                                    })
                                     : ""}</Descriptions.Item>
-                                <Descriptions.Item span={7} label="Average rate">{book.rates?<AverageRate rates={book.rates} />:"Not rated"}</Descriptions.Item>
+                                <Descriptions.Item span={7} label="Average rate">{book.rates ? <AverageRate rates={book.rates} /> : "Not rated"}</Descriptions.Item>
                                 <Descriptions.Item span={7} label="Description">
+                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                                    Corporis nam ut expedita, autem nemo modi dignissimos labore
+                                    totam quisquam temporibus hic natus quaerat deleniti reprehenderit
+                                    quidem fugiat fugit qui quod.
                                 </Descriptions.Item>
                             </Descriptions>
                         </Col>

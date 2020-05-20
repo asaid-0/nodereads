@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import styles from './ReviewForm.module.css'
 import { Button, Input, Alert } from "antd";
 import {
     CloseSquareFilled,
@@ -83,17 +84,17 @@ function ReviewEditForm(props) {
                 /> : ""
 
             }
-            <form onSubmit={handleSubmit} style={{ margin: '20px' }}>
+            <form onSubmit={handleSubmit} className={styles.form}>
                 <TextArea allowClear placeholder="Write your Review..." rows="5" required
                     onChange={handleChange}
                     value={review}
                 />
 
-                <Button type="primary" htmlType="submit">
-                    {reviewId ? <SaveFilled style={{ fontSize: '20px' }}/> : "Submit Review"}
+                <Button className={styles.button} type="primary" htmlType="submit">
+                    {reviewId ? <SaveFilled className={styles.icon}/> : "Submit Review"}
                 </Button>
                 {reviewId ?
-                    <Button onClick={props.changeMode} type="primary" danger ><CloseSquareFilled style={{ fontSize: '20px' }}/></Button>
+                    <Button onClick={props.changeMode} type="primary" danger ><CloseSquareFilled className={styles.icon}/></Button>
                     : ""}
             </form>
         </>

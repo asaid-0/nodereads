@@ -1,0 +1,16 @@
+.comment {
+    margin: 20px;
+    width: 35rem;
+    background: linear-gradient(#DAE2F8,#D6A4A4);
+    border-radius: 35px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.icon {
+    font-size: 20px;
+}
+
+.button {
+    margin: 5px;
+}

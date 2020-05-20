@@ -1,0 +1,21 @@
+.layout {
+    background: linear-gradient(120deg,#355C7D,#6C5B7B,#C06C84);
+}
+
+.card {
+    margin: 1rem;
+}
+
+.desc {
+    margin-top: 3rem;
+    font-weight: bolder;
+    /* background: linear-gradient(120deg, #553b08, #FFFFFF); */
+}
+
+.link{
+    font-weight: 800;
+    text-decoration: none;
+    text-transform: uppercase;
+    -webkit-text-stroke: 0.03rem #001529;
+    -webkit-text-fill-color: white;
+}
