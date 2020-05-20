@@ -26,27 +26,40 @@ router.get("/categories", async (req, res) => {
     }
 });
 
-router.get("/categories/:id", async (req, res) => {
-    try {
-        const { params: { id } } = req
-        //books = await BookModel.find({categories: id}).populate("author").populate("categories").exec();
-        CategoryModel.findById(id, (err, category)=>{
-            if(err) res.send(err)
-            if(category){
-                BookModel.find({categories: category._id},(err, books)=>{
-                    if(err) res.send(err)
-                    if(books.length > 0)
-                        res.send(books)
-                    else
-                        res.send({"err":"No books in this category"})
-                })
-            } else {
-                res.send({"err":"Category doesn't exist"})
-            }
-        })
-    } catch (error) {
-        res.send(error);
+router.get("/categories/:id", (req, res) => {
+    const limit = 8;
+    let page = 0;
+    if (req.query.page >= 1) {
+        page = req.query.page;
     }
+    // check first if category exists
+    CategoryModel.findById(req.params.id).populate("author").populate("categories")
+        .then(category => {
+            //find books has category in their categories list
+            BookModel.find({ categories: { "$in" : [category]} })
+                .skip(limit * page)
+                .limit(limit)
+                .then(books => {
+                    BookModel.count().exec((err, count) => {
+                        if (err) {
+                            return res.status(400).send(err);
+                        }
+                        return res.status(200).json({ pages: Math.ceil(count / limit), data: books })
+                    })
+                })
+                .catch(err => res.status(400).json({
+                    status: "error",
+                    type: "books",
+                    message: "can't find books by category",
+                    "error": err
+            }));
+        })
+        .catch(err => res.status(400).json({
+                status: "error",
+                type: "category",
+                message: "can't find category",
+                "error": err
+        }));
 });
 
 router.post('/login', (req, res) => {
