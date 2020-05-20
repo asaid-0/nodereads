@@ -3,6 +3,8 @@ const User = require('../models/User');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const CategoryModel = require("../models/Category");
+const BookModel = require("../models/Book");
 
 const generateToken = (id, email) => {
     return jwt.sign({
@@ -12,6 +14,40 @@ const generateToken = (id, email) => {
         expiresIn: "4h"
     });
 }
+
+
+router.get("/categories", async (req, res) => {
+    try {
+        // categories = await CategoryModel.find({}).populate("books").exec();
+        categories = await CategoryModel.find({}).exec();
+        res.send(categories);
+    } catch (error) {
+        res.status(200).json(error);
+    }
+});
+
+router.get("/categories/:id", async (req, res) => {
+    try {
+        const { params: { id } } = req
+        //books = await BookModel.find({categories: id}).populate("author").populate("categories").exec();
+        CategoryModel.findById(id, (err, category)=>{
+            if(err) res.send(err)
+            if(category){
+                BookModel.find({categories: category._id},(err, books)=>{
+                    if(err) res.send(err)
+                    if(books.length > 0)
+                        res.send(books)
+                    else
+                        res.send({"err":"No books in this category"})
+                })
+            } else {
+                res.send({"err":"Category doesn't exist"})
+            }
+        })
+    } catch (error) {
+        res.send(error);
+    }
+});
 
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
