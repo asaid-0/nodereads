@@ -7,7 +7,6 @@ const _ = require('lodash')
 
 //Get all books with populate
 router.get("/books", async (req, res) => {
-    console.log("current_user: ", req.currentUser);
     try {
         books = await BookModel.find({}).populate("author").populate("categories").exec();
         res.status(200).json(books);

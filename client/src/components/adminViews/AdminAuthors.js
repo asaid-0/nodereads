@@ -4,12 +4,14 @@ import axios from 'axios'
 import AuthorRow from './AuthorRow';
 import { Link } from 'react-router-dom';
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
+import styles from './table.module.css'
 
-function AdminAuthors() {
+function AdminAuthors({setSelectedKeys}) {
     const [authors, setAuthors] = useState([]);
 
     ////// add sppinner
     useEffect(() => {
+        setSelectedKeys(['2'])
         axios.get('/admin/authors')
             .then(res => {
                 setAuthors(res.data)
@@ -33,16 +35,17 @@ function AdminAuthors() {
 
     return (
         <Container fluid>
-            <Row><Button variant="success" as={Link} to="/admin/authors/add" >Add Author</Button> </Row>
+             <Row className="justify-content-md-center"><h2>Authors List</h2></Row>
+                <Row><Button style={{marginBottom:'10px'}} variant="success" as={Link} to="/admin/authors/add" >+ Add Author</Button> </Row>
             <Row>
-                <Table responsive>
+                <Table hover responsive>
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Photo</th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Date of Birth</th>
-                            <th>Photo</th>
                             <th>Action</th>
                         </tr>
                     </thead>

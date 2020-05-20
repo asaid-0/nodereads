@@ -4,12 +4,16 @@ import BookRow from './BookRow'
 import axios from 'axios'
 import { Link } from 'react-router-dom';
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
+import styles from './table.module.css'
 
-function AdminBooks() {
+
+
+function AdminBooks({setSelectedKeys}) {
         const [books, setBooks] = useState([]);
 
         ////// add sppinner
         useEffect(() => {
+            setSelectedKeys(['1'])
             axios.get('/admin/books')
                 .then(res => {
                     setBooks(res.data)
@@ -32,17 +36,18 @@ function AdminBooks() {
         }
     
         return (
-            <Container fluid>
-                <Row><Button variant="success" as={Link} to="/admin/books/add" >Add Author</Button> </Row>
+                <Container fluid>
+                <Row className="justify-content-md-center"><h2>Books List</h2></Row>
+                <Row><Button style={{marginBottom:'10px'}} variant="success" as={Link} to="/admin/books/add" >+ Add Book</Button> </Row>
                 <Row>
-                    <Table responsive>
+                    <Table  hover responsive >
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Cover</th>
                                 <th>Title</th>
                                 <th>Author</th>
                                 <th>Category</th>
-                                <th>Photo</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -58,7 +63,7 @@ function AdminBooks() {
                         </tbody>
                     </Table>
                 </Row>
-            </Container>
+                </Container>
         )
 }
 
