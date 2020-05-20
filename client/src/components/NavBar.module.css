@@ -29,6 +29,9 @@
     -webkit-text-stroke: 0.01rem white;
     -webkit-text-fill-color:  rgb(126, 193, 255);
 }
+.button:hover{
+    color: #001529 !important;
+}
 
    
    

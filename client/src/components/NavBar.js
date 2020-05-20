@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styles from './NavBar.module.css';
-import { Navbar, Nav, Form, FormControl } from 'react-bootstrap';
+import { Navbar, Nav, Form, FormControl, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { SearchOutlined } from '@ant-design/icons';
 
 
 export default function NavBar(props) {
@@ -28,7 +29,7 @@ export default function NavBar(props) {
                 <Form inline onSubmit={handleSubmit}>
                     <FormControl type="text" value={searchInput} onChange={handleChange} placeholder="Search" className="mr-sm-2" />
                     <Link to={`/home/search/${searchInput}`}>
-                        <input variant="outline-info" type="submit" value="Search" />
+                        <Button className={styles.button} variant="outline-primary">Search</Button>
                     </Link>
                 </Form>
             </Navbar>

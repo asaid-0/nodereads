@@ -82,7 +82,7 @@ function Home(props) {
                         }
 
                     </Row>
-                    <Row justify="space-around" style={{ height: "100vh" }}>
+                    <Row justify="space-around">
                         {
                             loading ?
                                 <Col>

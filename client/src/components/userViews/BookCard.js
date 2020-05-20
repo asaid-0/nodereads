@@ -1,14 +1,33 @@
 import React from 'react';
 import styles from './BookCard.module.css';
 import { Link } from 'react-router-dom';
-import { Rate } from 'antd';
+import { Rate, Menu, Dropdown, Button, Row } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
 
 const BookCard = (props) => {
 
     const { book, shelf } = props;
+    const menu = (
+        <Menu onClick={handleMenuClick} >
+            <Menu.Item key="reading">
+                Reading
+            </Menu.Item>
+            <Menu.Item key="want to read">
+                Want to read
+            </Menu.Item>
+            <Menu.Item key="read">
+                read
+            </Menu.Item>
 
-    console.log(book);
+        </Menu>
+    );
+    function handleMenuClick(e) {
+        console.log('click', e.key);
+    }
+
+
+    // console.log(book);
 
 
     return (
@@ -22,9 +41,11 @@ const BookCard = (props) => {
             <span>by</span>
             <h6> <Link className={styles.author}>New York</Link> </h6>
             <div>
-                <button className={styles.primary}>
-                    Read
-		        </button>
+                <Dropdown overlay={menu} trigger={['click']}    >
+                    <Button className={styles.primary}>
+                        read
+                    </Button>
+                </Dropdown>
             </div>
         </div>
 
