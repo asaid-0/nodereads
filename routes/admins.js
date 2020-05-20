@@ -155,38 +155,6 @@ router.delete("/authors/:id", (req, res) => {
     });
 });
 
-router.get("/categories", async (req, res) => {
-    try {
-        categories = await CategoryModel.find({}).populate("books").exec();
-        res.send(categories);
-    } catch (error) {
-        res.status(200).json(error);
-    }
-});
-
-router.get("/categories/:id", async (req, res) => {
-    try {
-        const { params: { id } } = req
-        //books = await BookModel.find({categories: id}).populate("author").populate("categories").exec();
-        CategoryModel.findById(id, (err, category)=>{
-            if(err) res.send(err)
-            if(category){
-                BookModel.find({categories: category._id},(err, books)=>{
-                    if(err) res.send(err)
-                    if(books.length > 0)
-                        res.send(books)
-                    else
-                        res.send({"err":"No books in this category"})
-                })
-            } else {
-                res.send({"err":"Category doesn't exist"})
-            }
-        })
-    } catch (error) {
-        res.send(error);
-    }
-});
-
 router.post('/categories', (req, res) => {
     const { body: { name } } = req
     if( name && name.length > 0){
