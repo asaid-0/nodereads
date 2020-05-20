@@ -38,7 +38,7 @@ function Rate(props) {
                 "rateID": rating._id
             }
 
-            axios.delete(`http://localhost:5000/books/${props.book._id}`, { data: payload })
+            axios.delete(`/books/${props.book._id}`, { data: payload })
                 .then(res => {
                     setRating({ ...rating, rate: 0 });
                 })
@@ -51,9 +51,7 @@ function Rate(props) {
 
     return (
         <div>
-
             <RateAntd onChange={handleChangeRate} allowClear allowHalf value={rating.rate} />
-
         </div>
     )
 }
