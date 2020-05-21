@@ -39,8 +39,9 @@ const WithAdminHeaders = (Comp) => {
               <span>Authors</span>
               <Link to="/admin/authors"></Link>
             </Menu.Item>
-            <Menu.Item key="3" icon={<AppstoreOutlined />} >
-            <span>Categories</span>
+            <Menu.Item key="3" icon={<AppstoreOutlined />}>
+              <span>Categories</span>
+              <Link to="/admin/categories"></Link>
             </Menu.Item>
           </Menu>
         </Sider>

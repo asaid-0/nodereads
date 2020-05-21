@@ -12,6 +12,8 @@ import AdminBooks from './components/adminViews/AdminBooks';
 import AdminAuthors from './components/adminViews/AdminAuthors';
 import AuthorForm from './components/adminViews/AuthorForm';
 import BookForm from './components/adminViews/BookForm';
+import AdminCategories from './components/adminViews/AdminCategories';
+import CategoryForm from './components/adminViews/CategoryForm';
 
 
 
@@ -39,6 +41,9 @@ function App() {
         <Route exact path="/admin/authors" component={AdminAuthors} />
         <Route exact path="/admin/authors/add" component={AuthorForm} />
         <Route exact path="/admin/authors/edit/:authorId" component={AuthorForm} />
+        <Route exact path="/admin/categories" component={AdminCategories} />
+        <Route exact path="/admin/categories/add" component={CategoryForm} />
+        <Route exact path="/admin/categories/edit/:categoryId" component={CategoryForm} />
 
       </Router>
     </>
