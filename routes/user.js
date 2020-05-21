@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const CategoryModel = require("../models/Category");
 const BookModel = require("../models/Book");
+const upload = require('../middleware/multer')
+const _ = require('lodash')
 
 const generateToken = (id, email) => {
     return jwt.sign({
@@ -103,8 +105,11 @@ router.post('/login', (req, res) => {
             })
         })
 });
-router.post('/register', (req, res) => {
-    const { firstname, lastname, email, password } = req.body
+
+router.post('/register', upload.single('userPhoto'), (req, res) => {
+    const { firstname, lastname, email, password } = req.body;
+    // const photo = req.file;
+    const photoPath = _.get(req, 'file.path')
     bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
             console.log("Error: ", err.message);
@@ -120,8 +125,8 @@ router.post('/register', (req, res) => {
                 lastname: lastname,
                 email: email,
                 password: hash,
-                isAdmin: false
-                // photo: photo,      
+                isAdmin: false,
+                photo: photoPath,  
             });
             user.save()
                 .then(user => {

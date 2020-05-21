@@ -26,17 +26,17 @@ router.get("/books/:id", async (req, res) => {
 });
 
 //add new book and add the book to authors books
-router.post("/books", upload.single('bookImage') ,async (req, res) => {
-    
+router.post("/books", upload.single('bookImage'), async (req, res) => {
+
     const { name, author, categories } = req.body;
     const photo = req.file
-    const photoPath = _.get(req,'file.path')
+    const photoPath = _.get(req, 'file.path')
     const parsedCat = JSON.parse(categories)
     // if (!name || !author || !categories || !photo) return res.status(400).send("bad request");
     const book = new BookModel({
         name,
         author,
-        categories:parsedCat,
+        categories: parsedCat,
         photo: photoPath
     });
     try {
@@ -57,9 +57,9 @@ router.patch("/books/:id", upload.single('bookImage'), (req, res) => {
     const modifiedBook = {
         name,
         author,
-        categories:parsedCat
+        categories: parsedCat
     }
-    if (photo){
+    if (photo) {
         modifiedBook.photo = photo.path
     }
     BookModel.findByIdAndUpdate(req.params.id, modifiedBook, { new: true })
@@ -109,10 +109,10 @@ router.get("/authors/:id", async (req, res) => {
 });
 
 //add new author
-router.post("/authors", upload.single('authorImage') ,(req, res) => {
+router.post("/authors", upload.single('authorImage'), (req, res) => {
     const { firstname, lastname, dob } = req.body;
     const photo = req.file
-    const photoPath = _.get(req,'file.path')
+    const photoPath = _.get(req, 'file.path')
     // if (!firstname || !lastname || !dob || !photo ) return res.status(400).send("bad request");    
     const author = new AuthorModel({
         firstname,
@@ -136,7 +136,7 @@ router.post("/authors", upload.single('authorImage') ,(req, res) => {
             lastname,
             dob
         }
-        if (photo){
+        if (photo) {
             modifiedAuthor.photo = photo.path
         }
         AuthorModel.findByIdAndUpdate(req.params.id, modifiedAuthor, { new: true })
@@ -157,7 +157,7 @@ router.delete("/authors/:id", (req, res) => {
 
 router.post('/categories', (req, res) => {
     const { body: { name } } = req
-    if( name && name.length > 0){
+    if (name && name.length > 0) {
         const category = new CategoryModel({
             name
         })
@@ -166,38 +166,38 @@ router.post('/categories', (req, res) => {
             res.send(category)
         })
     } else {
-        res.send({"err":"Name is empty or undefined"})
+        res.send({ "err": "Name is empty or undefined" })
     }
 })
 
 router.patch('/categories/:id', (req, res) => {
     const { body: { name } } = req
-    if( name && name.length > 0){
+    if (name && name.length > 0) {
         CategoryModel.findByIdAndUpdate(req.params.id, { 'name': name }, (err, category) => {
             if (err) res.send(err);
             res.send(category)
         })
     } else {
-        res.send({"err":"Name is empty or undefined"})
+        res.send({ "err": "Name is empty or undefined" })
     }
 })
 
 router.delete('/categories/:id', (req, res) => {
-    CategoryModel.findByIdAndDelete(req.params.id, function(err, category){
+    CategoryModel.findByIdAndDelete(req.params.id, function (err, category) {
         if (err) res.send(err)
-        try{
+        try {
             BookModel.updateMany(
-                { cateogries : category._id },
-                { $pull:{ categories : { $in: [category._id]} } },
+                { cateogries: category._id },
+                { $pull: { categories: { $in: [category._id] } } },
                 { multi: true }, (err) => {
                     if (err) res.send(err)
                     res.send(category)
                 }
             )
         } catch {
-            res.send({"err":"Category doesn't exist"})
+            res.send({ "err": "Category doesn't exist" })
         }
-        
+
     })
 })
 
