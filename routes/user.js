@@ -8,10 +8,11 @@ const BookModel = require("../models/Book");
 const upload = require('../middleware/multer')
 const _ = require('lodash')
 
-const generateToken = (id, email) => {
+const generateToken = (id, email, isAdmin) => {
     return jwt.sign({
         _id: id,
-        email: email
+        email: email,
+        isAdmin: isAdmin
     }, process.env.JWT_SECRET_KEY || "NOJWTKEY", {
         expiresIn: "4h"
     });
@@ -71,7 +72,7 @@ router.post('/login', (req, res) => {
             if (user) {
                 bcrypt.compare(password, user.password, (err, success) => {
                     if (success) {
-                        const token = generateToken(user._id, user.email);
+                        const token = generateToken(user._id, user.email, user.isAdmin);
                         return res.status(200).json({
                             status: "success",
                             type: "login",
@@ -130,7 +131,7 @@ router.post('/register', upload.single('userPhoto'), (req, res) => {
             });
             user.save()
                 .then(user => {
-                    const token = generateToken(user._id, user.email);
+                    const token = generateToken(user._id, user.email, user.isAdmin);
                     return res.status(201).json({
                         status: "success",
                         type: "register",
