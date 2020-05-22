@@ -3,26 +3,21 @@ import React, { useEffect, useContext } from 'react';
 // import { checkAuth } from './authHelpers';
 import { UserContext } from './authContext';
 
+
 function UserRoute(props) {
     // console.log(useContext(UserContext));
 
-    const {user, setUser} = useContext(UserContext);
-    // if(!user) {
-    //     const token = sessionStorage.getItem('token')
-    //     if(token) {
-    //         const userInfo = token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+');
-    //         setUser(JSON.parse(window.atob(userInfo)));
-    //     }
-    // }
-
+    const { user, setUser } = useContext(UserContext);
+    // console.log(user);
     const { component: Component, ...rest } = props;
-    const RenderComponent = () => {
+    const RenderComponent = (p) => {
         if (user && user._id) {
-            return <Component {...props} />
+            return <Component {...p} />
         } else {
+
             return <Redirect to={{
                 pathname: "/login",
-                state: { from: props.location },
+                state: { from: p.location },
             }} />;
         }
     }
@@ -30,21 +25,25 @@ function UserRoute(props) {
     return (
         <Route
             {...rest}
-            render={ RenderComponent }
+            component={RenderComponent}
         />
     );
 }
 
-
 function AdminRoute(props) {
+    // console.log(useContext(UserContext));
+
+    const { user, setUser } = useContext(UserContext);
+    // console.log(user);
     const { component: Component, ...rest } = props;
-    const RenderComponent = () => {
-        if (true) {
-            return <Component {...props} />
+    // console.log(Component);
+    const RenderComponent = (p) => {
+        if (user && user.isAdmin) {
+            return <Component {...p} />
         } else {
             return <Redirect to={{
                 pathname: "/login",
-                state: { from: props.location },
+                state: { from: p.location },
             }} />;
         }
     }
@@ -52,7 +51,7 @@ function AdminRoute(props) {
     return (
         <Route
             {...rest}
-            render={ RenderComponent }
+            component={RenderComponent}
         />
     );
 }

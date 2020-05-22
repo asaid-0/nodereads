@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import Dashboard from './components/adminViews/Dashboard';
@@ -20,8 +20,10 @@ import CategoryForm from './components/adminViews/CategoryForm';
 
 function App() {
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
+  
   const userObject = useMemo(() => ({ user, setUser }), [user, setUser]);
+
 
 
   return (
@@ -40,7 +42,7 @@ function App() {
 
           <UserRoute exact path="/authors" component={Authors} />
           <UserRoute exact path="/categories" component={Categories} />
-        </UserContext.Provider>
+        
         <AdminRoute exact path="/admin" component={Dashboard} />
         <AdminRoute exact path="/admin/books" component={AdminBooks} />
         <AdminRoute exact path="/admin/books/add" component={BookForm} />
@@ -51,6 +53,7 @@ function App() {
         <AdminRoute exact path="/admin/categories" component={AdminCategories} />
         <AdminRoute exact path="/admin/categories/add" component={CategoryForm} />
         <AdminRoute exact path="/admin/categories/edit/:categoryId" component={CategoryForm} />
+      </UserContext.Provider>
 
       </Router>
     </>

@@ -7,7 +7,7 @@ import { validateLoginForm } from './authHelpers';
 import { UserContext } from './authContext';
 import { useEffect } from 'react';
 
-function Login() {
+function Login(props) {
     const history = useHistory();
     const { user, setUser } = useContext(UserContext);
     const { error, showError } = useError(null);
@@ -23,14 +23,16 @@ function Login() {
         if (!user) {
             const token = sessionStorage.getItem('token')
             if (token) {
-                const userInfo = token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+');
-                setUser(JSON.parse(window.atob(userInfo)));
-                history.push('/home');
+                const userInfo = JSON.parse(window.atob(token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+')));
+                setUser(userInfo);
+
+                // console.log("MyProps: ", props.location.state.from.pathname);
+                history.push(props.location.state.from.pathname);
             }
         }
 
 
-    }, [])
+    }, [user])
 
     const handleSubmit = () => {
         if (validateLoginForm(userEmail, userPassword, showError)) {
@@ -47,20 +49,20 @@ function Login() {
                 .then(json => {
                     if (json.status === "success") {
                         sessionStorage.setItem('token', json.token);
-                        const userInfo = json.token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+');
-                        setUser(JSON.parse(window.atob(userInfo)));
-                        history.push('/home');
+                        const userInfo = JSON.parse(window.atob(json.token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+')));
+                        setUser(userInfo);
+                        history.push(props.location.state.from.pathname);
                     } else {
                         handleError(json.message)
-                        console.log(json);
+                        // console.log(json);
                     }
                 })
                 .catch(err => {
-                    console.log(err);
+                    // console.log(err);
                     handleError(err.message)
                 });
         }
-        console.log(user);
+        // console.log(user);
     }
 
     return (

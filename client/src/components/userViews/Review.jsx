@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Card from 'react-bootstrap/Card'
 // import Button from 'react-bootstrap/Button'
 import ReviewForm from './ReviewForm'
 import axios from 'axios'
 import styles from './Review.module.css';
+import { UserContext } from '../authComponents/authContext';
 import { Comment, Avatar, Button, Col } from "antd";
 import {
     EditFilled,
@@ -11,7 +12,8 @@ import {
 } from '@ant-design/icons';
 
 function Review(props) {
-
+    const { user } = useContext(UserContext);
+    console.log("Kenany review: ", user);
     const [review, setReview] = useState({ ...props.review, isInEditMode: false })
 
     const changeMode = () => {
