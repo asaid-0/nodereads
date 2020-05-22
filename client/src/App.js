@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import Dashboard from './components/adminViews/Dashboard';
@@ -12,33 +12,42 @@ import AdminBooks from './components/adminViews/AdminBooks';
 import AdminAuthors from './components/adminViews/AdminAuthors';
 import AuthorForm from './components/adminViews/AuthorForm';
 import BookForm from './components/adminViews/BookForm';
-
-
-
+import { UserRoute, AdminRoute } from './components/authComponents/authRoutes';
+import { Login, Register } from './components/authComponents/guestComponents';
+import { UserContext } from './components/authComponents/authContext';
 
 function App() {
+
+  const [user, setUser] = useState(null);
+  const userObject = useMemo(() => ({ user, setUser }), [user, setUser]);
+
+
   return (
     <>
       <Router>
-        <Route exact path="/home" component={Home} />
-        <Route exact path="/home/search/:searchInput" component={SearchResult} />
-        <Route exact path="/" component={Home} />
-
-        <Route exact path="/books" component={Books} />
-        <Route exact path="/books/:bookId" component={Book} />
-
-        <Route exact path="/authors" component={Authors} />
+        <UserContext.Provider value={userObject}>
+          <UserRoute exact path="/home" component={Home} />
+          <UserRoute exact path="/home/search/:searchInput" component={SearchResult} />
+          <UserRoute exact path="/" component={Home} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
 
 
-        <Route exact path="/categories" component={Categories} />
+          <UserRoute exact path="/books" component={Books} />
+          <UserRoute exact path="/books/:bookId" component={Book} />
 
-        <Route exact path="/admin" component={Dashboard} />
-        <Route exact path="/admin/books" component={AdminBooks} />
-        <Route exact path="/admin/books/add" component={BookForm} />
-        <Route exact path="/admin/books/edit/:bookId" component={BookForm} />
-        <Route exact path="/admin/authors" component={AdminAuthors} />
-        <Route exact path="/admin/authors/add" component={AuthorForm} />
-        <Route exact path="/admin/authors/edit/:authorId" component={AuthorForm} />
+          <UserRoute exact path="/authors" component={Authors} />
+        </UserContext.Provider>
+
+        <UserRoute exact path="/categories" component={Categories} />
+
+        <AdminRoute exact path="/admin" component={Dashboard} />
+        <AdminRoute exact path="/admin/books" component={AdminBooks} />
+        <AdminRoute exact path="/admin/books/add" component={BookForm} />
+        <AdminRoute exact path="/admin/books/edit/:bookId" component={BookForm} />
+        <AdminRoute exact path="/admin/authors" component={AdminAuthors} />
+        <AdminRoute exact path="/admin/authors/add" component={AuthorForm} />
+        <AdminRoute exact path="/admin/authors/edit/:authorId" component={AuthorForm} />
 
       </Router>
     </>
