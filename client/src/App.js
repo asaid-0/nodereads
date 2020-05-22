@@ -15,6 +15,8 @@ import BookForm from './components/adminViews/BookForm';
 import { UserRoute, AdminRoute } from './components/authComponents/authRoutes';
 import { Login, Register } from './components/authComponents/guestComponents';
 import { UserContext } from './components/authComponents/authContext';
+import AdminCategories from './components/adminViews/AdminCategories';
+import CategoryForm from './components/adminViews/CategoryForm';
 
 function App() {
 
@@ -37,10 +39,8 @@ function App() {
           <UserRoute exact path="/books/:bookId" component={Book} />
 
           <UserRoute exact path="/authors" component={Authors} />
+          <UserRoute exact path="/categories" component={Categories} />
         </UserContext.Provider>
-
-        <UserRoute exact path="/categories" component={Categories} />
-
         <AdminRoute exact path="/admin" component={Dashboard} />
         <AdminRoute exact path="/admin/books" component={AdminBooks} />
         <AdminRoute exact path="/admin/books/add" component={BookForm} />
@@ -48,6 +48,9 @@ function App() {
         <AdminRoute exact path="/admin/authors" component={AdminAuthors} />
         <AdminRoute exact path="/admin/authors/add" component={AuthorForm} />
         <AdminRoute exact path="/admin/authors/edit/:authorId" component={AuthorForm} />
+        <AdminRoute exact path="/admin/categories" component={AdminCategories} />
+        <AdminRoute exact path="/admin/categories/add" component={CategoryForm} />
+        <AdminRoute exact path="/admin/categories/edit/:categoryId" component={CategoryForm} />
 
       </Router>
     </>
