@@ -49,8 +49,8 @@ router.post('/:id', (req, res) => {
     if (type === 'review') {
 
         const { content } = req.body
-        if (!content.trim()) return res.json({ error: 'Review content required' })
-        if (content.trim().length < 3 ) return res.json({ error: 'Review content is shorter than the minimum allowed length (3)' })
+        if (!content.trim()) return res.status(400).json({ error: 'Review content required' })
+        if (content.trim().length < 3 ) return res.status(400).json({ error: 'Review content is shorter than the minimum allowed length (3)' })
         
         const review = {
             // user: currentUser,
@@ -80,7 +80,7 @@ router.post('/:id', (req, res) => {
                             res.status(400).send(err)
                         })
 
-                } else return res.json({ error: 'You have already submitted a review, you can edit it in review section below' })
+                } else return res.status(400).json({ error: 'You have already submitted a review, you can edit it in review section below' })
             })
             .catch(err => res.send(err))
     }
@@ -146,8 +146,8 @@ router.patch('/:id', (req, res) => {
     ///// Edit review
     if (type === 'review') {
         const { reviewID, newContent } = req.body;
-        if (!reviewID || !newContent.trim()) return res.json({ error: 'Review content required' })
-        if (newContent.trim().length < 3 ) return res.json({ error: 'Review content is shorter than the minimum allowed length (3)' })
+        if (!reviewID || !newContent.trim()) return res.status(400).json({ error: 'Review content required' })
+        if (newContent.trim().length < 3 ) return res.status(400).json({ error: 'Review content is shorter than the minimum allowed length (3)' })
 
         BookModel.findById(id)
             .populate('reviews.user')
