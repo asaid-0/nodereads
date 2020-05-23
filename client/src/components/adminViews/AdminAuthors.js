@@ -4,7 +4,7 @@ import axios from 'axios'
 import AuthorRow from './AuthorRow';
 import { Link } from 'react-router-dom';
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
-import styles from './table.module.css'
+import './table.module.css'
 
 function AdminAuthors({setSelectedKeys}) {
     const [authors, setAuthors] = useState([]);

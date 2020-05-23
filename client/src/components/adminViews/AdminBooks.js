@@ -4,7 +4,7 @@ import BookRow from './BookRow'
 import axios from 'axios'
 import { Link } from 'react-router-dom';
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
-import styles from './table.module.css'
+import './table.module.css'
 
 
 
