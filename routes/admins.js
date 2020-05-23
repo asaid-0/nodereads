@@ -29,6 +29,11 @@ router.get("/books/:id", async (req, res) => {
 router.post("/books", upload.single('bookImage'), async (req, res) => {
 
     const { name, author, categories } = req.body;
+
+    if(req.fileValidationError) {
+        return res.status(400).json({ "imageError": req.fileValidationError });
+    }
+
     const photo = req.file
     const photoPath = _.get(req, 'file.path')
     const parsedCat = JSON.parse(categories)
@@ -51,6 +56,10 @@ router.post("/books", upload.single('bookImage'), async (req, res) => {
 //edit book
 router.patch("/books/:id", upload.single('bookImage'), (req, res) => {
     const { name, author, categories } = req.body;
+
+    if(req.fileValidationError) {
+        return res.status(400).json({ "imageError": req.fileValidationError });
+    }
     const photo = req.file
     const parsedCat = JSON.parse(categories)
     // if (!name || !author || !categories) return res.status(400).send("bad request");
@@ -62,7 +71,7 @@ router.patch("/books/:id", upload.single('bookImage'), (req, res) => {
     if (photo) {
         modifiedBook.photo = photo.path
     }
-    BookModel.findByIdAndUpdate(req.params.id, modifiedBook, { new: true })
+    BookModel.findByIdAndUpdate(req.params.id, modifiedBook, { new: true , runValidators:true })
         .then(book => {
             res.status(200).json(book)
         }).catch(err => {
@@ -111,6 +120,10 @@ router.get("/authors/:id", async (req, res) => {
 //add new author
 router.post("/authors", upload.single('authorImage'), (req, res) => {
     const { firstname, lastname, dob } = req.body;
+
+    if(req.fileValidationError) {
+        return res.status(400).json({ "imageError": req.fileValidationError });
+    }
     const photo = req.file
     const photoPath = _.get(req, 'file.path')
     // if (!firstname || !lastname || !dob || !photo ) return res.status(400).send("bad request");    
@@ -128,6 +141,11 @@ router.post("/authors", upload.single('authorImage'), (req, res) => {
     //edit author
     router.patch("/authors/:id", upload.single('authorImage'), (req, res) => {
         const { firstname, lastname, dob } = req.body;
+
+        if(req.fileValidationError) {
+            return res.status(400).json({ "imageError": req.fileValidationError });
+        }
+
         const photo = req.file
         // if (!firstname || !lastname || !dob) return res.status(400).send("bad request");
 
@@ -139,7 +157,7 @@ router.post("/authors", upload.single('authorImage'), (req, res) => {
         if (photo) {
             modifiedAuthor.photo = photo.path
         }
-        AuthorModel.findByIdAndUpdate(req.params.id, modifiedAuthor, { new: true })
+        AuthorModel.findByIdAndUpdate(req.params.id, modifiedAuthor, { new: true, runValidators:true })
             .then(author => {
                 res.status(200).json(author)
             }).catch(err => {
