@@ -1,15 +1,16 @@
 import React, { useState, useContext } from 'react'
-import Card from 'react-bootstrap/Card'
-// import Button from 'react-bootstrap/Button'
 import ReviewForm from './ReviewForm'
 import axios from 'axios'
 import styles from './Review.module.css';
 import { UserContext } from '../authComponents/authContext';
-import { Comment, Avatar, Button, Col } from "antd";
+import { Comment, Avatar, Button, Col, Modal } from "antd";
 import {
     EditFilled,
     DeleteFilled,
+    ExclamationCircleOutlined,
 } from '@ant-design/icons';
+
+const { confirm } = Modal;
 
 function Review(props) {
 
@@ -30,11 +31,23 @@ function Review(props) {
             "type": "review",
             "reviewID": reviewID
         }
-        axios.delete(`/books/${props.bookId}`, { data: payload })
-            .then(res => {
-                props.updateReviewList(res.data);
-            })
-            .catch(err => console.log(err))
+        confirm({
+            title: 'Are you sure you want to delete the Review?',
+            icon: <ExclamationCircleOutlined />,
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+                return axios.delete(`/books/${props.bookId}`, { data: payload })
+                    .then(res => {
+                        props.updateReviewList(res.data);
+                    })
+                    .catch(err => console.log(err))
+            },
+            onCancel() { },
+        });
+
+
     }
 
     return (
@@ -66,6 +79,7 @@ function Review(props) {
                                 <Button className={styles.button} type="primary" onClick={changeMode} variant="info">
                                     <EditFilled className={styles.icon} />
                                 </Button>
+
                                 <Button type="primary" danger onClick={() => deletReview(review._id)}>
                                     <DeleteFilled className={styles.button} className={styles.icon} />
                                 </Button>

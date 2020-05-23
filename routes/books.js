@@ -49,12 +49,13 @@ router.post('/:id', (req, res) => {
     if (type === 'review') {
 
         const { content } = req.body
-        if (!content.trim()) return res.json({ error: 'review content required' })
-
+        if (!content.trim()) return res.json({ error: 'Review content required' })
+        if (content.trim().length < 3 ) return res.json({ error: 'Review content is shorter than the minimum allowed length (3)' })
+        
         const review = {
             // user: currentUser,
             user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730"),
-            content,
+            content: content.trim(),
         }
 
         BookModel.findById(id)
@@ -145,11 +146,13 @@ router.patch('/:id', (req, res) => {
     ///// Edit review
     if (type === 'review') {
         const { reviewID, newContent } = req.body;
-        if (!reviewID || !newContent.trim()) return res.json({ error: 'review content required' })
+        if (!reviewID || !newContent.trim()) return res.json({ error: 'Review content required' })
+        if (newContent.trim().length < 3 ) return res.json({ error: 'Review content is shorter than the minimum allowed length (3)' })
+
         BookModel.findById(id)
             .populate('reviews.user')
             .then(book => {
-                book.reviews.id(reviewID).content = newContent
+                book.reviews.id(reviewID).content = newContent.trim()
                 book.save()
                     .then(book => res.status(200).json(book.reviews.id(reviewID)))
                     .catch(err => res.status(400).send(err))
