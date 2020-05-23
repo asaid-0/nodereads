@@ -7,7 +7,7 @@ import { DownOutlined } from '@ant-design/icons';
 
 const BookCard = (props) => {
 
-    const { book, shelf } = props;
+    const { book, shelf, handleShelfChange } = props;
     const menu = (
         <Menu onClick={handleMenuClick} >
             <Menu.Item key="reading">
@@ -23,8 +23,14 @@ const BookCard = (props) => {
         </Menu>
     );
     function handleMenuClick(e) {
-        console.log('click', e.key);
+        console.log('you clicked', e.key);
+        if (e.key !== shelf) {
+            // sending shelf if only it is changed
+            // this is called lift state up through event handler and props function
+            handleShelfChange(e.key);
+        }
     }
+
 
 
     // console.log(book);
@@ -44,7 +50,7 @@ const BookCard = (props) => {
                 {
                     shelf ?
                         <>
-                            <Dropdown overlay={menu} trigger={['click']}    >
+                            <Dropdown overlay={menu} trigger={['click']} >
                                 <Button className={styles.primary}>
                                     read
                             </Button>
@@ -52,9 +58,8 @@ const BookCard = (props) => {
                             <Button> Remove  </Button>
                         </>
                         :
-                        <Button> Add to shelf </Button>
+                        null
                 }
-
             </div>
         </div>
 

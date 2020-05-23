@@ -60,7 +60,9 @@ function Home(props) {
         setPage(page);
     }
 
-
+    const handleShelfChange = (shelf) => {
+        // make your request to change shelf here
+    }
 
 
 
@@ -92,7 +94,10 @@ function Home(props) {
                                 books.map((elem) =>
 
                                     <Col style={{ marginTop: "2rem" }} >
-                                        <BookCard key={elem.book._id} book={elem.book} shelf={elem.shelf} />
+                                        <BookCard key={elem.book._id}
+                                            book={elem.book}
+                                            shelf={elem.shelf}
+                                            handleShelfChange={handleShelfChange} />
                                     </Col>
                                 )
                         }
