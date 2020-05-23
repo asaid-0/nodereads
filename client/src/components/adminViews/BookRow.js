@@ -15,7 +15,7 @@ function BookRow({ book, index, deleteBook }) {
             <td>{book.author.firstname}</td>
             <td>{book.categories.map((cat,index)=><h5  key={index}><Badge pill variant="warning"> {cat.name} </Badge></h5>)}</td>
             <td>
-                <Button variant="info" as={Link} to={`/admin/books/edit/${book._id}`}><EditFilled style={{ fontSize: '20px' }} /></Button><br/>
+                <Button variant="info" as={Link} to={`/admin/books/edit/${book._id}`} style={{marginRight:"0.2rem"}} ><EditFilled style={{ fontSize: '20px' }} /></Button>
                 <Button variant="danger" onClick={() => deleteBook(book._id)}><DeleteFilled style={{ fontSize: '20px' }} /></Button>
             </td>
         </tr>

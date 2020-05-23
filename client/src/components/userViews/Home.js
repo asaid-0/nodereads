@@ -31,7 +31,7 @@ function Home(props) {
 
 
     useEffect(() => {
-        // console.log(props.name);
+        console.log(props.name);
         setLoading(true);
         setFoundBooks(true);
         getBooks(shelf, page).then(res => {
@@ -60,7 +60,9 @@ function Home(props) {
         setPage(page);
     }
 
-
+    const handleShelfChange = (shelf) => {
+        // make your request to change shelf here
+    }
 
 
 
@@ -82,7 +84,7 @@ function Home(props) {
                         }
 
                     </Row>
-                    <Row justify="space-around">
+                    <Row justify="space-around" style={{ height: "100%" }} >
                         {
                             loading ?
                                 <Col>
@@ -92,7 +94,10 @@ function Home(props) {
                                 books.map((elem) =>
 
                                     <Col style={{ marginTop: "2rem" }} >
-                                        <BookCard key={elem.book._id} book={elem.book} shelf={elem.shelf} />
+                                        <BookCard key={elem.book._id}
+                                            book={elem.book}
+                                            shelf={elem.shelf}
+                                            handleShelfChange={handleShelfChange} />
                                     </Col>
                                 )
                         }

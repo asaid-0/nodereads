@@ -1,5 +1,6 @@
 .content{
     height: 90vh;
+    overflow: auto ;
     /* background-color: blue; */
 }
 .loader{

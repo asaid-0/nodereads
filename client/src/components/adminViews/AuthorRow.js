@@ -21,7 +21,7 @@ function AuthorRow({ author, index, deleteAuthor }) {
                 .tz("Africa/Cairo")
                 .format('ll')}</td>
             <td>
-                <Button variant="info" as={Link} to={`/admin/authors/edit/${author._id}`} ><EditFilled style={{ fontSize: '20px' }}/> </Button><br/>
+                <Button variant="info" as={Link} to={`/admin/authors/edit/${author._id}`} style={{marginRight:"0.2rem"}} ><EditFilled style={{ fontSize: '20px' }}/> </Button>
                 <Button variant="danger" onClick={() => deleteAuthor(author._id)}><DeleteFilled style={{ fontSize: '20px' }}/></Button>
             </td>
         </tr>
