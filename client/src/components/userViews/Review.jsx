@@ -12,30 +12,31 @@ import {
 } from '@ant-design/icons';
 
 function Review(props) {
-    const { user } = useContext(UserContext);
-    console.log("Kenany review: ", user);
-    const [review, setReview] = useState({ ...props.review, isInEditMode: false })
 
+    const { user } = useContext(UserContext);
+    const [review, setReview] = useState({ ...props.review, isInEditMode: false })
+    // console.log("userID: ", user._id, "\n review.user: ", review.user);
+    
     const changeMode = () => {
         setReview({ ...review, isInEditMode: !review.isInEditMode });
     }
-
+    
     const updateReview = (newReview) => {
         setReview({ ...newReview, isInEditMode: !review.isInEditMode });
     }
-
+    
     const deletReview = (reviewID) => {
         const payload = {
             "type": "review",
             "reviewID": reviewID
         }
-        axios.delete(`http://localhost:5000/books/${props.bookId}`, { data: payload })
-            .then(res => {
-                props.updateReviewList(res.data);
-            })
-            .catch(err => console.log(err))
+        axios.delete(`/books/${props.bookId}`, { data: payload })
+        .then(res => {
+            props.updateReviewList(res.data);
+        })
+        .catch(err => console.log(err))
     }
-
+    
     return (
         <>
             {review.isInEditMode ?
@@ -45,12 +46,12 @@ function Review(props) {
                             updateReview={updateReview}
                             bookId={props.bookId} review={review}
                             changeMode={changeMode}
-                        />
-                        {/* <Button onClick={changeMode} type="primary" danger >X</Button> */}
+                            />
                     </div>
                 </Col>
                 :
                 <Comment
+                    key={review._id}
                     className={styles.comment}
                     author={<a>{`${review.user.firstname} ${review.user.lastname}`}</a>}
                     avatar={
@@ -63,13 +64,17 @@ function Review(props) {
                         <p>
                             {review.content}
                             <br />
-                            {/* {review.user===} */}
-                            <Button className={styles.button} type="primary" onClick={changeMode} variant="info">
-                                <EditFilled className={styles.icon } />
-                            </Button>
-                            <Button type="primary" danger onClick={() => deletReview(review._id)}>
-                                <DeleteFilled className={styles.button} className={styles.icon} />
-                            </Button>
+                            {review.user._id === user._id ?
+                                <>
+                                    <Button className={styles.button} type="primary" onClick={changeMode} variant="info">
+                                        <EditFilled className={styles.icon} />
+                                    </Button>
+                                    <Button type="primary" danger onClick={() => deletReview(review._id)}>
+                                        <DeleteFilled className={styles.button} className={styles.icon} />
+                                    </Button>
+                                </>
+                                : ""}
+
                         </p>
                     }
                 />
