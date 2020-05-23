@@ -95,7 +95,7 @@ function ReviewEditForm(props) {
                 </Button>
                 {reviewId ?
                     <Button onClick={props.changeMode} type="primary" danger ><CloseSquareFilled className={styles.icon}/></Button>
-                    : ""}
+                    : null}
             </form>
         </>
     )
