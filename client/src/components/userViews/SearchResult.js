@@ -4,6 +4,7 @@ import { Layout, Spin, Row, Col } from 'antd';
 import WithUserHeaders from '../../HOC/WithUserHeaders';
 import BookCard from './BookCard';
 import EmptyPlaceholder from '../ui_components/EmptyPlaceholder';
+import styles from './SearchResult.module.css';
 
 const { Content } = Layout;
 
@@ -38,21 +39,21 @@ function SearchResult(props) {
     }, [searchInput])
     return (
         <>
-            <Content style={{ height: "100vh" }}>
+            <Content style={{ height: "100vh" }} >
 
                 {
                     loading ?
                         <Col>
-                            <Spin size="large" />
+                            <Spin className={styles.loader} size="large" />
                         </Col> :
                         <>
                             {
                                 books.length ?
-                                    <h1>Books</h1>
+                                    <h1 className={styles.title} >Books</h1>
                                     :
                                     null
                             }
-                            <Row align="middle" justify="space-around" style={{ marginTop: "2rem" }} >
+                            <Row align="middle" justify="space-around" style={{ marginTop: "1rem" }} >
                                 {
                                     books.map((elem) =>
                                         <Col style={{ marginTop: "2rem" }} >

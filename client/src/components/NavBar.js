@@ -27,7 +27,7 @@ export default function NavBar(props) {
                     <Nav.Link as={Link} to="/authors" className={styles.link}>{searchInput}</Nav.Link>
                 </Nav>
                 <Form inline onSubmit={handleSubmit}>
-                    <FormControl type="text" value={searchInput} onChange={handleChange} placeholder="Search" className="mr-sm-2" />
+                    <FormControl type="text" value={searchInput} onChange={handleChange} placeholder="book or author name" className="mr-sm-2" />
                     <Link to={`/home/search/${searchInput}`}>
                         <Button className={styles.button} variant="outline-primary">Search</Button>
                     </Link>

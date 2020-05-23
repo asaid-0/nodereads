@@ -41,11 +41,20 @@ const BookCard = (props) => {
             <span>by</span>
             <h6> <Link className={styles.author}>New York</Link> </h6>
             <div>
-                <Dropdown overlay={menu} trigger={['click']}    >
-                    <Button className={styles.primary}>
-                        read
-                    </Button>
-                </Dropdown>
+                {
+                    shelf ?
+                        <>
+                            <Dropdown overlay={menu} trigger={['click']}    >
+                                <Button className={styles.primary}>
+                                    read
+                            </Button>
+                            </Dropdown>
+                            <Button> Remove  </Button>
+                        </>
+                        :
+                        <Button> Add to shelf </Button>
+                }
+
             </div>
         </div>
 
