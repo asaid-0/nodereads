@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Button } from 'react-bootstrap';
-import axios from 'axios'
+import axios from '../../components/api/axios';
 import Select from 'react-select';
 import bookSchema from '../../schemas/bookSchema'
 import _ from 'lodash'
@@ -91,9 +91,10 @@ function BookForm(props) {
             if (editingId) {
                 axios.patch(`/admin/books/${editingId}`, formData)
                     .then(res => { props.history.push('/admin/books') })
-                    .catch(err => { console.log(err) })
+                    .catch(err =>{ if (err.response.data.imageError) setErrors({...errors, bookImage:err.response.data.imageError}) })
             } else {
-                axios.post('/admin/books', formData).then(res => { props.history.push('/admin/books') }).catch(err => { console.log(err) })
+                axios.post('/admin/books', formData).then(res => { props.history.push('/admin/books') })
+                .catch(err =>{ if (err.response.data.imageError) setErrors({...errors, bookImage:err.response.data.imageError}) } )
             }
         } catch (error) {
             setErrors(error.details.reduce((agg, e) => ({ ...agg, [e.name]: e.message }), {}));

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-date-picker';
-import axios from 'axios'
+import axios from '../../components/api/axios';
 import authorSchema from '../../schemas/authorSchema'
 import _ from 'lodash'
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
@@ -56,9 +56,10 @@ function AuthorForm(props) {
             if (editingId) {
                 axios.patch(`/admin/authors/${editingId}`, formData)
                     .then(res => { props.history.push('/admin/authors') })
-                    .catch(err => { console.log(err) })
+                    .catch(err =>{ if (err.response.data.imageError) setErrors({...errors, authorImage:err.response.data.imageError}) } )
             } else {
-                axios.post('/admin/authors', formData).then(res => { props.history.push('/admin/authors') }).catch(err => { console.log(err) })
+                axios.post('/admin/authors', formData).then(res => { props.history.push('/admin/authors'); console.log(res) })
+                .catch(err =>{ if (err.response.data.imageError) setErrors({...errors, authorImage:err.response.data.imageError}) } )
             }
         } catch (error) {
             setErrors(error.details.reduce((agg, e) => ({ ...agg, [e.name]: e.message }), {}));

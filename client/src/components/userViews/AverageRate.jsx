@@ -17,8 +17,8 @@ function AverageRate(props) {
 
     return (
         <>
-            <RateAntd disabled allowHalf value={rating} style={{ color: '#e89a3c' }}/>
-            ({props.rates.length} Ratings)
+            <RateAntd disabled allowHalf value={rating} style={{ color: '#e89a3c' }} />
+            <span> {rating} ({props.rates.length} Ratings)</span>
         </>
     )
 }
