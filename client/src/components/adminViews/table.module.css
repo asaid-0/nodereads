@@ -1,5 +1,5 @@
 table{
-    font-family: Montserrat, sans-serif;
+    font-family: Montserrat, sans-serif !important;
 }
 h2 {
     font-family: Montserrat, sans-serif;
@@ -8,6 +8,10 @@ td {
     font-size: 1.2rem;
     font-weight: 600;
     vertical-align: middle !important;
+}
+
+tr:hover {
+    background-color: gainsboro;
 }
 
 th {

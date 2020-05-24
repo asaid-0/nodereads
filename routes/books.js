@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     const { id } = req.params
     const { currentUser } = req
-    console.log(currentUser);
+    // console.log(currentUser);
     // res.send(`route get /books/${id}`);
     BookModel.findById(id)
         .populate('author')
@@ -43,18 +43,19 @@ router.post('/:id', (req, res) => {
     const { type } = req.body;
     const { id } = req.params
     const { currentUser } = req
-    console.log(currentUser);
+    // console.log(currentUser);
     
     /////// submit review
     if (type === 'review') {
 
         const { content } = req.body
-        if (!content.trim()) return res.json({ error: 'review content required' })
-
+        if (!content.trim()) return res.status(400).json({ error: 'Review content required' })
+        if (content.trim().length < 3 ) return res.status(400).json({ error: 'Review content is shorter than the minimum allowed length (3)' })
+        
         const review = {
             // user: currentUser,
             user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730"),
-            content,
+            content: content.trim(),
         }
 
         BookModel.findById(id)
@@ -79,7 +80,7 @@ router.post('/:id', (req, res) => {
                             res.status(400).send(err)
                         })
 
-                } else return res.json({ error: 'You have already submitted a review, you can edit it in review section below' })
+                } else return res.status(400).json({ error: 'You have already submitted a review, you can edit it in review section below' })
             })
             .catch(err => res.send(err))
     }
@@ -145,11 +146,13 @@ router.patch('/:id', (req, res) => {
     ///// Edit review
     if (type === 'review') {
         const { reviewID, newContent } = req.body;
-        if (!reviewID || !newContent.trim()) return res.json({ error: 'review content required' })
+        if (!reviewID || !newContent.trim()) return res.status(400).json({ error: 'Review content required' })
+        if (newContent.trim().length < 3 ) return res.status(400).json({ error: 'Review content is shorter than the minimum allowed length (3)' })
+
         BookModel.findById(id)
             .populate('reviews.user')
             .then(book => {
-                book.reviews.id(reviewID).content = newContent
+                book.reviews.id(reviewID).content = newContent.trim()
                 book.save()
                     .then(book => res.status(200).json(book.reviews.id(reviewID)))
                     .catch(err => res.status(400).send(err))

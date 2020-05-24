@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
 // @access  Private - user
 router.get('/books', async (req, res) => {
     const { currentUser } = req
-    console.log(currentUser);
+    // console.log(currentUser);
     try {
         const { filter, offset, limit } = req.query;
         const beginIndex = limit * (offset - 1);
