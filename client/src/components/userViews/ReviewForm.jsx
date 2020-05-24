@@ -43,15 +43,9 @@ function ReviewEditForm(props) {
             }
             axios.patch(`/books/${props.bookId}`, payload)
                 .then(res => {
-                    // console.log(res.data);
-                    if (!res.data.error) {
-                        props.updateReview(res.data)
-                    } else {
-
-                        setError(res.data.error)
-                    }
+                    props.updateReview(res.data)
                 })
-                .catch(err => console.log(err))
+                .catch(err => setError(err.response.data.error))
         } else {
             const payload = {
                 "type": "review",
@@ -60,15 +54,10 @@ function ReviewEditForm(props) {
 
             axios.post(`/books/${props.bookId}`, payload)
                 .then(res => {
-                    // console.log(res.data.error);
-                    if (!res.data.error) {
-                        setReview("");
-                        props.updateReviewList(res.data);
-                        // console.log(res.data);
-
-                    } else setError(res.data.error)
+                    setReview("");
+                    props.updateReviewList(res.data);
                 })
-                .catch(err => console.log(err))
+                .catch(err => setError(err.response.data.error))
         }
     }
 
@@ -91,11 +80,11 @@ function ReviewEditForm(props) {
                 />
 
                 <Button className={styles.button} type="primary" htmlType="submit">
-                    {reviewId ? <SaveFilled className={styles.icon}/> : "Submit Review"}
+                    {reviewId ? <SaveFilled className={styles.icon} /> : "Submit Review"}
                 </Button>
                 {reviewId ?
-                    <Button onClick={props.changeMode} type="primary" danger ><CloseSquareFilled className={styles.icon}/></Button>
-                    : ""}
+                    <Button onClick={props.changeMode} type="primary" danger ><CloseSquareFilled className={styles.icon} /></Button>
+                    : null}
             </form>
         </>
     )

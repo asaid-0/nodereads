@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios';
+import { UserContext } from '../authComponents/authContext';
 import { Rate as RateAntd } from 'antd';
 import 'antd/dist/antd.css';
 
 function Rate(props) {
 
+    const { user } = useContext(UserContext);
     const [rating, setRating] = useState({})
 
     useEffect(() => {
         if (props.book.rates) {
-            const rate = props.book.rates.find(rate => rate.user.toString() === "5eb4628d746f7c3026426730")//currentUser._id
+            const rate = props.book.rates.find(rate => rate.user === user._id)//currentUser._id
             rate ? setRating(rate) : setRating({});
         }
 

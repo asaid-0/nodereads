@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 // @desc    Search result from NavBar 
 // @access  Private - user
 router.get('/', async (req, res) => {
+
     try {
         const searchWord = req.query.searchWord;
         const books = Book.find({ title: new RegExp(searchWord, 'i') });
@@ -30,6 +31,8 @@ router.get('/', async (req, res) => {
 // @desc    Home all or filtered (want to read - reading - read ) books 
 // @access  Private - user
 router.get('/books', async (req, res) => {
+    const { currentUser } = req
+    // console.log(currentUser);
     try {
         const { filter, offset, limit } = req.query;
         const beginIndex = limit * (offset - 1);
