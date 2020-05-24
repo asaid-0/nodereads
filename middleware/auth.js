@@ -15,7 +15,7 @@ const isLogged = (token) => {
 // Verify that user is logged in middleware
 const auth = (req, res, next) => {
     const token = req.headers.authorization;
-    currentUser = isLogged(token.split(" ")[1]);
+    currentUser = token ? isLogged(token.split(" ")[1]) : false;
     if (currentUser) {
         req.currentUser = currentUser;
         next();
@@ -30,7 +30,7 @@ const auth = (req, res, next) => {
 // Verify that it's logged in and is admin middleware
 const admin = (req, res, next) => {
     const token = req.headers.authorization;
-    currentUser = isLogged(token.split(" ")[1]);
+    currentUser = token ? isLogged(token.split(" ")[1]) : false;
     if (currentUser) {
         req.currentUser = currentUser;
         User.findOne({ email: currentUser.email }).exec()

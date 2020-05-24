@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { Container, Row ,Table , Button} from 'react-bootstrap';
 import BookRow from './BookRow'
-import axios from 'axios'
+import axios from '../../components/api/axios';
 import { Link } from 'react-router-dom';
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
 import './table.module.css'

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../components/api/axios';
 import ReviewForm from './ReviewForm';
 import Review from './Review';
 import WithUserHeaders from '../../HOC/WithUserHeaders';

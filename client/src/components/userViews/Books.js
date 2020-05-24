@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import axios from '../../components/api/axios';
 import WithUserHeaders from '../../HOC/WithUserHeaders'
 import { Layout, Spin, Row, Col, Pagination } from 'antd';
 import 'antd/dist/antd.css';

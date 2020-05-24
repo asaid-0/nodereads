@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Button } from 'react-bootstrap';
-import axios from 'axios'
+import axios from '../../components/api/axios';
 import categorySchema from '../../schemas/categorySchema'
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
 import { Row, Col, Divider } from 'antd';
