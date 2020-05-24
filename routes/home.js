@@ -12,9 +12,9 @@ const mongoose = require('mongoose');
 router.get('/', async (req, res) => {
     try {
         const searchWord = req.query.searchWord;
-        const books = Book.find({ title: new RegExp(searchWord, 'i') });
+        const books = Book.find({ name: new RegExp(searchWord, 'i') });
         const authors = Author.find({
-            $or: [{ title: new RegExp(searchWord, 'i') },
+            $or: [{ firstname: new RegExp(searchWord, 'i') },
             { lastname: new RegExp(searchWord, 'i') }]
         });
         const result = await Promise.all([books, authors]);
@@ -36,7 +36,7 @@ router.get('/books', async (req, res) => {
         const endIndex = parseInt(limit * (offset - 1)) + parseInt(limit);
         // const { books } = await User.findById(req.currentUser._id).populate('books.book');
         const { books } = await User.findById(mongoose.Types.ObjectId("5eb3ae2e2c6ca55e7142efde"))
-            .populate('books.book');
+            .populate('books.book').populate('books.book.author');
         let userBooks = books; // Question
         if (filter) {
             userBooks = books.filter((book) => {
