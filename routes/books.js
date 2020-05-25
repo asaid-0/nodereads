@@ -122,35 +122,26 @@ router.post('/:id', async (req, res) => {
             "book":id,
             "shelf":shelf
         }
-        // UserModel.findById(currentUser._id, (err, foundUser) => {
-        //     if(err) console.log(err)
-        //     if(foundUser.books.length > 0){
-        //         console.log(foundUser)
-        //     } else {
-        //         foundUser.books.push({
-        //             "book":id,
-        //             "shelf":shelf
-        //         })
-        //         foundUser.save((err, savedUser) => {
-        //             if(err) console.log(err)
-        //             console.log(savedUser)
-        //         });
-
-        //     }
-        // })
         
-        console.log("something")
-        UserModel.findById(currentUser._id, (err, foundUser) => {
-            if(err) console.log(err)
-            console.log(foundUser)
-        })
-        UserModel.findOneAndUpdate({ _id: "5eb4628d746f7c3026426730", "books.book": id},
+        UserModel.findOneAndUpdate({ _id: currentUser, "books.book": id},
             { $set: { "books.$.shelf": shelf  } },
             { new: true },
             (err, user) => {
                 if (err) res.send(err)
-                console.log(user)
-                res.status(200).json("Book added successfully to shelf")
+                else{
+                    if(user)
+                        res.status(200).json("Book updated successfully in shelf")
+                    else{
+                        UserModel.findOneAndUpdate({ _id: currentUser},
+                            { $push: { books: book  } },
+                            { new: true },
+                            (err, newUser) => {
+                                if(err) res.send(err)
+                                res.status(200).json("Book added successfully to shelf")
+                            })
+                    }
+                }
+
             })
     }
 })
