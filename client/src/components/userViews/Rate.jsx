@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import axios from 'axios';
+import axios from '../../components/api/axios';
 import { UserContext } from '../authComponents/authContext';
 import { Rate as RateAntd } from 'antd';
 import 'antd/dist/antd.css';

@@ -23,19 +23,17 @@ mongoose.connect(uri, {
     if (!err) console.log("mogodb started");
     else console.log(err);
 })
-
-
-app.use(cors())
+app.use(cors());
 app.use('/uploads', express.static('uploads'))
 app.use(express.json())
 
 
 // app.use('/admin', admin, adminRoute);
 // app.use('/books', auth, booksRouter);
-app.use('/admin', adminRoute);
-app.use('/books', booksRouter);
-app.use('/authors', authorsRouter);
-app.use('/home', homeRouter);
+app.use('/admin', admin, adminRoute);
+app.use('/books', auth, booksRouter);
+app.use('/authors', auth, authorsRouter);
+app.use('/home', auth, homeRouter);
 app.use('/', userRoutes);
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-date-picker';
-import axios from 'axios'
+import axios from '../../components/api/axios';
 import authorSchema from '../../schemas/authorSchema'
 import _ from 'lodash'
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'

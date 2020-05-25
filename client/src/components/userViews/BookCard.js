@@ -3,6 +3,7 @@ import styles from './BookCard.module.css';
 import { Link } from 'react-router-dom';
 import { Rate, Menu, Dropdown, Button, Row } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import AverageRate from './AverageRate';
 
 
 const BookCard = (props) => {
@@ -40,12 +41,12 @@ const BookCard = (props) => {
 
         <div className={styles.card_container} >
             <span className={styles.pro}>
-                <Rate disabled defaultValue={2} />
+                <AverageRate rates={book.rates} />
             </span>
-            <img className={styles.round} src="https://randomuser.me/api/portraits/women/79.jpg" alt="user" />
-            <h3> <Link className={styles.title} > Ricky Park </Link> </h3>
+            <img className={styles.round} src={book.photo ? `/${book.photo}` : "/images/open_book.png"} alt="user" />
+            <h3> <Link className={styles.title} to={`/books/${book._id}`} > {book.name} </Link> </h3>
             <span>by</span>
-            <h6> <Link className={styles.author}>New York</Link> </h6>
+            <h6> <Link className={styles.author}>{book.author.firstname}</Link> </h6>
             <div>
                 {
                     shelf ?

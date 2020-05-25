@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import axios from '../../components/api/axios';
 import { Layout, Spin, Row, Col } from 'antd';
 import WithUserHeaders from '../../HOC/WithUserHeaders';
 import BookCard from './BookCard';

@@ -5,11 +5,13 @@ const authorSchema = function (editingId) {
     firstname: {
       type: String,
       min: 3,
+      max: 15,
       required: true
     },
     lastname: {
       type: String,
       min: 3,
+      max: 15,
       required: true
     },
     dob: {

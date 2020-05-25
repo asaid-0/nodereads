@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import ReviewForm from './ReviewForm'
-import axios from 'axios'
+import axios from '../../components/api/axios';
 import styles from './Review.module.css';
 import { UserContext } from '../authComponents/authContext';
 import { Comment, Avatar, Button, Col, Modal } from "antd";
