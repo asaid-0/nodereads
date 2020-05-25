@@ -10,7 +10,7 @@ function Authors() {
 
     useEffect(() => {
         async function fetchAuthors() {
-            const result = await axios.get('/authors')
+            const result = await axios.get('/authors/')
             if(result.data){
                 setAuthors(result.data.data)
             }else{
