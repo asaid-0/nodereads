@@ -8,12 +8,19 @@ const router = express.Router();
 
 /////////////////////**** retrieve all books ****/////////////////////
 
-router.get('/', (req, res) => {
-
-    BookModel.find({})
-        .populate('author')
-        .then(books => res.status(200).json(books))
-        .catch(err => res.status(400).send(err))
+router.get('/', async (req, res) => {
+    try {
+        const { offset, limit } = req.query;
+        const beginIndex = limit * (offset - 1);
+        const endIndex = parseInt(limit * (offset - 1)) + parseInt(limit);
+        const books = await BookModel.find({}).populate('author');
+        res.send({
+            Books: books.slice(beginIndex, endIndex),
+            BooksCount: books.length
+        });
+    } catch (error) {
+        res.status(500).send({ msg: "Sorry, Server Error" });
+    }
 })
 
 /////////////////////**** retrieve book info ****/////////////////////
@@ -44,14 +51,14 @@ router.post('/:id', (req, res) => {
     const { id } = req.params
     const { currentUser } = req
     // console.log(currentUser);
-    
+
     /////// submit review
     if (type === 'review') {
 
         const { content } = req.body
         if (!content.trim()) return res.status(400).json({ error: 'Review content required' })
-        if (content.trim().length < 3 ) return res.status(400).json({ error: 'Review content is shorter than the minimum allowed length (3)' })
-        
+        if (content.trim().length < 3) return res.status(400).json({ error: 'Review content is shorter than the minimum allowed length (3)' })
+
         const review = {
             // user: currentUser,
             user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730"),
@@ -70,9 +77,9 @@ router.post('/:id', (req, res) => {
                     book.save()
                         .then(book => {
                             // console.log(book.populated);
-                            book.populate('reviews.user', function(err,book) {
+                            book.populate('reviews.user', function (err, book) {
                                 res.status(200).json(book.reviews)
-                               });
+                            });
                         })
                         .catch(err => {
                             console.log(err);
@@ -147,7 +154,7 @@ router.patch('/:id', (req, res) => {
     if (type === 'review') {
         const { reviewID, newContent } = req.body;
         if (!reviewID || !newContent.trim()) return res.status(400).json({ error: 'Review content required' })
-        if (newContent.trim().length < 3 ) return res.status(400).json({ error: 'Review content is shorter than the minimum allowed length (3)' })
+        if (newContent.trim().length < 3) return res.status(400).json({ error: 'Review content is shorter than the minimum allowed length (3)' })
 
         BookModel.findById(id)
             .populate('reviews.user')
@@ -194,7 +201,7 @@ router.delete('/:id', (req, res) => {
 
     if (type === 'rate') {
         const { rateID } = req.body
-        
+
         BookModel.findById(id)
             .then(book => {
                 book.rates.pull({ _id: rateID, user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730") })//currentUser._id
