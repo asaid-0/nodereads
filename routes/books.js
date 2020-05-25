@@ -118,32 +118,38 @@ router.post('/:id', async (req, res) => {
     //////// add to shelve
     else if (type === 'shelf') {
         const { shelf } = req.body;
-        let user;
-        await UserModel.findById("5eb4628d746f7c3026426730", (err, foundUser) => {
-            if(err) console.log(err)
-            if(foundUser.books.length > 0){
-                console.log(foundUser)
-            } else {
-                foundUser.books.push({
-                    "book":id,
-                    "shelf":shelf
-                })
-                foundUser.save((err, savedUser) => {
-                    if(err) console.log(err)
-                    console.log(foundUser)
-                });
+        const book = {
+            "book":id,
+            "shelf":shelf
+        }
+        // UserModel.findById(currentUser._id, (err, foundUser) => {
+        //     if(err) console.log(err)
+        //     if(foundUser.books.length > 0){
+        //         console.log(foundUser)
+        //     } else {
+        //         foundUser.books.push({
+        //             "book":id,
+        //             "shelf":shelf
+        //         })
+        //         foundUser.save((err, savedUser) => {
+        //             if(err) console.log(err)
+        //             console.log(savedUser)
+        //         });
 
-            }
-        })
+        //     }
+        // })
         
-        console.log(user)
         console.log("something")
-
-        UserModel.findOneAndUpdate({ _id: "5eb4628d746f7c3026426730", "books.book": id },
-            { "books.$.shelf": shelf },
+        UserModel.findById(currentUser._id, (err, foundUser) => {
+            if(err) console.log(err)
+            console.log(foundUser)
+        })
+        UserModel.findOneAndUpdate({ _id: "5eb4628d746f7c3026426730", "books.book": id},
+            { $set: { "books.$.shelf": shelf  } },
             { new: true },
-            (err) => {
-                if (err) res.send("bang")
+            (err, user) => {
+                if (err) res.send(err)
+                console.log(user)
                 res.status(200).json("Book added successfully to shelf")
             })
     }
@@ -222,7 +228,7 @@ router.delete('/:id', (req, res) => {
 
     // delete book from shelve
     else if (type === 'shelf') {
-        UserModel.findOneAndDelete({ _id: currentUser._id },
+        UserModel.findOneAndUpdate({ _id: currentUser._id },
             { $pull: { "books": { "book": id } } },
             (err) => {
                 if (err) res.send(err)
