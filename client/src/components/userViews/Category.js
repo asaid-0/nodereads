@@ -1,15 +1,14 @@
-import React from 'react'
-import { Card } from 'react-bootstrap'
-import { Link } from 'react-router-dom';
-const Category = ({category}) => {
+import React, { useState, useEffect }from 'react'
+import WithUserHeaders from '../../HOC/WithUserHeaders'
+import { Container, Row, Col } from 'react-bootstrap';
+import axios from '../../components/api/axios';
 
+function Category(){
     return(
-        <Card as={Link} to={`/categories/${category._id}`} style={{minHeight:'10em'}}>
-            <Card.Body>
-                <Card.Title style={{margin:0}}>{category.name}</Card.Title>
-            </Card.Body>
-        </Card>
+        <div>
+            <h1>EH YA 3SL</h1>
+        </div>
     )
 }
 
-export default Category;
+export default WithUserHeaders(Category)
