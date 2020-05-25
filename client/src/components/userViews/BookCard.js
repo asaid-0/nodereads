@@ -40,27 +40,31 @@ const BookCard = (props) => {
     return (
 
         <div className={styles.card_container} >
-            <span className={styles.pro}>
-                <AverageRate rates={book.rates} />
-            </span>
             <img className={styles.round} src={book.photo ? `/${book.photo}` : "/images/open_book.png"} alt="user" />
-            <h3> <Link className={styles.title} to={`/books/${book._id}`} > {book.name} </Link> </h3>
-            <span>by</span>
-            <h6> <Link className={styles.author}>{book.author.firstname}</Link> </h6>
-            <div>
+            <span className={styles.pro}>
                 {
-                    shelf ?
-                        <>
-                            <Dropdown overlay={menu} trigger={['click']} >
-                                <Button className={styles.primary}>
-                                    read
-                            </Button>
-                            </Dropdown>
-                            <Button> Remove  </Button>
-                        </>
-                        :
-                        null
+                    book.rates.length ? <AverageRate rates={book.rates} /> : "Not rated"
                 }
+            </span>
+            <div className={styles.body}>
+                <h3> <Link className={styles.title} to={`/books/${book._id}`} > {book.name} </Link> </h3>
+                <span>by</span>
+                <h6> <Link className={styles.author}>{book.author.firstname}</Link> </h6>
+                <div>
+                    {
+                        shelf ?
+                            <>
+                                <Dropdown overlay={menu} trigger={['click']} >
+                                    <Button className={styles.primary}>
+                                        read
+                            </Button>
+                                </Dropdown>
+                                <Button> Remove  </Button>
+                            </>
+                            :
+                            null
+                    }
+                </div>
             </div>
         </div>
 

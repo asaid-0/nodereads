@@ -28,7 +28,7 @@ function Login(props) {
                 let location = "/home";
                 if (userInfo.isAdmin) location = "/admin"
                 if (props.location.state && props.location.state.from) location = props.location.state.from.pathname;
-                history.push(location);
+                window.location.pathname = location;
             }
         }
 
@@ -56,7 +56,7 @@ function Login(props) {
                         let location = "/home";
                         if (userInfo.isAdmin) location = "/admin"
                         if (props.location.state && props.location.state.from) location = props.location.state.from.pathname;
-                        history.push(location);
+                        window.location.pathname = location;
                     } else {
                         handleError(json.message)
                     }

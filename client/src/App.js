@@ -17,14 +17,18 @@ import BookForm from './components/adminViews/BookForm';
 import { UserRoute, AdminRoute } from './components/authComponents/authRoutes';
 import { Login } from './components/authComponents/guestComponents';
 import Register from './components/authComponents/RegisterForm';
-import { UserContext } from './components/authComponents/authContext';
+import { UserContext, UserProvider } from './components/authComponents/authContext';
 import AdminCategories from './components/adminViews/AdminCategories';
 import CategoryForm from './components/adminViews/CategoryForm';
 
 function App() {
 
-  const [user, setUser] = useState();
-  
+  let userInfo = {};
+  const token = sessionStorage.getItem('token')
+  if (token) {
+    userInfo = JSON.parse(window.atob(token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+')));
+  }
+  const [user, setUser] = useState(userInfo);
   const userObject = useMemo(() => ({ user, setUser }), [user, setUser]);
 
 

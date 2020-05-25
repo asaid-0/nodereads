@@ -8,12 +8,19 @@ const router = express.Router();
 
 /////////////////////**** retrieve all books ****/////////////////////
 
-router.get('/', (req, res) => {
-
-    BookModel.find({})
-        .populate('author')
-        .then(books => res.status(200).json(books))
-        .catch(err => res.status(400).send(err))
+router.get('/', async (req, res) => {
+    try {
+        const { offset, limit } = req.query;
+        const beginIndex = limit * (offset - 1);
+        const endIndex = parseInt(limit * (offset - 1)) + parseInt(limit);
+        const books = await BookModel.find({}).populate('author');
+        res.send({
+            Books: books.slice(beginIndex, endIndex),
+            BooksCount: books.length
+        });
+    } catch (error) {
+        res.status(500).send({ msg: "Sorry, Server Error" });
+    }
 })
 
 /////////////////////**** retrieve book info ****/////////////////////
