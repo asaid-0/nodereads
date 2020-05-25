@@ -38,7 +38,7 @@ router.get('/:id', (req, res) => {
 
 /////////////////////**** submit review, rate, add to shelve ****/////////////////////
 
-router.post('/:id', (req, res) => {
+router.post('/:id', async (req, res) => {
 
     const { type } = req.body;
     const { id } = req.params
@@ -125,12 +125,33 @@ router.post('/:id', (req, res) => {
 
     //////// add to shelve
     else if (type === 'shelf') {
-        const { shelf } = req.body
-        UserModel.findOneAndUpdate({ _id: currentUser._id, "books.book": id },
+        const { shelf } = req.body;
+        let user;
+        await UserModel.findById("5eb4628d746f7c3026426730", (err, foundUser) => {
+            if(err) console.log(err)
+            if(foundUser.books.length > 0){
+                console.log(foundUser)
+            } else {
+                foundUser.books.push({
+                    "book":id,
+                    "shelf":shelf
+                })
+                foundUser.save((err, savedUser) => {
+                    if(err) console.log(err)
+                    console.log(foundUser)
+                });
+
+            }
+        })
+        
+        console.log(user)
+        console.log("something")
+
+        UserModel.findOneAndUpdate({ _id: "5eb4628d746f7c3026426730", "books.book": id },
             { "books.$.shelf": shelf },
             { new: true },
             (err) => {
-                if (err) res.send(err)
+                if (err) res.send("bang")
                 res.status(200).json("Book added successfully to shelf")
             })
     }
