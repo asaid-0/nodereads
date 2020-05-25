@@ -31,7 +31,6 @@ function Home(props) {
 
 
     useEffect(() => {
-        console.log(props.name);
         setLoading(true);
         setFoundBooks(true);
         getBooks(shelf, page).then(res => {
