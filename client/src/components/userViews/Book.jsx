@@ -49,12 +49,14 @@ function Book(props) {
                             <Row justify="center" key={review._id}>
                                 <Review bookId={bookId}
                                     updateReviewList={updateReviewList}
-                                    review={review} 
+                                    review={review}
                                 />
                             </Row>
                         )
                     })
-                        : <h3>No reviews</h3>
+                        : <Row justify="center" >
+                            <h3>No reviews</h3>
+                        </Row>
                 }
             </Content>
         </Layout>

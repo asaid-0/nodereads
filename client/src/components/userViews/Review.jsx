@@ -16,7 +16,6 @@ function Review(props) {
 
     const { user } = useContext(UserContext);
     const [review, setReview] = useState({ ...props.review, isInEditMode: false })
-    // console.log("userID: ", user._id, "\n review.user: ", review.user);
 
     const changeMode = () => {
         setReview({ ...review, isInEditMode: !review.isInEditMode });
@@ -46,8 +45,6 @@ function Review(props) {
             },
             onCancel() { },
         });
-
-
     }
 
     return (
@@ -66,9 +63,10 @@ function Review(props) {
                 author={<a>{`${review.user.firstname} ${review.user.lastname}`}</a>}
                 avatar={
                     <Avatar
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT2LfV4GzzKg_8tkHFIGSMw4YzYzAlLDnLYlJ2d6A7mMxygJo_j&usqp=CAU"
-                        alt="Han Solo"
+                        src={`/${review.user.photo}`}
+                        alt="Gumball"
                     />
+
                 }
                 content={
                     <>

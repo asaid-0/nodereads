@@ -70,7 +70,7 @@ function ReviewEditForm(props) {
                     showIcon
                     closable
                     onClose={handleCloseAlert}
-                /> : ""
+                /> : null
 
             }
             <form onSubmit={handleSubmit} className={styles.form}>
