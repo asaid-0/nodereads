@@ -48,7 +48,7 @@ function App() {
           <UserRoute exact path="/authors" component={Authors} />
           <UserRoute exact path="/categories" component={Categories} />
 
-          <AdminRoute exact path="/admin" component={Dashboard} />
+          <AdminRoute exact path="/admin" component={AdminBooks} />
           <AdminRoute exact path="/admin/books" component={AdminBooks} />
           <AdminRoute exact path="/admin/books/add" component={BookForm} />
           <AdminRoute exact path="/admin/books/edit/:bookId" component={BookForm} />

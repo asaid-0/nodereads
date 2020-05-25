@@ -1,21 +1,24 @@
-import AdminHeaders from './../components/adminViews/AdminHeaders'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { UserContext } from '../components/authComponents/authContext'
+
 import styles from './WithAdminHeaders.module.css'
 import 'antd/dist/antd.css';
-import { Layout, Menu, Avatar } from 'antd';
+import { Layout, Menu, Avatar,  Divider } from 'antd';
 import { Link } from 'react-router-dom';
 import {
   BookOutlined,
   UserOutlined,
   AppstoreOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import { Row } from 'react-bootstrap';
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 
 const WithAdminHeaders = (Comp) => {
   const AdminHeaders = (props) => {
 
     const [selectedKeys, setSelectedKeys] = useState(['1'])
+    const { user } = useContext(UserContext);
 
     return (
       <Layout className={styles.layout} style={{ minHeight: '100vh' }}>
@@ -31,7 +34,7 @@ const WithAdminHeaders = (Comp) => {
             size={64}
             />
             <br/>
-            <strong>Admin</strong>
+            <strong>{user.email}</strong>
           </div>
           <Menu theme="dark" selectedKeys={selectedKeys} defaultSelectedKeys={['1']} mode="inline">
             <Menu.Item key="1" icon={<BookOutlined />}>
@@ -46,6 +49,11 @@ const WithAdminHeaders = (Comp) => {
               <span>Categories</span>
               <Link to="/admin/categories"></Link>
             </Menu.Item>
+            <Divider />
+            <Menu.Item icon={<LogoutOutlined />}>
+              <span>Logout</span>
+              <Link to=""></Link>
+            </Menu.Item>
           </Menu>
         </Sider>
         <Layout className={styles.site_layout}>
@@ -56,7 +64,7 @@ const WithAdminHeaders = (Comp) => {
               <Comp setSelectedKeys={setSelectedKeys} {...props} />
             </div>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+          <Footer style={{ textAlign: 'center' }}>NodeReads ©2020</Footer>
         </Layout>
       </Layout>
     );

@@ -5,8 +5,11 @@ import { Link , useHistory } from 'react-router-dom';
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
 import './table.module.css'
 import MaterialTable, {MTableToolbar} from 'material-table'
-import { Tag } from 'antd';
-
+import { Tag ,Modal  } from 'antd';
+import {
+    ExclamationCircleOutlined,
+} from '@ant-design/icons'
+const { confirm } = Modal;
 
 
 function AdminBooks({setSelectedKeys}) {
@@ -26,14 +29,22 @@ function AdminBooks({setSelectedKeys}) {
     
     
         const deleteBook = (id)=>{
-            axios.delete(`/admin/books/${id}`)
-            .then(res=>{
-                setBooks(books.filter(book=>book._id!==id))
-                console.log(
-                    res.data.name + "deleted"
-                );
-            })
-            .catch(err=>console.log(err))
+            confirm({
+                title: `Are you sure you want to delete this Book?`,
+                icon: <ExclamationCircleOutlined />,
+                okText: 'Yes',
+                okType: 'danger',
+                cancelText: 'No',
+                onOk() {
+                    return axios.delete(`/admin/books/${id}`)
+                    .then(res=>{
+                        setBooks(books.filter(book=>book._id!==id))
+                    })
+                    .catch(err=>console.log(err))
+                },
+                onCancel() { },
+            });
+            
         }
     
         return (
@@ -51,12 +62,12 @@ function AdminBooks({setSelectedKeys}) {
                     actions={[
                         {
                             icon: 'edit',
-                            tooltip: 'Edit Author',
+                            tooltip: 'Edit Book',
                             onClick: (event, rowData) => history.push(`/admin/books/edit/${rowData._id}`)
                         },
                         rowData => ({
                             icon: 'delete',
-                            tooltip: 'Delete Author',
+                            tooltip: 'Delete Book',
                             onClick: (event, rowData) => deleteBook(rowData._id)
                         })
                     ]}

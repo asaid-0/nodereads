@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Table, Button } from 'react-bootstrap';
+import { Container, Row, Button } from 'react-bootstrap';
 import axios from '../../components/api/axios';
 import { Link , useHistory } from 'react-router-dom';
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
 import './table.module.css'
 import MaterialTable, {MTableToolbar} from 'material-table'
+import { Modal } from "antd";
+import {
+    ExclamationCircleOutlined,
+} from '@ant-design/icons'
+const { confirm } = Modal;
 
 function AdminAuthors({ setSelectedKeys }) {
     const [authors, setAuthors] = useState([]);
@@ -24,14 +29,22 @@ function AdminAuthors({ setSelectedKeys }) {
 
     const deleteAuthor = (event, rowData) => {
         const id= rowData._id
-        axios.delete(`/admin/authors/${id}`)
-            .then(res => {
-                setAuthors(authors.filter(auther => auther._id !== id))
-                console.log(
-                    res.data.firstname + "deleted"
-                );
-            })
-            .catch(err => console.log(err))
+
+        confirm({
+            title: `Are you sure you want to delete this Author: ${rowData.firstname}?`,
+            icon: <ExclamationCircleOutlined />,
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+                return axios.delete(`/admin/authors/${id}`)
+                .then(res => {
+                    setAuthors(authors.filter(auther => auther._id !== id))
+                })
+                .catch(err => console.log(err))
+            },
+            onCancel() { },
+        });
     }
 
 
@@ -74,8 +87,6 @@ function AdminAuthors({ setSelectedKeys }) {
                       }}
                 />
         </Container>
-
-
     )
 }
 

@@ -5,8 +5,11 @@ import { Link, useHistory } from 'react-router-dom';
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
 import './table.module.css'
 import MaterialTable, { MTableToolbar } from 'material-table'
-import { Tag } from 'antd';
-
+import { Tag ,Modal  } from 'antd';
+import {
+    ExclamationCircleOutlined,
+} from '@ant-design/icons'
+const { confirm } = Modal;
 
 function AdminCategories({ setSelectedKeys }) {
     const [categories, setCategories] = useState([]);
@@ -26,14 +29,21 @@ function AdminCategories({ setSelectedKeys }) {
 
 
     const deleteCategory = (id) => {
-        axios.delete(`/admin/categories/${id}`)
-            .then(res => {
-                setCategories(categories.filter(category => category._id !== id))
-                console.log(
-                    res.data.name + "deleted"
-                );
-            })
-            .catch(err => console.log(err))
+        confirm({
+            title: `Are you sure you want to delete this Category?`,
+            icon: <ExclamationCircleOutlined />,
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+                return axios.delete(`/admin/categories/${id}`)
+                .then(res => {
+                    setCategories(categories.filter(category => category._id !== id))
+                })
+                .catch(err => console.log(err))
+            },
+            onCancel() { },
+        });
     }
 
     return (
@@ -48,12 +58,12 @@ function AdminCategories({ setSelectedKeys }) {
                 actions={[
                     {
                         icon: 'edit',
-                        tooltip: 'Edit Author',
+                        tooltip: 'Edit Category',
                         onClick: (event, rowData) => history.push(`/admin/categories/edit/${rowData._id}`)
                     },
                     rowData => ({
                         icon: 'delete',
-                        tooltip: 'Delete Author',
+                        tooltip: 'Delete Category',
                         onClick: (event, rowData) => deleteCategory(rowData._id)
                     })
                 ]}
