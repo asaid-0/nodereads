@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Container, Row ,Table , Button} from 'react-bootstrap';
+import { Container, Row , Button} from 'react-bootstrap';
 import axios from 'axios'
 import { Link , useHistory } from 'react-router-dom';
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
@@ -45,7 +45,7 @@ function AdminBooks({setSelectedKeys}) {
                         { title: 'Cover', field: 'photo', render: rowData => <img src={`/${rowData.photo}`} style={{width: 40 }}/> , sorting: false, grouping: false },
                         { title: 'Title', field: 'name', customSort: (a, b) => a.name.localeCompare(b.name), grouping: false },
                         { title: 'Author', field: 'author.firstname' },
-                        { title: 'Category', field: 'categories', render: rowData => rowData.categories.map((cat,index)=><Tag color="geekblue" key={index}>{cat.name}</Tag> ), sorting: false  }
+                        { title: 'Category', field: 'categories', render: rowData => rowData.categories.map((cat,index)=><Tag color="geekblue" key={index}>{cat.name}</Tag> ), sorting: false ,grouping: false }
                     ]}
                     data={books}
                     actions={[
