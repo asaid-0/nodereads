@@ -25,9 +25,10 @@ function Login(props) {
             if (token) {
                 const userInfo = JSON.parse(window.atob(token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+')));
                 setUser(userInfo);
-
-                // console.log("MyProps: ", props.location.state.from.pathname);
-                history.push(props.location.state.from.pathname);
+                let location = "/home";
+                if (userInfo.isAdmin) location = "/admin"
+                if (props.location.state && props.location.state.from) location = props.location.state.from.pathname;
+                window.location.pathname = location;
             }
         }
 
@@ -37,74 +38,72 @@ function Login(props) {
     const handleSubmit = () => {
         if (validateLoginForm(userEmail, userPassword, showError)) {
             setLoading(true);
-            fetch('/login', {
+            const req = new Request('/login', {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json'
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: JSON.stringify({ email: userEmail, password: userPassword })
-            })
+
+            });
+            fetch(req)
                 .then(response => response.json())
                 .then(json => {
                     if (json.status === "success") {
                         sessionStorage.setItem('token', json.token);
                         const userInfo = JSON.parse(window.atob(json.token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+')));
                         setUser(userInfo);
-                        history.push(props.location.state.from.pathname);
+                        let location = "/home";
+                        if (userInfo.isAdmin) location = "/admin"
+                        if (props.location.state && props.location.state.from) location = props.location.state.from.pathname;
+                        window.location.pathname = location;
                     } else {
                         handleError(json.message)
-                        // console.log(json);
                     }
                 })
                 .catch(err => {
-                    // console.log(err);
                     handleError(err.message)
                 });
         }
-        // console.log(user);
     }
 
     return (
-        <Form
-            onSubmit={e => {
-                e.preventDefault();
-                handleSubmit();
-            }}
-        >
-            <Error error={error} />
-            <h5>Sign in</h5>
-            <br />
-            <FormGroup>
-                <Form.Control
-                    type="email"
-                    name="email"
-                    value={userEmail}
-                    placeholder="Email"
-                    onChange={e => setUserEmail(e.target.value)}
-                />
-            </FormGroup>
-            <FormGroup>
-                <Form.Control
-                    type="password"
-                    name="password"
-                    value={userPassword}
-                    placeholder="Password"
-                    onChange={e => setUserPassword(e.target.value)}
-                />
-            </FormGroup>
-            <Button type="submit" disabled={loading} block={true}>
-                {loading ? "Loading..." : "Sign In"}
-            </Button>
-        </Form>
+        <div className="container">
+            <Form
+                onSubmit={e => {
+                    e.preventDefault();
+                    handleSubmit();
+                }}
+            >
+                <h5>Sign in</h5>
+                <br />
+                {error && <Error error={error} />}
+                <FormGroup>
+                    <Form.Control
+                        type="email"
+                        name="email"
+                        value={userEmail}
+                        placeholder="Email"
+                        onChange={e => setUserEmail(e.target.value)}
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <Form.Control
+                        type="password"
+                        name="password"
+                        value={userPassword}
+                        placeholder="Password"
+                        onChange={e => setUserPassword(e.target.value)}
+                    />
+                </FormGroup>
+                <Button type="submit" disabled={loading} block={true}>
+                    {loading ? "Loading..." : "Sign In"}
+                </Button>
+            </Form>
+        </div>
     );
-}
-
-function Register() {
-
 }
 
 export {
     Login,
-    Register
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import axios from '../../components/api/axios';
 import WithUserHeaders from '../../HOC/WithUserHeaders'
 import { Layout, Spin, Row, Col, Pagination } from 'antd';
 import 'antd/dist/antd.css';
@@ -14,16 +14,29 @@ function Books(props) {
 
     const [books, setBooks] = useState([]);
     const [foundBooks, setFoundBooks] = useState(true);
+    const [BooksCount, setBooksCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(2);
+
+
+    const getBooks = (page, limit) => {
+        // console.log({ limit, page });
+        return axios.get(`http://localhost:5000/books?limit=${limit}&offset=${page}`);
+    }
+
 
     useEffect(() => {
-        // console.log(props.name);
+        // console.log(page);
+        console.log({ page, pageSize });
         setLoading(true);
         setFoundBooks(true);
-        axios.get('http://localhost:5000/books').then(res => {
-            if (res.data.length) {
-                setBooks(res.data);
+        getBooks(page, pageSize).then(res => {
+            const { Books, BooksCount } = res.data;
+            // console.log({ Books, BooksCount });
+            if (Books.length) {
+                setBooks(Books);
+                setBooksCount(BooksCount);
                 setLoading(false);
                 setFoundBooks(true);
             }
@@ -34,12 +47,18 @@ function Books(props) {
             }
         })
             .catch(err => console.log(err));
-    }, [page]);
+    }, [page, pageSize]);
 
     const handlePagination = (page, pageSize) => {
         console.log({ page, pageSize });
         setPage(page);
     }
+    const handlePageSizeChange = (current, size) => {
+        console.log({ current, size });
+        setPageSize(size);
+        setPage(1);
+    }
+
 
 
     return (
@@ -51,8 +70,14 @@ function Books(props) {
                             // foundBooks ?
                             <Col>
                                 <Pagination
+                                    current={page}
                                     onChange={handlePagination}
-                                    defaultCurrent={1} total={30} pageSize={2}
+                                    defaultCurrent={1}
+                                    total={BooksCount}
+                                    showSizeChanger
+                                    pageSize={pageSize}
+                                    pageSizeOptions={['2', '3', '4']}
+                                    onShowSizeChange={handlePageSizeChange}
                                 />
                             </Col>
                             // : null

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../components/api/axios';
 import { Layout, Spin, Row, Col, Pagination } from 'antd';
 import 'antd/dist/antd.css';
 import WithUserHeaders from '../../HOC/WithUserHeaders';
@@ -20,21 +20,20 @@ function Home(props) {
     const [page, setPage] = useState(1);
     const [shelf, setShelf] = useState("all");
 
-    const getBooks = (shelf, page) => {
+    const getUserBooks = (shelf, page) => {
         if (shelf === "all") {
-            return axios.get(`http://localhost:5000/home/books?limit=4&offset=${page}`);
+            return axios.get(`http://localhost:5000/home/books?limit=3&offset=${page}`);
         }
         else {
-            return axios.get(`http://localhost:5000/home/books?filter=${shelf}&limit=2&offset=${page}`);
+            return axios.get(`http://localhost:5000/home/books?filter=${shelf}&limit=3&offset=${page}`);
         }
     }
 
 
     useEffect(() => {
-        console.log(props.name);
         setLoading(true);
         setFoundBooks(true);
-        getBooks(shelf, page).then(res => {
+        getUserBooks(shelf, page).then(res => {
             if (res.data.length) {
                 setBooks(res.data);
                 setLoading(false);
@@ -76,8 +75,11 @@ function Home(props) {
                             // foundBooks ?
                             <Col>
                                 <Pagination
+                                    current={page}
                                     onChange={handlePagination}
-                                    defaultCurrent={1} total={30} pageSize={2}
+                                    defaultCurrent={1}
+                                    total={books.length}
+                                    pageSize={3}
                                 />
                             </Col>
                             // : null

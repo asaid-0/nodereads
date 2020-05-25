@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Container, Row , Button} from 'react-bootstrap';
-import axios from 'axios'
+import axios from '../../components/api/axios';
 import { Link , useHistory } from 'react-router-dom';
 import WithAdminHeaders from '../../HOC/WithAdminHeaders'
 import './table.module.css'
