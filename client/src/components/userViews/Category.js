@@ -6,7 +6,7 @@ import axios from '../../components/api/axios';
 function Category(){
     return(
         <div>
-            <h1>EH YA 3SL</h1>
+            <h1>Category</h1>
         </div>
     )
 }
