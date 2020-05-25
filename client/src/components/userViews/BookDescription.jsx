@@ -4,6 +4,7 @@ import { Col, Card, Descriptions } from "antd";
 import Rate from './Rate'
 import { Link } from 'react-router-dom';
 import styles from './Book.module.css';
+import Shelf from './Shelf'
 
 const { Meta } = Card;
 
@@ -20,6 +21,7 @@ function BookDescription({ book }) {
                     <hr />
                     <Meta title="Rate this book" />
                     <Rate book={book} />
+                    <Shelf book={book._id}/>
                 </Card>,
 
         </Col >

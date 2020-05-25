@@ -44,7 +44,7 @@ router.get('/:id', (req, res) => {
 
 /////////////////////**** submit review, rate, add to shelve ****/////////////////////
 
-router.post('/:id', (req, res) => {
+router.post('/:id', async (req, res) => {
 
     const { type } = req.body;
     const { id } = req.params
@@ -124,13 +124,31 @@ router.post('/:id', (req, res) => {
 
     //////// add to shelve
     else if (type === 'shelf') {
-        const { shelf } = req.body
-        UserModel.findOneAndUpdate({ _id: currentUser._id, "books.book": id },
-            { "books.$.shelf": shelf },
+        const { shelf } = req.body;
+        const book = {
+            "book":id,
+            "shelf":shelf
+        }
+        
+        UserModel.findOneAndUpdate({ _id: currentUser, "books.book": id},
+            { $set: { "books.$.shelf": shelf  } },
             { new: true },
-            (err) => {
+            (err, user) => {
                 if (err) res.send(err)
-                res.status(200).json("Book added successfully to shelf")
+                else{
+                    if(user)
+                        res.status(200).json("Book updated successfully in shelf")
+                    else{
+                        UserModel.findOneAndUpdate({ _id: currentUser},
+                            { $push: { books: book  } },
+                            { new: true },
+                            (err, newUser) => {
+                                if(err) res.send(err)
+                                res.status(200).json("Book added successfully to shelf")
+                            })
+                    }
+                }
+
             })
     }
 })
@@ -208,7 +226,7 @@ router.delete('/:id', (req, res) => {
 
     // delete book from shelve
     else if (type === 'shelf') {
-        UserModel.findOneAndDelete({ _id: currentUser._id },
+        UserModel.findOneAndUpdate({ _id: currentUser._id },
             { $pull: { "books": { "book": id } } },
             (err) => {
                 if (err) res.send(err)

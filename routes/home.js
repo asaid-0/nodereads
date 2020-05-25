@@ -52,4 +52,20 @@ router.get('/books', async (req, res) => {
     }
 })
 
+router.get('/books/:id', async (req, res) => {
+    const {currentUser} = req
+    const { id } = req.params
+    try{
+        const { books } = await User.findById(currentUser._id).populate('books.book')
+        const book = books.find((book) => book.book._id == id)
+        if(book)
+            res.send(book);
+        else
+            res.status(404).send({ err: "No book" });
+
+    } catch {
+        res.status(500).send({ err: "Server error" });
+    }
+})
+
 module.exports = router

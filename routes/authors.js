@@ -24,7 +24,7 @@ router.get('/', (req, res) => {
         .catch(err => res.status(400).send(err))
 });
 
-router.get('/:id/books', async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         author = await AuthorModel.findById(req.params.id);
         books = await BookModel.find({ author: req.params.id });
