@@ -9,7 +9,7 @@ import Book from './components/userViews/Book.jsx';
 import Authors from './components/userViews/Authors';
 import Author from './components/userViews/Author';
 import Categories from './components/userViews/Categories';
-import Category from './components/userViews/CategoryCard';
+import Category from './components/userViews/Category';
 import AdminBooks from './components/adminViews/AdminBooks';
 import AdminAuthors from './components/adminViews/AdminAuthors';
 import AuthorForm from './components/adminViews/AuthorForm';
