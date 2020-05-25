@@ -11,14 +11,14 @@ import userSchema from '../../schemas/userSchema';
 export default function Register(props) {
 
     const history = useHistory();
-    const { setUserSession } = useContext(UserContext);
+    const { setUser: setUserSession  } = useContext(UserContext);
     const [user, setUser] = useState({});
     const { error, showError } = useError({});
     const [btnMessage, setBtnMessage] = useState("Sign Up");
 
     const handleError = (error) => {
         console.log(error.details);
-        setBtnMessage("Sign up");
+        setBtnMessage("Sign Up");
         const allErrors = error.details.reduce((agg, err) => ({ ...agg, [err.name]: err.message }), {})
         showError(allErrors);
     }
@@ -36,12 +36,12 @@ export default function Register(props) {
         setBtnMessage("Loading ...");
         // validate
         const newUserSchema = userSchema;
-        const cleanedData = newUserSchema.clean({ ...user, userPhoto: user.userPhoto.name });
+        const cleanedData = newUserSchema.clean({ ...user, userPhoto: user.userPhoto ? user.userPhoto.name : null });
         try {
             newUserSchema.validate(cleanedData);
 
         } catch (err) {
-            handleError(err);
+            return handleError(err);
         }
         console.log(user.userPhoto);
         // send 
@@ -63,17 +63,22 @@ export default function Register(props) {
         fetch(req)
             .then(res => res.json())
             .then(json => {
+                console.log("json: ... ", json);
                 if (json.status === "success") {
                     sessionStorage.setItem('token', json.token);
                     const userInfo = JSON.parse(window.atob(json.token.split('.')[1].replace(/_/g, '/').replace(/-/g, '+')));
-                    setUser(userInfo);
+                    setUserSession(userInfo);
                     setBtnMessage("Registeration Successful .. Redirecting !")
                     setTimeout(() => {
-                        history.push('/home');
+                        window.location.pathname = '/home';
                     }, 3 * 1000);
+                } else {
+                    setBtnMessage("Sign Up");
+                    showError({...error, email: "Email is already registered!"});
                 }
             })
             .catch(err => {
+                // alert(err);
                 console.log(err);
             });
 
@@ -83,9 +88,9 @@ export default function Register(props) {
         <div className="container">
             <Form onSubmit={handleSubmit}>
                 <br />
-                <p><h5>Sign up</h5></p>
+                <p><h5>Sign Up</h5></p>
                 <br />
-
+                {error.response && <Error error={error.response} />}
                 <FormGroup>
                     {error.firstName && <Error error={error.firstName} />}
                     <Form.Control

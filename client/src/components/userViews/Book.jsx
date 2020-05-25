@@ -33,7 +33,7 @@ function Book(props) {
         <Layout className={styles.layout} key={bookId}>
             <Content >
                 <Row>
-                    <BookDescription book={book}/>
+                    <BookDescription book={book} />
                 </Row>
 
                 <Row justify="center">
@@ -43,17 +43,19 @@ function Book(props) {
                         </div>
                     </Col>
                 </Row>
-                <Row justify="center">
-                    {
-                        reviewList.length ? reviewList.map(review => {
-                            return <Review bookId={bookId}
-                                updateReviewList={updateReviewList}
-                                review={review} key={review._id}
-                            />
-                        })
-                            : <h3>No reviews</h3>
-                    }
-                </Row>
+                {
+                    reviewList.length ? reviewList.map(review => {
+                        return (
+                            <Row justify="center" key={review._id}>
+                                <Review bookId={bookId}
+                                    updateReviewList={updateReviewList}
+                                    review={review} 
+                                />
+                            </Row>
+                        )
+                    })
+                        : <h3>No reviews</h3>
+                }
             </Content>
         </Layout>
     )

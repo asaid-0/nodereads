@@ -7,14 +7,16 @@ import { UserContext } from './authContext';
 function UserRoute(props) {
     // console.log(useContext(UserContext));
 
-    const { user, setUser } = useContext(UserContext);
-    // console.log(user);
+    const { user } = useContext(UserContext);
+    console.log("User route: ,,,... ", user);
+    const token = sessionStorage.getItem("token");
     const { component: Component, ...rest } = props;
     const RenderComponent = (p) => {
         if (user && user._id) {
             return <Component {...p} />
         } else {
 
+            debugger;
             return <Redirect to={{
                 pathname: "/login",
                 state: { from: p.location },

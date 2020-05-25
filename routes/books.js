@@ -27,8 +27,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id } = req.params
-    const { currentUser } = req
-    // console.log(currentUser);
+
     // res.send(`route get /books/${id}`);
     BookModel.findById(id)
         .populate('author')
@@ -60,15 +59,14 @@ router.post('/:id', (req, res) => {
         if (content.trim().length < 3) return res.status(400).json({ error: 'Review content is shorter than the minimum allowed length (3)' })
 
         const review = {
-            // user: currentUser,
-            user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730"),
+            user: mongoose.Types.ObjectId(currentUser._id),
             content: content.trim(),
         }
 
         BookModel.findById(id)
             .then(book => {
                 // check if user submitted review before
-                const oldReview = book.reviews.find(review => review.user._id.toString() === "5eb4628d746f7c3026426730")//currentUser._id
+                const oldReview = book.reviews.find(review => review.user._id.toString() === currentUser._id)
                 // console.log(oldReview);
 
                 if (!oldReview) {
@@ -76,16 +74,11 @@ router.post('/:id', (req, res) => {
                     book.reviews.push(review)
                     book.save()
                         .then(book => {
-                            // console.log(book.populated);
                             book.populate('reviews.user', function (err, book) {
                                 res.status(200).json(book.reviews)
                             });
                         })
-                        .catch(err => {
-                            console.log(err);
-
-                            res.status(400).send(err)
-                        })
+                        .catch(err => res.status(400).send(err))
 
                 } else return res.status(400).json({ error: 'You have already submitted a review, you can edit it in review section below' })
             })
@@ -99,8 +92,7 @@ router.post('/:id', (req, res) => {
         if (!rate || typeof (rate) != 'number') res.status(400).send('Invalid rate')
 
         const userRate = {
-            // user: currentUser,
-            user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730"),
+            user: mongoose.Types.ObjectId(currentUser._id),
             rate,
         }
 
@@ -108,7 +100,7 @@ router.post('/:id', (req, res) => {
             .populate('author')
             .then(book => {
                 // check if user submitted rate before
-                const oldRate = book.rates.find(rate => rate.user.toString() === "5eb4628d746f7c3026426730")//currentUser._id
+                const oldRate = book.rates.find(rate => rate.user.toString() === currentUser._id)
 
                 if (!oldRate) {
                     book.rates.push(userRate)
@@ -190,7 +182,7 @@ router.delete('/:id', (req, res) => {
         BookModel.findById(id)
             .populate('reviews.user')
             .then(book => {
-                book.reviews.pull({ _id: reviewID, user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730") })//currentUser._id
+                book.reviews.pull({ _id: reviewID, user: currentUser })
                 book.save()
                     .then(book => res.json(book.reviews))
                     .catch(err => res.status(400).send(err))
@@ -203,8 +195,9 @@ router.delete('/:id', (req, res) => {
         const { rateID } = req.body
 
         BookModel.findById(id)
+            .populate('rates.user')
             .then(book => {
-                book.rates.pull({ _id: rateID, user: mongoose.Types.ObjectId("5eb4628d746f7c3026426730") })//currentUser._id
+                book.rates.pull({ _id: rateID, user: currentUser })
                 book.save()
                     .then(book => res.json(book.rates))
                     .catch(err => res.status(400).send(err))
