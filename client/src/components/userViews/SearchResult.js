@@ -3,6 +3,7 @@ import axios from '../../components/api/axios';
 import { Layout, Spin, Row, Col } from 'antd';
 import WithUserHeaders from '../../HOC/WithUserHeaders';
 import BookCard from './BookCard';
+import AuthorCard from './AuthorCard';
 import EmptyPlaceholder from '../ui_components/EmptyPlaceholder';
 import styles from './SearchResult.module.css';
 
@@ -27,6 +28,7 @@ function SearchResult(props) {
             .then(res => {
                 setBooks(res.data[0]);
                 setAuthors(res.data[1]);
+                console.log(res.data[0], "/n", res.data[1]);
                 setLoading(false);
                 if (!(res.data[0].length || res.data[1].length)) {
                     setFoundResult(false);
@@ -39,37 +41,56 @@ function SearchResult(props) {
     }, [searchInput])
     return (
         <>
-            <Content style={{ height: "100vh" }} >
+            <Layout style={{ overflow: "auto" }}>
+                <Content>
 
-                {
-                    loading ?
-                        <Col>
-                            <Spin className={styles.loader} size="large" />
-                        </Col> :
-                        <>
-                            {
-                                books.length ?
-                                    <h1 className={styles.title} >Books</h1>
-                                    :
-                                    null
-                            }
-                            <Row align="middle" justify="space-around" style={{ marginTop: "1rem" }} >
+                    {
+                        loading ?
+                            <Col>
+                                <Spin className={styles.loader} size="large" />
+                            </Col> :
+                            <>
                                 {
-                                    books.map((elem) =>
-                                        <Col style={{ marginTop: "2rem" }} >
-                                            <BookCard key={elem._id} book={elem} shelf={undefined} />
-                                        </Col>
-                                    )
+                                    books.length ?
+                                        <h1 className={styles.title} >Books</h1>
+                                        :
+                                        null
                                 }
-                            </Row>
-                        </>
-                }
-                {
-                    foundResult ? null :
-                        <EmptyPlaceholder />
-                }
+                                <Row align="middle" justify="space-around" style={{ marginTop: "1rem" }} >
+                                    {
+                                        books.map((elem) =>
+                                            <Col style={{ marginTop: "2rem" }} >
+                                                <BookCard key={elem._id} book={elem} shelf={undefined} />
+                                            </Col>
+                                        )
+                                    }
+                                </Row>
+                                {
+                                    authors.length ?
+                                        <h1 className={styles.title} >Authors</h1>
+                                        :
+                                        null
+                                }
+                                <Row align="middle" justify="space-around" style={{ marginTop: "1rem", marginBottom: "8rem" }} >
+                                    {
 
-            </Content>
+                                        authors.map((author) =>
+                                            <Col style={{ marginTop: "2rem" }} >
+                                                <AuthorCard author={author} />
+                                            </Col>
+                                        )
+                                    }
+                                </Row>
+                            </>
+                    }
+                    {
+                        foundResult ? null :
+                            <EmptyPlaceholder msg="Nothing Found" />
+                    }
+
+                </Content>
+            </Layout>
+
         </>
     )
 }

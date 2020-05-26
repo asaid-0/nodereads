@@ -17,7 +17,7 @@ function Books(props) {
     const [BooksCount, setBooksCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(2);
+    const [pageSize, setPageSize] = useState(6);
 
 
     const getBooks = (page, limit) => {
@@ -76,7 +76,7 @@ function Books(props) {
                                     total={BooksCount}
                                     showSizeChanger
                                     pageSize={pageSize}
-                                    pageSizeOptions={['2', '3', '4']}
+                                    pageSizeOptions={['6', '9', '12']}
                                     onShowSizeChange={handlePageSizeChange}
                                 />
                             </Col>
@@ -102,7 +102,7 @@ function Books(props) {
                         }
                         {
                             foundBooks ? null :
-                                <EmptyPlaceholder />
+                                <EmptyPlaceholder msg="No Books Found" />
                         }
                     </Row>
                 </Content>

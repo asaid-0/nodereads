@@ -105,7 +105,7 @@ function Home(props) {
                         }
                         {
                             foundBooks ? null :
-                                <EmptyPlaceholder />
+                                <EmptyPlaceholder msg="No Books Found" />
                         }
                     </Row>
                 </Content>

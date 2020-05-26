@@ -29,7 +29,6 @@ export default function NavBar(props) {
                         <Nav.Link as={Link} to="/books" className={styles.link}>Books</Nav.Link>
                         <Nav.Link as={Link} to="/categories" className={styles.link}>Categories</Nav.Link>
                         <Nav.Link as={Link} to="/authors" className={styles.link}>Authors</Nav.Link>
-                        <Nav.Link as={Link} to="/authors" className={styles.link}>{searchInput}</Nav.Link>
                     </Nav>
 
                     <Form inline onSubmit={handleSubmit}>
