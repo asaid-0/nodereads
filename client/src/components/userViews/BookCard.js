@@ -3,7 +3,6 @@ import styles from './BookCard.module.css';
 import Shelf from './Shelf';
 import { Link } from 'react-router-dom';
 import { Rate, Menu, Dropdown, Button, Row } from 'antd';
-import $ from 'jquery';
 import { DownOutlined } from '@ant-design/icons';
 import AverageRate from './AverageRate';
 
