@@ -40,7 +40,7 @@ function Category(props) {
             }
         })
             .catch(err => console.log(err));
-    }, [page, books]);
+    }, [page, books.length]);
 
 
     const handlePagination = (page) => {

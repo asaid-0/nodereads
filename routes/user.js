@@ -36,10 +36,11 @@ router.get("/categories/:id", (req, res) => {
         page = req.query.page;
     }
     // check first if category exists
-    CategoryModel.findById(req.params.id).populate("author").populate("categories")
+    CategoryModel.findById(req.params.id)
         .then(category => {
             //find books has category in their categories list
             BookModel.find({ categories: { "$in" : [category]} })
+                .populate("author")
                 .skip(limit * page)
                 .limit(limit)
                 .then(books => {
