@@ -30,34 +30,36 @@ function Book(props) {
     }, [bookId])
 
     return (
-        <Layout className={styles.layout} key={bookId}>
-            <Content >
-                <Row>
-                    <BookDescription book={book} />
-                </Row>
+        <Layout style={{height: "90vh"}} className={styles.layout} key={bookId}>
+            <Content style={{ overflow: "auto" }}>
+                <div className="container">
+                    <Row>
+                        <BookDescription book={book} />
+                    </Row>
 
-                <Row justify="center">
-                    <Col span={14}>
-                        <div>
-                            <ReviewForm bookId={bookId} updateReviewList={updateReviewList} />
-                        </div>
-                    </Col>
-                </Row>
-                {
-                    reviewList.length ? reviewList.map(review => {
-                        return (
-                            <Row justify="center" key={review._id}>
-                                <Review bookId={bookId}
-                                    updateReviewList={updateReviewList}
-                                    review={review}
-                                />
+                    <Row justify="center">
+                        <Col span={14}>
+                            <div>
+                                <ReviewForm bookId={bookId} updateReviewList={updateReviewList} />
+                            </div>
+                        </Col>
+                    </Row>
+                    {
+                        reviewList.length ? reviewList.map(review => {
+                            return (
+                                <Row justify="center" key={review._id}>
+                                    <Review bookId={bookId}
+                                        updateReviewList={updateReviewList}
+                                        review={review}
+                                    />
+                                </Row>
+                            )
+                        })
+                            : <Row justify="center" >
+                                <h3>No reviews</h3>
                             </Row>
-                        )
-                    })
-                        : <Row justify="center" >
-                            <h3>No reviews</h3>
-                        </Row>
-                }
+                    }
+                </div>
             </Content>
         </Layout>
     )
