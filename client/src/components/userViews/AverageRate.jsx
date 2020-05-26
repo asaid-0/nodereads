@@ -18,7 +18,6 @@ function AverageRate(props) {
     return (
         <>
             <RateAntd disabled allowHalf value={rating} style={{ color: '#e89a3c' }} />
-            <span> {rating ? rating.toFixed(2) : null} ({props.rates.length} Ratings)</span>
         </>
     )
 }

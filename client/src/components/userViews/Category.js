@@ -53,40 +53,42 @@ function Category(props) {
         <>
             <Layout>
                 <Content className={styles.content}>
-                    <Row align="middle" justify="center" style={{ marginTop: "2rem" }} >
-                        {
-                            <Col>
-                                <Pagination
-                                    current={page}
-                                    onChange={handlePagination}
-                                    defaultCurrent={1}
-                                    total={BooksCount}
-                                />
-                            </Col>
-                        }
-
-                    </Row>
-                    <Row justify="space-around" style={{ height: "100%" }} >
-                        {
-                            loading ?
+                    <div className="container">
+                        <Row align="middle" justify="center" style={{ marginTop: "2rem" }} >
+                            {
                                 <Col>
-                                    <Spin className={styles.loader} size="large" />
+                                    <Pagination
+                                        current={page}
+                                        onChange={handlePagination}
+                                        defaultCurrent={1}
+                                        total={BooksCount}
+                                    />
                                 </Col>
-                                :
-                                books.map((elem) =>
-                                    <Col style={{ marginTop: "2rem" }} >
-                                        <BookCard key={elem._id}
-                                            book={elem}
-                                            shelf={undefined}
-                                            handleShelfChange={undefined} />
+                            }
+
+                        </Row>
+                        <Row justify="space-around" style={{ height: "100%" }} >
+                            {
+                                loading ?
+                                    <Col>
+                                        <Spin className={styles.loader} size="large" />
                                     </Col>
-                                )
-                        }
-                        {
-                            books.length || loading ? null :
-                                <EmptyPlaceholder />
-                        }
-                    </Row>
+                                    :
+                                    books.map((elem) =>
+                                        <Col style={{ marginTop: "2rem" }} >
+                                            <BookCard key={elem._id}
+                                                book={elem}
+                                                shelf={undefined}
+                                                handleShelfChange={undefined} />
+                                        </Col>
+                                    )
+                            }
+                            {
+                                books.length || loading ? null :
+                                    <EmptyPlaceholder />
+                            }
+                        </Row>
+                    </div>
                 </Content>
             </Layout>
         </>

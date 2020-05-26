@@ -6,7 +6,7 @@ import 'antd/dist/antd.css';
 import styles from './Home.module.css';
 import BookCard from './BookCard';
 import EmptyPlaceholder from '../ui_components/EmptyPlaceholder';
-const { Sider, Header, Content, Footer } = Layout;
+const { Content } = Layout;
 
 
 
