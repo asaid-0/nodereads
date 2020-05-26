@@ -15,23 +15,30 @@ export default function NavBar(props) {
     }
     return (
         <>
-            <Navbar variant="dark" className={styles.navbar}>
+            <Navbar expand="lg" variant="dark" className={styles.navbar}>
                 <Navbar.Brand as={Link} to="/" >
                     <img src="/images/nodejs-logo.png" alt="logo" className={styles.logo} />
-                    <span className={styles.title}>Reads</span></Navbar.Brand>
-                <Nav className="mr-auto">
-                    <Nav.Link as={Link} to="/home" className={styles.link} >  Home </Nav.Link>
-                    <Nav.Link as={Link} to="/books" className={styles.link}>Books</Nav.Link>
-                    <Nav.Link as={Link} to="/categories" className={styles.link}>Categories</Nav.Link>
-                    <Nav.Link as={Link} to="/authors" className={styles.link}>Authors</Nav.Link>
-                    <Nav.Link as={Link} to="/authors" className={styles.link}>{searchInput}</Nav.Link>
-                </Nav>
-                <Form inline onSubmit={handleSubmit}>
-                    <FormControl type="text" value={searchInput} onChange={handleChange} placeholder="book or author name" className="mr-sm-2" />
-                    <Link to={`/home/search/${searchInput}`}>
-                        <Button className={styles.button} variant="outline-primary">Search</Button>
-                    </Link>
-                </Form>
+                    <span className={styles.title}>Reads</span>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+
+
+                    <Nav className="mr-auto">
+                        <Nav.Link as={Link} to="/home" className={styles.link} >  Home </Nav.Link>
+                        <Nav.Link as={Link} to="/books" className={styles.link}>Books</Nav.Link>
+                        <Nav.Link as={Link} to="/categories" className={styles.link}>Categories</Nav.Link>
+                        <Nav.Link as={Link} to="/authors" className={styles.link}>Authors</Nav.Link>
+                        <Nav.Link as={Link} to="/authors" className={styles.link}>{searchInput}</Nav.Link>
+                    </Nav>
+
+                    <Form inline onSubmit={handleSubmit}>
+                        <FormControl type="text" value={searchInput} onChange={handleChange} placeholder="book or author name" className="mr-sm-2" />
+                        <Link to={`/home/search/${searchInput}`}>
+                            <Button className={styles.button} variant="outline-primary">Search</Button>
+                        </Link>
+                    </Form>
+                </Navbar.Collapse>
             </Navbar>
         </>
     )

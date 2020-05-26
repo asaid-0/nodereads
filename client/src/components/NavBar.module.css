@@ -1,35 +1,34 @@
-.navbar{
+.navbar {
     background-color:#001529;
-    height: 4rem;
     box-shadow: 0 3px 20px #001529;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
-.logo{
+.logo {
     width: 2rem;
     margin-left: 1rem;
 }
-.title{
+.title {
     font-size: 1.5rem;
     font-weight: 500;
     color: #61DBFB;
     margin-right: 2rem;
 }
-.link{
-      font-weight: 800;
-      text-decoration: none;
-      text-transform: uppercase;
-      -webkit-text-stroke: 0.03rem #001529;
+.link {
+    font-weight: 800;
+    text-decoration: none;
+    text-transform: uppercase;
+    -webkit-text-stroke: 0.03rem #001529;
     -webkit-text-fill-color: white;
 }
-.link:hover{
+.link:hover {
     -webkit-text-stroke: 0.01rem white;
     -webkit-text-fill-color:  rgb(126, 193, 255);
 }
-.button:hover{
+.button:hover {
     color: #001529 !important;
 }
 

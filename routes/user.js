@@ -47,7 +47,7 @@ router.get("/categories/:id", (req, res) => {
                         if (err) {
                             return res.status(400).send(err);
                         }
-                        return res.status(200).json({ pages: Math.ceil(count / limit), data: books })
+                        return res.status(200).json({ count: count, pages: Math.ceil(count / limit), data: books })
                     })
                 })
                 .catch(err => res.status(400).json({

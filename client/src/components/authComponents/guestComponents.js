@@ -56,6 +56,7 @@ function Login(props) {
                         let location = "/home";
                         if (userInfo.isAdmin) location = "/admin"
                         if (props.location.state && props.location.state.from) location = props.location.state.from.pathname;
+                        if (!userInfo.isAdmin && location.includes("/admin")) location = "/home";
                         window.location.pathname = location;
                     } else {
                         handleError(json.message)
