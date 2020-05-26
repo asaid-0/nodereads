@@ -15,8 +15,6 @@ function UserRoute(props) {
         if (user && user._id) {
             return <Component {...p} />
         } else {
-
-            debugger;
             return <Redirect to={{
                 pathname: "/login",
                 state: { from: p.location },

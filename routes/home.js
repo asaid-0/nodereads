@@ -37,9 +37,9 @@ router.get('/books', async (req, res) => {
         const { filter, offset, limit } = req.query;
         const beginIndex = limit * (offset - 1);
         const endIndex = parseInt(limit * (offset - 1)) + parseInt(limit);
-        // const { books } = await User.findById(req.currentUser._id).populate('books.book');
-        const { books } = await User.findById(mongoose.Types.ObjectId("5eb3ae2e2c6ca55e7142efde"))
-            .populate('books.book').populate('books.book.author');
+        const { books } = await User.findById(req.currentUser._id).populate('books.book');
+        // const { books } = await User.findById(mongoose.Types.ObjectId("5eb3ae2e2c6ca55e7142efde"))
+            // .populate('books.book').populate('books.book.author');
         let userBooks = books; // Question
         if (filter) {
             userBooks = books.filter((book) => {

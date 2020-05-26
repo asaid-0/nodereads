@@ -49,7 +49,7 @@ const BookCard = (props) => {
             <div className={styles.body}>
                 <h3> <Link className={styles.title} to={`/books/${book._id}`} > {book.name} </Link> </h3>
                 <span>by</span>
-                <h6> <Link className={styles.author}>{book.author.firstname}</Link> </h6>
+                <h6> <Link to={`/authors/${book.author._id}`} className={styles.author}>{book.author.firstname}</Link> </h6>
                 <div>
                     {
                         shelf ?
