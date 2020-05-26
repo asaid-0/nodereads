@@ -37,9 +37,16 @@ router.get('/books', async (req, res) => {
         const { filter, offset, limit } = req.query;
         const beginIndex = limit * (offset - 1);
         const endIndex = parseInt(limit * (offset - 1)) + parseInt(limit);
-        const { books } = await User.findById(req.currentUser._id).populate('books.book').populate('books.author');
+        const { books } = await User.findById(req.currentUser._id).populate({
+            path: 'books.book',
+            model: 'Book',
+            populate: {
+                path: 'author',
+                model: 'Author'
+            }
+        });
         // const { books } = await User.findById(mongoose.Types.ObjectId("5eb3ae2e2c6ca55e7142efde"))
-            // .populate('books.book').populate('books.book.author');
+        // .populate('books.book').populate('books.book.author');
         let userBooks = books; // Question
         if (filter) {
             userBooks = books.filter((book) => {
@@ -53,12 +60,12 @@ router.get('/books', async (req, res) => {
 })
 
 router.get('/books/:id', async (req, res) => {
-    const {currentUser} = req
+    const { currentUser } = req
     const { id } = req.params
-    try{
+    try {
         const { books } = await User.findById(currentUser._id).populate('books.book')
         const book = books.find((book) => book.book._id == id)
-        if(book)
+        if (book)
             res.send(book);
         else
             res.status(404).send({ err: "No book" });
