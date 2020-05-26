@@ -13,11 +13,7 @@ router.get('/', async (req, res) => {
 
     try {
         const searchWord = req.query.searchWord;
-<<<<<<< HEAD
-        const books = Book.find({ name: new RegExp(searchWord, 'i') }).populate('author');
-=======
         const books = Book.find({ name: new RegExp(searchWord, 'i') }).populate("author");
->>>>>>> 55be28d9e17ab5881636d73c8dd1dfb068f6a615
         const authors = Author.find({
             $or: [{ firstname: new RegExp(searchWord, 'i') },
             { lastname: new RegExp(searchWord, 'i') }]
