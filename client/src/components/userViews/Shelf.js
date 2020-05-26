@@ -71,7 +71,6 @@ const Shelf = ({ book }) => {
     }
 
     return (
-        <div className={styles.actions}>
             <div tabIndex="0" onBlur={handleFocus} onClick={handleSelectClick} className={`${styles.tilt_up} ${styles.select_menu} ${openMenu ? styles.open : ''}`} style={{ "--t": `${t}px` }}>
                 <select data-menu></select>
                 <div className={styles.button}>
@@ -90,7 +89,6 @@ const Shelf = ({ book }) => {
                     <li onClick={() => handleItemClick(3)}>Reading</li>
                 </ul>
             </div>
-        </div>
     )
 }
 
