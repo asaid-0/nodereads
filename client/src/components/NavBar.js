@@ -33,10 +33,12 @@ export default function NavBar(props) {
 
                     <Form inline onSubmit={handleSubmit}>
                         <FormControl type="text" value={searchInput} onChange={handleChange} placeholder="book or author name" className="mr-sm-2" />
-                        <Link to={`/home/search/${searchInput}`}>
+                        <Link to={ searchInput ? `/home/search/${searchInput}` : "/home/search/%20"}>
                             <Button className={styles.button} variant="outline-primary">Search</Button>
                         </Link>
                     </Form>
+                    <Nav.Link as={Link} onClick={() => { sessionStorage.removeItem('token'); window.location.pathname = "/login" }} className={styles.link} > Logout </Nav.Link>
+
                 </Navbar.Collapse>
             </Navbar>
         </>

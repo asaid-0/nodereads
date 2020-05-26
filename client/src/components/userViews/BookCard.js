@@ -15,7 +15,7 @@ const BookCard = (props) => {
         <div style={{ margin: "1rem" }} className={styles.card}>
             <div style={{ backgroundImage: book.photo ? `url("/${book.photo}")` : 'url("/images/open_book.png")' }} className={styles.banner}>
                 <svg style={{ zIndex: 100 }} viewBox="0 0 100 100">
-                    <image href="https://cdn.pixabay.com/photo/2015/08/25/10/40/ben-knapen-906550_960_720.jpg" width="100" height="100" />
+                    <image href={ (book.author && book.author.photo) ? `/${book.author.photo}` : "https://cdn.pixabay.com/photo/2015/08/25/10/40/ben-knapen-906550_960_720.jpg"} width="100" height="100" />
                 </svg>
             </div>
             <div

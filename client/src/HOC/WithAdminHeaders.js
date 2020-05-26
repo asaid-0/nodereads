@@ -30,7 +30,7 @@ const WithAdminHeaders = (Comp) => {
         }}>
           <div className={styles.logo} >
             <Avatar
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            src={ user.photo ? user.photo : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"}
             size={64}
             />
             <br/>
@@ -52,7 +52,7 @@ const WithAdminHeaders = (Comp) => {
             <Divider />
             <Menu.Item icon={<LogoutOutlined />}>
               <span>Logout</span>
-              <Link to=""></Link>
+              <Link onClick={() => { sessionStorage.removeItem('token'); window.location.pathname = "/login" }}></Link>
             </Menu.Item>
           </Menu>
         </Sider>

@@ -7,11 +7,12 @@ import { validateLoginForm } from './authHelpers';
 import { UserContext } from './authContext';
 import { useEffect } from 'react';
 import userSchema from '../../schemas/userSchema';
+import styles from './guestComponents.module.css';
 
 export default function Register(props) {
 
     const history = useHistory();
-    const { setUser: setUserSession  } = useContext(UserContext);
+    const { setUser: setUserSession } = useContext(UserContext);
     const [user, setUser] = useState({});
     const { error, showError } = useError({});
     const [btnMessage, setBtnMessage] = useState("Sign Up");
@@ -74,7 +75,7 @@ export default function Register(props) {
                     }, 3 * 1000);
                 } else {
                     setBtnMessage("Sign Up");
-                    showError({...error, email: "Email is already registered!"});
+                    showError({ ...error, email: "Email is already registered!" });
                 }
             })
             .catch(err => {
@@ -85,85 +86,120 @@ export default function Register(props) {
     }
 
     return (
-        <div className="container">
-            <Form onSubmit={handleSubmit}>
-                <br />
-                <p><h5>Sign Up</h5></p>
-                <br />
-                {error.response && <Error error={error.response} />}
-                <FormGroup>
-                    {error.firstName && <Error error={error.firstName} />}
-                    <Form.Control
-                        type="text"
-                        name="firstName"
-                        placeholder="First Name"
-                        onChange={handleInput}
-                        value={user.firstName}
-                    />
-                </FormGroup>
-
-                <FormGroup>
-                    {error.lastName && <Error error={error.lastName} />}
-                    <Form.Control
-                        type="text"
-                        name="lastName"
-                        placeholder="Last Name"
-                        onChange={handleInput}
-                        value={user.lastName}
-                    />
-                </FormGroup>
-
-                <FormGroup>
-                    {error.email && <Error error={error.email} />}
-                    <Form.Control
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        onChange={handleInput}
-                        value={user.email}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    {error.password && <Error error={error.password} />}
-                    <Form.Control
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        onChange={handleInput}
-                        value={user.password}
-                    />
-                </FormGroup>
-
-                <FormGroup>
-                    {error.confirmPassword && <Error error={error.confirmPassword} />}
-                    <Form.Control
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="Password Confirmation"
-                        onChange={handleInput}
-                        value={user.confirmPassword}
-                    />
-                </FormGroup>
 
 
+        <section className={styles.entry_page} id="entry-page">
 
-                <Form.Group controlId="formImage">
-                    {error.userPhoto && <Error error={error.userPhoto} />}
+                <Form className={styles.form} onSubmit={handleSubmit}>
+                    <h2 className={styles.h2}>Sign Up!</h2>
+                    {error.response && <Error error={error.response} />}
+                    <fieldset style={{paddingLeft: "1rem"}} className={styles.fieldset}>
+                        <legend className={styles.legend}>Create Account</legend>
 
-                    <Form.Label>Image</Form.Label>
-                    <Form.File
-                        id="userPhoto"
-                        label="Upload User Image"
-                        name="userPhoto"
-                        onChange={handleFileChange}
-                        custom
-                    />
-                </Form.Group>
+                        <ul className={styles.ul}>
+                        
+                        {error.firstName && <Error error={error.firstName} />}
+                            <li className={styles.li}>
+                                <label className={styles.label} for="firstname">Firstname:</label>
+                                <FormGroup>
+                                    <Form.Control
+                                        className={styles.input}
+                                        type="text"
+                                        name="firstName"
+                                        id="firstname"
+                                        placeholder="First Name"
+                                        onChange={handleInput}
+                                        value={user.firstName}
+                                    />
+                                </FormGroup>
+                            </li>
 
-                <Button type="submit" disabled={btnMessage != "Sign Up"} block={true}>
-                    {btnMessage}
-                </Button>
-            </Form>
-        </div>
+                            {error.lastName && <Error error={error.lastName} />}
+                            <li className={styles.li}>
+                                <label className={styles.label} for="lastname">Lastname:</label>
+                                <FormGroup>
+                                    <Form.Control
+                                        className={styles.input}
+                                        type="text"
+                                        name="lastName"
+                                        id="lastname"
+                                        placeholder="Last Name"
+                                        onChange={handleInput}
+                                        value={user.lastName}
+                                    />
+                                </FormGroup>
+                            </li>
+
+                            {error.email && <Error error={error.email} />}
+                            <li className={styles.li}>
+                                <label className={styles.label} for="email">Email:</label>
+                                <FormGroup>
+                                    <Form.Control
+                                        className={styles.input}
+                                        type="email"
+                                        name="email"
+                                        id="email"
+                                        placeholder="Email"
+                                        onChange={handleInput}
+                                        value={user.email}
+                                    />
+                                </FormGroup>
+                            </li>
+
+                            {error.password && <Error error={error.password} />}
+                            <li className={styles.li}>
+                                <label className={styles.label} for="password">Password:</label>
+                                <FormGroup>
+                                    <Form.Control
+                                        className={styles.input}
+                                        type="password"
+                                        name="password"
+                                        id="password"
+                                        placeholder="Password"
+                                        onChange={handleInput}
+                                        value={user.password}
+                                    />
+                                </FormGroup>
+                            </li>
+
+                            {error.confirmPassword && <Error error={error.confirmPassword} />}
+                            <li className={styles.li}>
+                                <label className={styles.label} for="confirmPassword">Password Confirmation:</label>
+                                <FormGroup>
+                                    <Form.Control
+                                        className={styles.input}
+                                        type="password"
+                                        name="confirmPassword"
+                                        id="confirmPassword"
+                                        placeholder="Password Confirmation"
+                                        onChange={handleInput}
+                                        value={user.confirmPassword}
+                                    />
+                                </FormGroup>
+
+                            </li>
+
+                            {error.userPhoto && <Error error={error.userPhoto} />}
+                            <li className={styles.li}>
+                                <label className={styles.label} for="userPhoto">User Image:</label>
+                                <Form.Group controlId="formImage">
+                                    <Form.File
+                                        id="userPhoto"
+                                        label="Upload User Image"
+                                        name="userPhoto"
+                                        onChange={handleFileChange}
+                                        custom
+                                    />
+                                </Form.Group>
+                            </li>
+                        </ul>
+                    </fieldset>
+
+                    <Button type="submit" disabled={btnMessage != "Sign Up"} block={true}>
+                        {btnMessage}
+                    </Button>
+                    <button className={styles.button} type="button" onClick={() => history.push('/login')}>Have an Account?</button>
+                </Form>
+        </section>
     );
 }
