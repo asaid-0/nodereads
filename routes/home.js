@@ -63,14 +63,7 @@ router.get('/books/:id', async (req, res) => {
     const { currentUser } = req
     const { id } = req.params
     try {
-        // const { books } = await User.findById(currentUser._id).populate({
-        //     path: 'books.book',
-        //     model: 'Book',
-        // });
-        // const { books } = await User.findById(currentUser._id);
-
-
-
+        const { books } = await User.findById(currentUser._id).populate('books.book')
         const book = books.find((book) => book.book._id == id)
         if (book)
             res.send(book);
