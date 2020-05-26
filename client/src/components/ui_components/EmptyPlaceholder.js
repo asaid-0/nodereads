@@ -4,13 +4,13 @@ import 'antd/dist/antd.css';
 
 
 
-function EmptyPlaceholder() {
+function EmptyPlaceholder({ msg }) {
     return (
         <>
             <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
                 description={
-                    <span> No Books Found </span>
+                    <span>{msg}</span>
                 }
                 imageStyle={{
                     marginTop: "10rem"
