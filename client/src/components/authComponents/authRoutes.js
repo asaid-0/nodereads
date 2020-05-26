@@ -8,7 +8,6 @@ function UserRoute(props) {
     // console.log(useContext(UserContext));
 
     const { user } = useContext(UserContext);
-    console.log("User route: ,,,... ", user);
     const token = sessionStorage.getItem("token");
     const { component: Component, ...rest } = props;
     const RenderComponent = (p) => {
