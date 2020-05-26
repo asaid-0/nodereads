@@ -52,7 +52,7 @@ const WithAdminHeaders = (Comp) => {
             <Divider />
             <Menu.Item icon={<LogoutOutlined />}>
               <span>Logout</span>
-              <Link to=""></Link>
+              <Link onClick={() => { sessionStorage.removeItem('token'); window.location.pathname = "/login" }}></Link>
             </Menu.Item>
           </Menu>
         </Sider>

@@ -38,6 +38,8 @@ export default function NavBar(props) {
                             <Button className={styles.button} variant="outline-primary">Search</Button>
                         </Link>
                     </Form>
+                    <Nav.Link as={Link} onClick={() => { sessionStorage.removeItem('token'); window.location.pathname = "/login" }} className={styles.link} > Logout </Nav.Link>
+
                 </Navbar.Collapse>
             </Navbar>
         </>
