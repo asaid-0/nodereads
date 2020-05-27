@@ -1,21 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styles from './BookCard.module.css';
 import Shelf from './Shelf';
 import { Link } from 'react-router-dom';
-import { Rate, Menu, Dropdown, Button, Row } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
 import AverageRate from './AverageRate';
 
 
 const BookCard = (props) => {
-    const { book, shelf, handleShelfChange } = props;
+    const { book } = props;
     return (
 
 
         <div style={{ margin: "1rem" }} className={styles.card}>
             <div style={{ backgroundImage: book.photo ? `url("/${book.photo}")` : 'url("/images/open_book.png")' }} className={styles.banner}>
                 <svg style={{ zIndex: 100 }} viewBox="0 0 100 100">
-                    <image href={ (book.author && book.author.photo) ? `/${book.author.photo}` : "https://cdn.pixabay.com/photo/2015/08/25/10/40/ben-knapen-906550_960_720.jpg"} width="100" height="100" />
+                    <image href={(book.author && book.author.photo) ? `/${book.author.photo}` : "https://cdn.pixabay.com/photo/2015/08/25/10/40/ben-knapen-906550_960_720.jpg"} width="100" height="100" />
                 </svg>
             </div>
             <div

@@ -71,24 +71,29 @@ const Shelf = ({ book }) => {
     }
 
     return (
-            <div tabIndex="0" onBlur={handleFocus} onClick={handleSelectClick} className={`${styles.tilt_up} ${styles.select_menu} ${openMenu ? styles.open : ''}`} style={{ "--t": `${t}px` }}>
-                <select data-menu></select>
-                <div className={styles.button}>
-                    <em></em>
-                    <ul>
-                        <li>Add to Shelf</li>
-                        <li>Want to Read</li>
-                        <li>Read</li>
-                        <li>Reading</li>
-                    </ul>
-                </div>
+        <div tabIndex="0"
+            onBlur={handleFocus}
+            onClick={handleSelectClick}
+            className={`${styles.tilt_up} ${styles.select_menu} ${openMenu ? styles.open : ''}`}
+            style={{ "--t": `${t}px` }}
+        >
+            <select data-menu></select>
+            <div className={styles.button}>
+                <em></em>
                 <ul>
-                    <li onClick={() => handleItemClick(0)}>Add to Shelf</li>
-                    <li onClick={() => handleItemClick(1)}>Want to Read</li>
-                    <li onClick={() => handleItemClick(2)}>Read</li>
-                    <li onClick={() => handleItemClick(3)}>Reading</li>
+                    <li>Add to Shelf</li>
+                    <li>Want to Read</li>
+                    <li>Read</li>
+                    <li>Reading</li>
                 </ul>
             </div>
+            <ul>
+                <li onClick={() => handleItemClick(0)}>Add to Shelf</li>
+                <li onClick={() => handleItemClick(1)}>Want to Read</li>
+                <li onClick={() => handleItemClick(2)}>Read</li>
+                <li onClick={() => handleItemClick(3)}>Reading</li>
+            </ul>
+        </div>
     )
 }
 

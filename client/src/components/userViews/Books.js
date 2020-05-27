@@ -27,8 +27,7 @@ function Books(props) {
 
 
     useEffect(() => {
-        // console.log(page);
-        console.log({ page, pageSize });
+        // console.log({ page, pageSize });
         setLoading(true);
         setFoundBooks(true);
         getBooks(page, pageSize).then(res => {
@@ -50,11 +49,11 @@ function Books(props) {
     }, [page, pageSize]);
 
     const handlePagination = (page, pageSize) => {
-        console.log({ page, pageSize });
+        // console.log({ page, pageSize });
         setPage(page);
     }
     const handlePageSizeChange = (current, size) => {
-        console.log({ current, size });
+        // console.log({ current, size });
         setPageSize(size);
         setPage(1);
     }
@@ -63,8 +62,8 @@ function Books(props) {
 
     return (
         <>
-            <Layout>
-                <Content className={styles.content}>
+            <Layout style={{ paddingBottom: "5rem" }} >
+                <Content className={styles.content} >
                     <Row align="middle" justify="center" style={{ marginTop: "2rem" }} >
                         {
                             // foundBooks ?
@@ -95,8 +94,7 @@ function Books(props) {
                                     <Col style={{ marginTop: "2rem" }} >
                                         <BookCard key={elem._id}
                                             book={elem}
-                                            shelf={undefined}
-                                            handleShelfChange={undefined} />
+                                        />
                                     </Col>
                                 )
                         }

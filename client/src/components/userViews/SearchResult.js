@@ -18,26 +18,36 @@ function SearchResult(props) {
     const [authors, setAuthors] = useState([]);
     const [foundResult, setFoundResult] = useState(false);
     const [loading, setLoading] = useState(true);
+    // const [input, setInput] = useState(searchInput);
 
 
 
     useEffect(() => {
+        console.log(searchInput.length);
         setFoundResult(true);
         setLoading(true);
-        axios.get(`/home?searchWord=${searchInput}`)
-            .then(res => {
-                setBooks(res.data[0]);
-                setAuthors(res.data[1]);
-                console.log(res.data[0], "/n", res.data[1]);
-                setLoading(false);
-                if (!(res.data[0].length || res.data[1].length)) {
-                    setFoundResult(false);
-                    console.log("found");
-                }
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        if (searchInput !== " ") {
+            axios.get(`/home?searchWord=${searchInput}`)
+                .then(res => {
+                    setBooks(res.data[0]);
+                    setAuthors(res.data[1]);
+                    // console.log(res.data[0], "/n", res.data[1]);
+                    setLoading(false);
+                    if (!(res.data[0].length || res.data[1].length)) {
+                        setFoundResult(false);
+                        console.log("found");
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        } else {
+            console.log("nooooo");
+            setBooks([]);
+            setAuthors([]);
+            setLoading(false)
+            setFoundResult(false);
+        }
     }, [searchInput])
     return (
         <>
@@ -60,7 +70,7 @@ function SearchResult(props) {
                                     {
                                         books.map((elem) =>
                                             <Col style={{ marginTop: "2rem" }} >
-                                                <BookCard key={elem._id} book={elem} shelf={undefined} />
+                                                <BookCard key={elem._id} book={elem} />
                                             </Col>
                                         )
                                     }
@@ -85,7 +95,7 @@ function SearchResult(props) {
                     }
                     {
                         foundResult ? null :
-                            <EmptyPlaceholder msg="Nothing Found" />
+                            <EmptyPlaceholder msg="Enter the word you search for" />
                     }
 
                 </Content>

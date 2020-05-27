@@ -31,9 +31,9 @@ export default function NavBar(props) {
                         <Nav.Link as={Link} to="/authors" className={styles.link}>Authors</Nav.Link>
                     </Nav>
 
-                    <Form inline onSubmit={handleSubmit}>
+                    <Form style={{ marginRight: "3rem" }} inline onSubmit={handleSubmit}>
                         <FormControl type="text" value={searchInput} onChange={handleChange} placeholder="book or author name" className="mr-sm-2" />
-                        <Link to={ searchInput ? `/home/search/${searchInput}` : "/home/search/%20"}>
+                        <Link to={searchInput ? `/home/search/${searchInput}` : "/home/search/%20"}>
                             <Button className={styles.button} variant="outline-primary">Search</Button>
                         </Link>
                     </Form>
