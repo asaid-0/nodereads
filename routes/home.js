@@ -53,7 +53,11 @@ router.get('/books', async (req, res) => {
                 return book.shelf === filter;
             })
         }
-        res.send(userBooks.slice(beginIndex, endIndex));
+        // res.send(userBooks.slice(beginIndex, endIndex));
+        res.send({
+            userBooks: userBooks.slice(beginIndex, endIndex),
+            BooksCount: userBooks.length
+        });
     } catch (error) {
         res.status(500).send({ msg: "Sorry, Server Error" });
     }

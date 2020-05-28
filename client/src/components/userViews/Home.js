@@ -15,17 +15,19 @@ const { Sider, Header, Content, Footer } = Layout;
 
 function Home(props) {
     const [books, setBooks] = useState([]);
+    const [BooksCount, setBooksCount] = useState(0);
     const [foundBooks, setFoundBooks] = useState(true);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(6);
     const [shelf, setShelf] = useState("all");
 
-    const getUserBooks = (shelf, page) => {
+    const getUserBooks = (shelf, page, limit) => {
         if (shelf === "all") {
-            return axios.get(`http://localhost:5000/home/books?limit=3&offset=${page}`);
+            return axios.get(`http://localhost:5000/home/books?limit=${limit}&offset=${page}`);
         }
         else {
-            return axios.get(`http://localhost:5000/home/books?filter=${shelf}&limit=3&offset=${page}`);
+            return axios.get(`http://localhost:5000/home/books?filter=${shelf}&limit=${limit}&offset=${page}`);
         }
     }
 
@@ -33,9 +35,11 @@ function Home(props) {
     useEffect(() => {
         setLoading(true);
         setFoundBooks(true);
-        getUserBooks(shelf, page).then(res => {
-            if (res.data.length) {
-                setBooks(res.data);
+        getUserBooks(shelf, page, pageSize).then(res => {
+            const { userBooks, BooksCount } = res.data;
+            if (userBooks.length) {
+                setBooks(userBooks);
+                setBooksCount(BooksCount);
                 setLoading(false);
                 setFoundBooks(true);
             }
@@ -58,6 +62,11 @@ function Home(props) {
         console.log({ page, pageSize });
         setPage(page);
     }
+    const handlePageSizeChange = (current, size) => {
+        // console.log({ current, size });
+        setPageSize(size);
+        setPage(1);
+    }
 
 
     return (
@@ -73,8 +82,11 @@ function Home(props) {
                                     current={page}
                                     onChange={handlePagination}
                                     defaultCurrent={1}
-                                    total={books.length}
-                                    pageSize={3}
+                                    total={BooksCount}
+                                    pageSize={pageSize}
+                                    showSizeChanger
+                                    pageSizeOptions={['6', '9', '12']}
+                                    onShowSizeChange={handlePageSizeChange}
                                 />
                             </Col>
                             // : null
